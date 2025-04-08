@@ -19,8 +19,16 @@ type
   TWhisperContext = Pointer;
   TWhisperState = Pointer;
 
+  TWhisperTimings = record
+    SampleMs: Float;
+    EncodeMs: Float;
+    DecodeMs: Float;
+    BatchdMs: Float;
+    PromptMs: Float;
+  end;
+  PWhisperTimings = ^TWhisperTimings;
+
   TWhisperAlignmentHeadsPreset = (
-    WHISPER_AHEADS_UNDEFIN£ED = -1,
     WHISPER_AHEADS_NONE,
     WHISPER_AHEADS_N_TOP_MOST,  // All heads from the N-top-most text-layers
     WHISPER_AHEADS_CUSTOM,

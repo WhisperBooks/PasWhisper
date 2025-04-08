@@ -13,6 +13,7 @@ uses
 
 var
   WhisperLibrary: TDynLib;
+  WhisperLibraryIsLoaded: Boolean;
 
   WhisperInitFromFileWithParams: function (const AModelFile: PAnsiChar; const params: PWhisperContextParams): TWhisperContext; CDecl;
   WhisperContextDefaultParams: function(): PWhisperContextParams; CDecl;
@@ -127,6 +128,11 @@ var
     WhisperLangAutoDetect: function(Ctx: TWhisperContext; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
     WhisperLangAutoDetectWithState: function(Ctx: TWhisperContext; State: TWhisperState; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
 
+    WhisperGetTimings: function(Ctx: TWhisperContext): PWhisperTimings; CDecl;
+
+    WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
+    WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
+
 const
   DLLPath = '';//../../../data/cpu/';
 
@@ -154,6 +160,8 @@ uses
 
 procedure FinalizeWhisperLibrary;
 begin
+  WhisperLibraryIsLoaded := False;
+
   Pointer(@WhisperInitFromFileWithParams) := Nil;
   Pointer(@WhisperContextDefaultParams) := Nil;
   Pointer(@WhisperFree) := Nil;
@@ -203,6 +211,10 @@ begin
   Pointer(@WhisperLangId)          := Nil;
   Pointer(@WhisperLangStr)         := Nil;
   Pointer(@WhisperLangStrFull)     := Nil;
+
+  Pointer(@WhisperGetTimings)      := Nil;
+  Pointer(@WhisperPrintTimings)    := Nil;
+  Pointer(@WhisperResetTimings)    := Nil;
 
   FreeAndNil(WhisperLibrary);
 end;
@@ -275,6 +287,12 @@ begin
       Pointer(@WhisperLangStrFull)     := WhisperLibrary.Symbol('whisper_lang_str_full');
       Pointer(@WhisperLangAutoDetect)  := WhisperLibrary.Symbol('whisper_lang_auto_detect');
       Pointer(@WhisperLangAutoDetectWithState) := WhisperLibrary.Symbol('whisper_lang_auto_detect_with_state');
+
+      Pointer(@WhisperGetTimings)      := WhisperLibrary.Symbol('whisper_get_timings');
+      Pointer(@WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
+      Pointer(@WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
+
+      WhisperLibraryIsLoaded := True;
 
     end
   else

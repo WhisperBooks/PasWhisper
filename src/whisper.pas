@@ -47,7 +47,13 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Test(const AModel: String): TWhisperModel;
+    function  GetTimings: PWhisperTimings;
+    procedure PrintTimings;
+    procedure ResetTimings;
+    function  LoadModel(const AModel: String): Boolean;
+    function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
+    function  Encode(const Offset, NThreads: Integer): Integer;
+    function  Decode(Tokens: PWhisperTokens; const NTokens, NPast, NThreads: Integer): Integer;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;
@@ -92,8 +98,14 @@ implementation
 constructor TWhisper.Create;
 begin
   inherited Create;
-  if Pointer(@WhisperInitFromFileWithParams) = Nil then
+  if Not WhisperLibraryIsLoaded then
     Raise Exception.Create('Whisper library not available');
+end;
+
+function TWhisper.Decode(Tokens: PWhisperTokens; const NTokens, NPast,
+  NThreads: Integer): Integer;
+begin
+  Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads);
 end;
 
 destructor TWhisper.Destroy;
@@ -102,6 +114,11 @@ begin
     WhisperFree(FCtx);
 
   inherited;
+end;
+
+function TWhisper.Encode(const Offset, NThreads: Integer): Integer;
+begin
+  Result := WhisperEncode(FCtx, Offset, NThreads);
 end;
 
 function TWhisper.GetIsMultilingual: Int32;
@@ -213,6 +230,11 @@ begin
   Result := WhisperNvocab(FCtx);
 end;
 
+function TWhisper.GetTimings: PWhisperTimings;
+begin
+  Result := WhisperGetTimings(FCtx);
+end;
+
 function TWhisper.GetTokenBeg: TWhisperToken;
 begin
   Result := WhisperTokenBeg(FCtx);
@@ -268,20 +290,20 @@ begin
   Result := WhisperTokenTranslate(FCtx);
 end;
 
-function TWhisper.Test(const AModel: String): TWhisperModel;
+function TWhisper.LoadModel(const AModel: String): Boolean;
 begin
+  Result := False;
   if FileExists(AModel) then
     begin
       Self.FModel := AModel;
       PModel := PAnsiChar(Pointer(AnsiString(Self.FModel)));
       Init;
+      Result := True;
     end;
-  Result := default(TWhisperModel);
 end;
 
 procedure TWhisper.Init;
 var
-//  PCtx: TWhisperContext;
   CParams: TWhisperContextParams;
   PParams: PWhisperContextParams;
 begin
@@ -289,6 +311,21 @@ begin
   CParams := PParams^;
   Self.FCParams := CParams;
   FCtx := WhisperInitFromFileWithParams(PModel, @FCParams);
+end;
+
+procedure TWhisper.PrintTimings;
+begin
+  WhisperPrintTimings(FCtx);
+end;
+
+procedure TWhisper.ResetTimings;
+begin
+  WhisperResetTimings(FCtx);
+end;
+
+function TWhisper.SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
+begin
+  Result := WhisperSetMel(FCtx, Data, NLen, NMel);
 end;
 
 end.

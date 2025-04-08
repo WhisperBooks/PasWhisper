@@ -19,13 +19,16 @@ type
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
-    FWhisper: TWhisper;
   public
     { Public declarations }
   end;
 
 var
   Form1: TForm1;
+
+const
+  Threads: Int32 = 4;
+  MaxBenchToken = 512;
 
 implementation
 
@@ -35,17 +38,64 @@ uses WhisperTypes;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
-  zz: TWhisperModel;
-  cparams: TWhisperContextParams;
+  I: Integer;
+  Whisp: TWhisper;
+  NMels: Int32;
+  Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
+  Timings: PWhisperTimings;
 begin
-  FWhisper := TWhisper.Create;
-  cparams :=  default(TWhisperContextParams);
+  Whisp := TWhisper.Create;
 
-  zz := FWhisper.Test('C:\models\ggml-base.en.bin');
+  if Whisp.LoadModel('C:\models\ggml-base.en.bin') then
+    begin
+      NMels := Whisp.ModelNmels;
+      if Whisp.SetMel(Nil, 0, NMels) <> 0 then
+        Exit;
 
-  WriteLnLog('TWhisperContext              : %d',[SizeOf(TWhisperContext)]);
-  WriteLnLog('TWhisper NMels               : %d',[FWhisper.ModelNmels]);
-  writelnlog('%d,%d,%d,%d',[zz.hparams.n_vocab, zz.hparams.n_audio_ctx, zz.hparams.n_audio_state, zz.hparams.n_audio_head]);
+      for I := 0 to MaxBenchToken - 1 do
+          Tokens[I] := 0;
+
+      // Heat
+      if Whisp.Encode(0, Threads) <> 0 then
+        Exit;
+      if Whisp.Decode(@Tokens, 256, 0, Threads) <> 0 then
+        Exit;
+      if Whisp.Decode(@Tokens, 1, 256, Threads) <> 0 then
+        Exit;
+
+      Whisp.ResetTimings;
+
+      // Run
+      if Whisp.Encode(0, Threads) <> 0 then
+        Exit;
+
+      for I := 0 to 255 do
+        begin
+          if Whisp.Decode(@Tokens, 1, I, Threads) <> 0 then
+            Exit;
+        end;
+
+      for I := 0 to 63 do
+        begin
+          if Whisp.Decode(@Tokens, 5, 0, Threads) <> 0 then
+            Exit;
+        end;
+
+      for I := 0 to 15 do
+        begin
+          if Whisp.Decode(@Tokens, 256, 0, Threads) <> 0 then
+            Exit;
+        end;
+
+      Timings := Whisp.GetTimings;
+
+      WriteLnLog('Whisper NMels               : %d',[Nmels]);
+      WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
+      WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
+      WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
+      WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
+      WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
+    end;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
