@@ -68,6 +68,65 @@ var
     // Task tokens
     WhisperTokenTranslate      : function (Ctx: TWhisperContext): TWhisperToken; CDecl;
     WhisperTokenTranscribe     : function (Ctx: TWhisperContext): TWhisperToken; CDecl;
+
+    // This can be used to set a custom log mel spectrogram inside the default state of the provided whisper context.
+    // Use this instead of whisper_pcm_to_mel() if you want to provide your own log mel spectrogram.
+    // n_mel must be 80
+    // Returns 0 on success
+    WhisperSetMel: function(Ctx: TWhisperContext; const Data: PFloat; NLen: Int32; NMel: Int32): Int32; CDecl;
+    WhisperSetMelWithState: function(Ctx: TWhisperContext; State: TWhisperState; const Data: PFloat; NLen: Int32; NMel: Int32): Int32; CDecl;
+
+    // Run the Whisper encoder on the log mel spectrogram stored inside the default state in the provided whisper context.
+    // Make sure to call whisper_pcm_to_mel() or whisper_set_mel() first.
+    // offset can be used to specify the offset of the first frame in the spectrogram.
+    // Returns 0 on success
+    WhisperEncode: function(Ctx: TWhisperContext; Offset: Int32; NThreads: Int32): Int32; CDecl;
+    WhisperEncodeWithState: function(Ctx: TWhisperContext; State: TWhisperState; Offset: Int32; NThreads: Int32): Int32; CDecl;
+
+    // Run the Whisper decoder to obtain the logits and probabilities for the next token.
+    // Make sure to call whisper_encode() first.
+    // tokens + n_tokens is the provided context for the decoder.
+    // n_past is the number of tokens to use from previous decoder calls.
+    // Returns 0 on success
+    // TODO: add support for multiple decoders
+    WhisperDecode: function(Ctx: TWhisperContext; Tokens: PWhisperTokens; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
+    WhisperDecodeWithState: function(Ctx: TWhisperContext; State: TWhisperState; Tokens: PWhisperTokens; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
+
+    // Convert the provided text into tokens.
+    // The tokens pointer must be large enough to hold the resulting tokens.
+    // Returns the number of tokens on success, no more than n_max_tokens
+    // Returns a negative number on failure - the number of tokens that would have been returned
+    // TODO: not sure if correct
+    WhisperTokenize: function(Ctx: TWhisperContext; Text: PAnsiString; Tokens: PWhisperTokens; MaxTokens: Int32): Int32; CDecl;
+
+    // Return the number of tokens in the provided text
+    // Equivalent to: -whisper_tokenize(ctx, text, NULL, 0)
+    WhisperTokenCount: function(Ctx: TWhisperContext; Text: PAnsiString): Int32; CDecl;
+
+    // Largest language id (i.e. number of available languages - 1)
+    WhisperLangMaxId: function : Int32; CDecl;
+
+    // Return the id of the specified language, returns -1 if not found
+    // Examples:
+    //   "de" -> 2
+    //   "german" -> 2
+    WhisperLangId: function(const Lang: PAnsiString): Int32; CDecl;
+
+    // Return the short string of the specified language id (e.g. 2 -> "de"), returns nullptr if not found
+    WhisperLangStr: function(id: Int32): PAnsiString; CDecl;
+
+    // Return the short string of the specified language name (e.g. 2 -> "german"), returns nullptr if not found
+    WhisperLangStrFull: function(id: Int32): PAnsiString; CDecl;
+
+    // Use mel data at offset_ms to try and auto-detect the spoken language
+    // Make sure to call whisper_pcm_to_mel() or whisper_set_mel() first
+    // Returns the top language id or negative on failure
+    // If not null, fills the lang_probs array with the probabilities of all languages
+    // The array must be whisper_lang_max_id() + 1 in size
+    // ref: https://github.com/openai/whisper/blob/main/whisper/decoding.py#L18-L69
+    WhisperLangAutoDetect: function(Ctx: TWhisperContext; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
+    WhisperLangAutoDetectWithState: function(Ctx: TWhisperContext; State: TWhisperState; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
+
 const
   DLLPath = '';//../../../data/cpu/';
 
@@ -132,6 +191,19 @@ begin
   Pointer(@WhisperTokenTranslate) := Nil;
   Pointer(@WhisperTokenTranscribe) := Nil;
 
+  Pointer(@WhisperSetMel)          := Nil;
+  Pointer(@WhisperSetMelWithState) := Nil;
+  Pointer(@WhisperEncode)          := Nil;
+  Pointer(@WhisperEncodeWithState) := Nil;
+  Pointer(@WhisperDecode)          := Nil;
+  Pointer(@WhisperDecodeWithState) := Nil;
+  Pointer(@WhisperTokenize)        := Nil;
+  Pointer(@WhisperTokenCount)      := Nil;
+  Pointer(@WhisperLangMaxId)       := Nil;
+  Pointer(@WhisperLangId)          := Nil;
+  Pointer(@WhisperLangStr)         := Nil;
+  Pointer(@WhisperLangStrFull)     := Nil;
+
   FreeAndNil(WhisperLibrary);
 end;
 
@@ -151,21 +223,10 @@ begin
 
   if WhisperLibrary <> Nil then
     begin
+      WhisperLibrary.SymbolError := seRaise;
       Pointer(@WhisperInitFromFileWithParams) := WhisperLibrary.Symbol('whisper_init_from_file_with_params');
-      {$ifdef RaiseExeptionOnImportError}
-      if Pointer(@WhisperInitFromFileWithParams) = Nil then
-        Raise Exception.Create('Couldn''t link to whisper_init_from_file_with_params');
-      {$endif}
       Pointer(@WhisperContextDefaultParams) := WhisperLibrary.Symbol('whisper_context_default_params');
-      {$ifdef RaiseExeptionOnImportError}
-      if Pointer(@WhisperInitFromFileWithParams) = Nil then
-        Raise Exception.Create('Couldn''t link to whisper_context_default_params');
-      {$endif}
       Pointer(@WhisperFree) := WhisperLibrary.Symbol('whisper_free');
-      {$ifdef RaiseExeptionOnImportError}
-      if Pointer(@WhisperInitFromFileWithParams) = Nil then
-        Raise Exception.Create('Couldn''t link to whisper_free');
-      {$endif}
 
       Pointer(@WhisperNlen) := WhisperLibrary.Symbol('whisper_n_len');
       Pointer(@WhisperNlenFromState) := WhisperLibrary.Symbol('whisper_n_len_from_state');
@@ -199,6 +260,22 @@ begin
       Pointer(@WhisperTokenLang) := WhisperLibrary.Symbol('whisper_token_lang');
       Pointer(@WhisperTokenTranslate) := WhisperLibrary.Symbol('whisper_token_translate');
       Pointer(@WhisperTokenTranscribe) := WhisperLibrary.Symbol('whisper_token_transcribe');
+
+      Pointer(@WhisperSetMel)          := WhisperLibrary.Symbol('whisper_set_mel');
+      Pointer(@WhisperSetMelWithState) := WhisperLibrary.Symbol('whisper_set_mel_with_state');
+      Pointer(@WhisperEncode)          := WhisperLibrary.Symbol('whisper_encode');
+      Pointer(@WhisperEncodeWithState) := WhisperLibrary.Symbol('whisper_encode_with_state');
+      Pointer(@WhisperDecode)          := WhisperLibrary.Symbol('whisper_decode');
+      Pointer(@WhisperDecodeWithState) := WhisperLibrary.Symbol('whisper_decode_with_state');
+      Pointer(@WhisperTokenize)        := WhisperLibrary.Symbol('whisper_tokenize');
+      Pointer(@WhisperTokenCount)      := WhisperLibrary.Symbol('whisper_token_count');
+      Pointer(@WhisperLangMaxId)       := WhisperLibrary.Symbol('whisper_lang_max_id');
+      Pointer(@WhisperLangId)          := WhisperLibrary.Symbol('whisper_lang_id');
+      Pointer(@WhisperLangStr)         := WhisperLibrary.Symbol('whisper_lang_str');
+      Pointer(@WhisperLangStrFull)     := WhisperLibrary.Symbol('whisper_lang_str_full');
+      Pointer(@WhisperLangAutoDetect)  := WhisperLibrary.Symbol('whisper_lang_auto_detect');
+      Pointer(@WhisperLangAutoDetectWithState) := WhisperLibrary.Symbol('whisper_lang_auto_detect_with_state');
+
     end
   else
     Raise Exception.Create('Couldn''t import whisper library');

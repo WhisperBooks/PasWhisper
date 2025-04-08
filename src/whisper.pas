@@ -8,6 +8,7 @@ type
   TWhisper = class
   strict private
     FCtx: TWhisperContext;
+    FState: TWhisperState;
     FModel: String;
     FCParams: TWhisperContextParams;
     procedure Init;
@@ -29,6 +30,20 @@ type
     function GetModelNmels          : Int32;
     function GetModelftype          : Int32;
     function GetModeltype           : Int32;
+    function GetLogits              : PFloat;
+    function GetLogitsFromState     : PFloat;
+    function GetTokenEot: TWhisperToken;
+    function GetTokenSot: TWhisperToken;
+    function GetTokenSolm: TWhisperToken;
+    function GetTokenPrev: TWhisperToken;
+    function GetTokenNosp: TWhisperToken;
+    function GetTokenNot: TWhisperToken;
+    function GetTokenBeg: TWhisperToken;
+    function GetTokenTranslate: TWhisperToken;
+    function GetTokenTranscribe: TWhisperToken;
+  	function GetTokenLang(const LangId: Int32): TWhisperToken;
+    function GetTokenToStr(const Token: TWhisperToken): PAnsiString;
+    function GetModelTypeReadable: PAnsiString;
   public
     constructor Create;
     destructor Destroy; override;
@@ -51,7 +66,21 @@ type
     property ModelNmels          : Int32 Read GetModelNmels;
     property Modelftype          : Int32 Read GetModelftype;
     property Modeltype           : Int32 Read GetModeltype;
-  end;
+    property Logits              : PFloat Read GetLogits;
+    property LogitsFromState     : PFloat Read GetLogitsFromState;
+    property TokenEot		         : TWhisperToken Read GetTokenEot;
+    property TokenSot            : TWhisperToken Read GetTokenSot;
+    property TokenSolm           : TWhisperToken Read GetTokenSolm;
+    property TokenPrev           : TWhisperToken Read GetTokenPrev;
+    property TokenNosp           : TWhisperToken Read GetTokenNosp;
+    property TokenNot            : TWhisperToken Read GetTokenNot;
+    property TokenBeg            : TWhisperToken Read GetTokenBeg;
+    property TokenTranslate      : TWhisperToken Read GetTokenTranslate;
+    property TokenTranscribe     : TWhisperToken Read GetTokenTranscribe;
+    property TokenLang[const LangId: Int32] : TWhisperToken Read GetTokenLang;
+    property TokenToStr[const Token: TWhisperToken] : PAnsiString Read GetTokenToStr;
+    property ModelTypeReadable   : PAnsiString Read GetModelTypeReadable;
+ end;
 
 var
   PModel: PAnsiChar;
@@ -78,6 +107,18 @@ end;
 function TWhisper.GetIsMultilingual: Int32;
 begin
   Result := WhisperIsMultilingual(FCtx);
+end;
+
+function TWhisper.GetLogits: PFloat;
+begin
+  Result := WhisperGetLogits(FCtx);
+end;
+
+function TWhisper.GetLogitsFromState: PFloat;
+begin
+  if FState = Nil then
+    Exception.Create('GetLogitsFromState : State not set');
+  Result := WhisperGetLogitsFromState(FState);
 end;
 
 function TWhisper.GetModelftype: Int32;
@@ -140,6 +181,11 @@ begin
   Result := WhisperModeltype(FCtx);
 end;
 
+function TWhisper.GetModelTypeReadable: PAnsiString;
+begin
+  Result := WhisperModelTypeReadable(FCtx);
+end;
+
 function TWhisper.GetNaudioCtx: Int32;
 begin
   Result := WhisperNaudioCtx(FCtx);
@@ -152,7 +198,9 @@ end;
 
 function TWhisper.GetNlenFromState: Int32;
 begin
-  Result := WhisperNlenFromState(FCtx);
+  if FState = Nil then
+    Exception.Create('GetNlenFromState : State not set');
+  Result := WhisperNlenFromState(FState);
 end;
 
 function TWhisper.GetNtextCtx: Int32;
@@ -163,6 +211,61 @@ end;
 function TWhisper.GetNvocab: Int32;
 begin
   Result := WhisperNvocab(FCtx);
+end;
+
+function TWhisper.GetTokenBeg: TWhisperToken;
+begin
+  Result := WhisperTokenBeg(FCtx);
+end;
+
+function TWhisper.GetTokenEot: TWhisperToken;
+begin
+  Result := WhisperTokenEot(FCtx);
+end;
+
+function TWhisper.GetTokenLang(const LangId: Int32): TWhisperToken;
+begin
+  Result := WhisperTokenLang(FCtx, LangId);
+end;
+
+function TWhisper.GetTokenNosp: TWhisperToken;
+begin
+  Result := WhisperTokenNosp(FCtx);
+end;
+
+function TWhisper.GetTokenNot: TWhisperToken;
+begin
+  Result := WhisperTokenNot(FCtx);
+end;
+
+function TWhisper.GetTokenPrev: TWhisperToken;
+begin
+  Result := WhisperTokenPrev(FCtx);
+end;
+
+function TWhisper.GetTokenSolm: TWhisperToken;
+begin
+  Result := WhisperTokenSolm(FCtx);
+end;
+
+function TWhisper.GetTokenSot: TWhisperToken;
+begin
+  Result := WhisperTokenSot(FCtx);
+end;
+
+function TWhisper.GetTokenToStr(const Token: TWhisperToken): PAnsiString;
+begin
+  Result := WhisperTokenToStr(FCtx, Token);
+end;
+
+function TWhisper.GetTokenTranscribe: TWhisperToken;
+begin
+  Result := WhisperTokenTranscribe(FCtx);
+end;
+
+function TWhisper.GetTokenTranslate: TWhisperToken;
+begin
+  Result := WhisperTokenTranslate(FCtx);
 end;
 
 function TWhisper.Test(const AModel: String): TWhisperModel;
