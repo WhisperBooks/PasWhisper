@@ -9,173 +9,14 @@ interface
 uses GgmlExternal;
 
 type
-  Int64_t = Int64;
-  Int32_t = Int32;
   WhisperBool = ByteBool;
-  Size_t = UInt64;
   Float = Single;
-  TFloatArray = array of Single;
-
-  e_model = (
-    MODEL_UNKNOWN,
-    MODEL_TINY,
-    MODEL_BASE,
-    MODEL_SMALL,
-    MODEL_MEDIUM,
-    MODEL_LARGE
-  );
-
-  TWhisperMel = record
-    n_len: Integer;
-    n_len_org: Integer;
-    n_mel: Integer;
-    data: TFloatArray;
-  end;
-
-  TWhisperFilters = record
-    n_mel: Int32;
-    n_fft: Int32;
-    data: TFloatArray;
-  end;
-
-  TWhisperHparams = record
-    const
-    n_vocab       : Int32_t = 51864;
-    n_audio_ctx   : Int32_t = 1500;
-    n_audio_state : Int32_t = 384;
-    n_audio_head  : Int32_t = 6;
-    n_audio_layer : Int32_t = 4;
-    n_text_ctx    : Int32_t = 448;
-    n_text_state  : Int32_t = 384;
-    n_text_head   : Int32_t = 6;
-    n_text_layer  : Int32_t = 4;
-    n_mels        : Int32_t = 80;
-    ftype         : Int32_t = 1;
-    eps           : Float   = 1e-5;
-  end;
-
-  // audio encoding layer
-  PWhisperLayerEncoder = ^TWhisperLayerEncoder;
-  TWhisperLayerEncoder = record
-    // encoder.blocks.*.attn_ln
-    attn_ln_0_w: PggmlTensor;
-    attn_ln_0_b: PggmlTensor;
-
-    // encoder.blocks.*.attn.out
-    attn_ln_1_w: PggmlTensor;
-    attn_ln_1_b: PggmlTensor;
-
-    // encoder.blocks.*.attn.query
-    attn_q_w: PggmlTensor;
-    attn_q_b: PggmlTensor;
-
-    // encoder.blocks.*.attn.key
-    attn_k_w: PggmlTensor;
-
-    // encoder.blocks.*.attn.value
-    attn_v_w: PggmlTensor;
-    attn_v_b: PggmlTensor;
-
-    // encoder.blocks.*.mlp_ln
-    mlp_ln_w: PggmlTensor;
-    mlp_ln_b: PggmlTensor;
-
-    // encoder.blocks.*.mlp.0
-    mlp_0_w: PggmlTensor;
-    mlp_0_b: PggmlTensor;
-
-    // encoder.blocks.*.mlp.2
-    mlp_1_w: PggmlTensor;
-    mlp_1_b: PggmlTensor;
-  end;
-
-  // token decoding layer
-  PWhisperLayerDecoder = ^TWhisperLayerDecoder;
-  TWhisperLayerDecoder = record
-    // decoder.blocks.*.attn_ln
-    attn_ln_0_w: PggmlTensor;
-    attn_ln_0_b: PggmlTensor;
-
-    // decoder.blocks.*.attn.out
-    attn_ln_1_w: PggmlTensor;
-    attn_ln_1_b: PggmlTensor;
-
-    // decoder.blocks.*.attn.query
-    attn_q_w: PggmlTensor;
-    attn_q_b: PggmlTensor;
-
-    // decoder.blocks.*.attn.key
-    attn_k_w: PggmlTensor;
-
-    // decoder.blocks.*.attn.value
-    attn_v_w: PggmlTensor;
-    attn_v_b: PggmlTensor;
-
-    // decoder.blocks.*.cross_attn_ln
-    cross_attn_ln_0_w: PggmlTensor;
-    cross_attn_ln_0_b: PggmlTensor;
-
-    // decoder.blocks.*.cross_attn.out
-    cross_attn_ln_1_w: PggmlTensor;
-    cross_attn_ln_1_b: PggmlTensor;
-
-    // decoder.blocks.*.cross_attn.query
-    cross_attn_q_w: PggmlTensor;
-    cross_attn_q_b: PggmlTensor;
-
-    // decoder.blocks.*.cross_attn.key
-    cross_attn_k_w: PggmlTensor;
-
-    // decoder.blocks.*.cross_attn.value
-    cross_attn_v_w: PggmlTensor;
-    cross_attn_v_b: PggmlTensor;
-
-    // decoder.blocks.*.mlp_ln
-    mlp_ln_w: PggmlTensor;
-    mlp_ln_b: PggmlTensor;
-
-    // decoder.blocks.*.mlp.0
-    mlp_0_w: PggmlTensor;
-    mlp_0_b: PggmlTensor;
-
-    // decoder.blocks.*.mlp.2
-    mlp_1_w: PggmlTensor;
-    mlp_1_b: PggmlTensor;
-  end;
-
-  PggmlContext = Pointer;
-  PggmlBackendBuffer = Pointer;
-
-  TStdMap16 = Array [0..15] of byte;
-  TStdMap24 = Array [0..23] of byte;
-
-  TWhisperModel = record
-  var
-    mtype:          Int32; // = e_model.MODEL_UNKNOWN;
-    hparams:        TWhisperHparams;
-    filters:        TWhisperFilters;
-    e_pe:           PggmlTensor; // encoder.positional_embedding
-    e_conv_1_w:     PggmlTensor; // encoder.conv1
-    e_conv_1_b:     PggmlTensor;
-    e_conv_2_w:     PggmlTensor; // encoder.conv2
-    e_conv_2_b:     PggmlTensor;
-    e_ln_w:         PggmlTensor; // encoder.ln_post
-    e_ln_b:         PggmlTensor;
-    d_pe:           PggmlTensor; // decoder.positional_embedding
-    d_te:           PggmlTensor; // decoder.token_embedding
-    d_ln_w:         PggmlTensor; // decoder.ln
-    d_ln_b:         PggmlTensor;
-    layers_encoder: TStdMap24; // Map of PWhisperLayerEncoder;
-    layers_decoder: TStdMap24; // Map of PWhisperLayerDecoder;
-    // ggml context that contains all the meta information about the model tensors
-    ctxs:           TStdMap24; // Map of PggmlContext;
-    // the model backend data is read-only and can be shared between processors
-    buffer:         TStdMap24; // PggmlBackendBuffer;
-    // tensors
-    n_loaded:       Int32;
-    tensors:        TStdMap16; // Map of PggmlTensor
-  end;
-  PWhisperModel = ^TWhisperModel;
+  PFloat = ^Float;
+  TWhisperPos = Int32;
+  TWhisperToken = Int32;
+  TWhisperSeqId = Int32;
+  TWhisperContext = Pointer;
+  TWhisperState = Pointer;
 
   TWhisperAlignmentHeadsPreset = (
     WHISPER_AHEADS_UNDEFIN£ED = -1,
@@ -311,13 +152,176 @@ type
 }
 
 
+  e_model = (
+    MODEL_UNKNOWN,
+    MODEL_TINY,
+    MODEL_BASE,
+    MODEL_SMALL,
+    MODEL_MEDIUM,
+    MODEL_LARGE
+  );
+
+  TVectorFloat = Array[0..31] of Byte;
+
+  TWhisperMel = record
+    n_len: Integer;
+    n_len_org: Integer;
+    n_mel: Integer;
+    data: TVectorFloat;
+  end;
+
+  TWhisperFilters = record
+    n_mel: Int32;
+    n_fft: Int32;
+    data: TVectorFloat;
+  end;
+
+  TWhisperHparams = record
+    var
+    n_vocab       : Int32; // = 51864;
+    n_audio_ctx   : Int32; // = 1500;
+    n_audio_state : Int32; // = 384;
+    n_audio_head  : Int32; // = 6;
+    n_audio_layer : Int32; // = 4;
+    n_text_ctx    : Int32; // = 448;
+    n_text_state  : Int32; // = 384;
+    n_text_head   : Int32; // = 6;
+    n_text_layer  : Int32; // = 4;
+    n_mels        : Int32; // = 80;
+    ftype         : Int32; // = 1;
+    eps           : Float; //   = 1e-5;
+  end;
+
+  // audio encoding layer
+  PWhisperLayerEncoder = ^TWhisperLayerEncoder;
+  TWhisperLayerEncoder = record
+    // encoder.blocks.*.attn_ln
+    attn_ln_0_w: PggmlTensor;
+    attn_ln_0_b: PggmlTensor;
+
+    // encoder.blocks.*.attn.out
+    attn_ln_1_w: PggmlTensor;
+    attn_ln_1_b: PggmlTensor;
+
+    // encoder.blocks.*.attn.query
+    attn_q_w: PggmlTensor;
+    attn_q_b: PggmlTensor;
+
+    // encoder.blocks.*.attn.key
+    attn_k_w: PggmlTensor;
+
+    // encoder.blocks.*.attn.value
+    attn_v_w: PggmlTensor;
+    attn_v_b: PggmlTensor;
+
+    // encoder.blocks.*.mlp_ln
+    mlp_ln_w: PggmlTensor;
+    mlp_ln_b: PggmlTensor;
+
+    // encoder.blocks.*.mlp.0
+    mlp_0_w: PggmlTensor;
+    mlp_0_b: PggmlTensor;
+
+    // encoder.blocks.*.mlp.2
+    mlp_1_w: PggmlTensor;
+    mlp_1_b: PggmlTensor;
+  end;
+
+  // token decoding layer
+  PWhisperLayerDecoder = ^TWhisperLayerDecoder;
+  TWhisperLayerDecoder = record
+    // decoder.blocks.*.attn_ln
+    attn_ln_0_w: PggmlTensor;
+    attn_ln_0_b: PggmlTensor;
+
+    // decoder.blocks.*.attn.out
+    attn_ln_1_w: PggmlTensor;
+    attn_ln_1_b: PggmlTensor;
+
+    // decoder.blocks.*.attn.query
+    attn_q_w: PggmlTensor;
+    attn_q_b: PggmlTensor;
+
+    // decoder.blocks.*.attn.key
+    attn_k_w: PggmlTensor;
+
+    // decoder.blocks.*.attn.value
+    attn_v_w: PggmlTensor;
+    attn_v_b: PggmlTensor;
+
+    // decoder.blocks.*.cross_attn_ln
+    cross_attn_ln_0_w: PggmlTensor;
+    cross_attn_ln_0_b: PggmlTensor;
+
+    // decoder.blocks.*.cross_attn.out
+    cross_attn_ln_1_w: PggmlTensor;
+    cross_attn_ln_1_b: PggmlTensor;
+
+    // decoder.blocks.*.cross_attn.query
+    cross_attn_q_w: PggmlTensor;
+    cross_attn_q_b: PggmlTensor;
+
+    // decoder.blocks.*.cross_attn.key
+    cross_attn_k_w: PggmlTensor;
+
+    // decoder.blocks.*.cross_attn.value
+    cross_attn_v_w: PggmlTensor;
+    cross_attn_v_b: PggmlTensor;
+
+    // decoder.blocks.*.mlp_ln
+    mlp_ln_w: PggmlTensor;
+    mlp_ln_b: PggmlTensor;
+
+    // decoder.blocks.*.mlp.0
+    mlp_0_w: PggmlTensor;
+    mlp_0_b: PggmlTensor;
+
+    // decoder.blocks.*.mlp.2
+    mlp_1_w: PggmlTensor;
+    mlp_1_b: PggmlTensor;
+  end;
+
+  PggmlContext = Pointer;
+  PggmlBackendBuffer = Pointer;
+
+  TStdMap24 = Array [0..23] of byte;
+  TStdMap32 = Array [0..31] of byte;
+
+  TWhisperModel = record
+  var
+    mtype:          Int32; // = e_model.MODEL_UNKNOWN;
+    hparams:        TWhisperHparams;
+    filters:        TWhisperFilters;
+    e_pe:           PggmlTensor; // encoder.positional_embedding
+    e_conv_1_w:     PggmlTensor; // encoder.conv1
+    e_conv_1_b:     PggmlTensor;
+    e_conv_2_w:     PggmlTensor; // encoder.conv2
+    e_conv_2_b:     PggmlTensor;
+    e_ln_w:         PggmlTensor; // encoder.ln_post
+    e_ln_b:         PggmlTensor;
+    d_pe:           PggmlTensor; // decoder.positional_embedding
+    d_te:           PggmlTensor; // decoder.token_embedding
+    d_ln_w:         PggmlTensor; // decoder.ln
+    d_ln_b:         PggmlTensor;
+    layers_encoder: TStdMap32; // Map of PWhisperLayerEncoder;
+    layers_decoder: TStdMap32; // Map of PWhisperLayerDecoder;
+    // ggml context that contains all the meta information about the model tensors
+    ctxs:           TStdMap32; // Map of PggmlContext;
+    // the model backend data is read-only and can be shared between processors
+    buffer:         TStdMap32; // PggmlBackendBuffer;
+    // tensors
+    n_loaded:       Int32;
+    tensors:        TStdMap24; // Map of PggmlTensor
+  end;
+  PWhisperModel = ^TWhisperModel;
+
   TVocabID = Int32;
 
   TWhisperVocab = record
   var
     n_vocab: Int64; // 51864;
-    token_to_id: TStdMap16; // std::map<token, id>
-    id_to_token: TStdMap16; // std::map<id, token>
+    token_to_id: TStdMap24; // std::map<token, id>
+    id_to_token: TStdMap24; // std::map<id, token>
     // reference: https://github.com/openai/whisper/blob/248b6cb124225dd263bb9bd32d060b6517e067f8/whisper/tokenizer.py#L334-L349
     token_eot: TVocabID; // 50256;
     token_sot: TVocabID; // 50257;
@@ -332,22 +336,6 @@ type
     token_beg: TVocabID; // 50363; // begin timestamps
   end;
 
-
-  TWhisperContext = record
-  var
-    t_load_us: int64_t;
-    t_start_us: int64_t ;
-  const
-    wtype = ggmlType.GGML_TYPE_F16; // weight type (FP32 / FP16 / QX)
-    itype =  ggmlType.GGML_TYPE_F16; // intermediate type (FP32 or FP16)
-  var
-    params: TWhisperContextParams;
-    model: TWhisperModel;
-    vocab: TWhisperVocab; // TWhisperVocab;
-    state: Pointer; // TwhisperState;
-    path_model: PAnsiChar; // populated by whisper_init_from_file_with_params()
-  end;
-  PWhisperContext = ^TWhisperContext;
 
 implementation
 

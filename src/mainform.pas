@@ -41,23 +41,11 @@ begin
   FWhisper := TWhisper.Create;
   cparams :=  default(TWhisperContextParams);
 
-  WriteLnLog('TWhisperModel                : %d',[SizeOf(TWhisperModel)]);
-  WriteLnLog('TWhisperVocab                : %d',[SizeOf(TWhisperVocab)]);
-  WriteLnLog('TWhisperContextParams        : %d (%p)',[SizeOf(TWhisperContextParams), @cparams]);
-  WriteLnLog('SizeOf use_gpu               : %d (%p)',[SizeOf(cparams.use_gpu), @cparams.use_gpu]);
-  WriteLnLog('SizeOf flash_attn            : %d (%p)',[SizeOf(cparams.flash_attn), @cparams.flash_attn]);
-  WriteLnLog('SizeOf gpu_device            : %d (%p)', [sizeof(cparams.gpu_device), @cparams.gpu_device]);
-  WriteLnLog('SizeOf dtw_token_timestamps  : %d (%p)', [sizeof(cparams.dtw_token_timestamps), @cparams.dtw_token_timestamps]);
-  WriteLnLog('SizeOf dtw_aheads_preset     : %d (%p)', [sizeof(cparams.dtw_aheads_preset), @cparams.dtw_aheads_preset]);
-  WriteLnLog('SizeOf dtw_n_top             : %d (%p)', [sizeof(cparams.dtw_n_top), @cparams.dtw_n_top]);
-  WriteLnLog('SizeOf dtw_aheads            : %d (%p)', [sizeof(cparams.dtw_aheads), @cparams.dtw_aheads]);
-  WriteLnLog('  SizeOf dtw_aheads.n_heads    : %d (%p)', [sizeof(cparams.dtw_aheads.nHeads), @cparams.dtw_aheads.nHeads]);
-  WriteLnLog('  SizeOf dtw_aheads.heads      : %d (%p)',[ sizeof(cparams.dtw_aheads.Heads), @cparams.dtw_aheads.Heads]);
-  WriteLnLog('SizeOf dtw_mem_size          : %d (%p)', [sizeof(cparams.dtw_mem_size), @cparams.dtw_mem_size]);
-  {$O-}
   zz := FWhisper.Test('C:\models\ggml-base.en.bin');
+
+  WriteLnLog('TWhisperContext              : %d',[SizeOf(TWhisperContext)]);
+  WriteLnLog('TWhisper NMels               : %d',[FWhisper.ModelNmels]);
   writelnlog('%d,%d,%d,%d',[zz.hparams.n_vocab, zz.hparams.n_audio_ctx, zz.hparams.n_audio_state, zz.hparams.n_audio_head]);
-  {$O+}
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
