@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{4B6865E5-EE96-468F-8584-FD852BF11005}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="src\PasWhisper.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="src\WhisperCli.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="PasWhisper">
+        <MSBuild Projects="src\PasWhisper.dproj"/>
+    </Target>
+    <Target Name="PasWhisper:Clean">
+        <MSBuild Projects="src\PasWhisper.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PasWhisper:Make">
+        <MSBuild Projects="src\PasWhisper.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="WhisperCli">
+        <MSBuild Projects="src\WhisperCli.dproj"/>
+    </Target>
+    <Target Name="WhisperCli:Clean">
+        <MSBuild Projects="src\WhisperCli.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WhisperCli:Make">
+        <MSBuild Projects="src\WhisperCli.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="PasWhisper;WhisperCli"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="PasWhisper:Clean;WhisperCli:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="PasWhisper:Make;WhisperCli:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
