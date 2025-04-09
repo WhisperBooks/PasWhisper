@@ -16,7 +16,7 @@ var
   WhisperLibraryIsLoaded: Boolean;
 
   WhisperInitFromFileWithParams: function (const AModelFile: PAnsiChar; const params: PWhisperContextParams): TWhisperContext; CDecl;
-  WhisperContextDefaultParams: function(): PWhisperContextParams; CDecl;
+  WhisperContextDefaultParams: function(): TWhisperContextParams; CDecl;
   WhisperFree: procedure (ctx: TWhisperContext); CDecl;
 
 {

@@ -97,7 +97,6 @@ implementation
 
 constructor TWhisper.Create;
 begin
-  inherited Create;
   if Not WhisperLibraryIsLoaded then
     Raise Exception.Create('Whisper library not available');
 end;
@@ -295,8 +294,7 @@ begin
   Result := False;
   if FileExists(AModel) then
     begin
-      Self.FModel := AModel;
-      PModel := PAnsiChar(Pointer(AnsiString(Self.FModel)));
+      FModel := AModel;
       Init;
       Result := True;
     end;
@@ -307,10 +305,8 @@ var
   CParams: TWhisperContextParams;
   PParams: PWhisperContextParams;
 begin
-  PParams := WhisperContextDefaultParams;
-  CParams := PParams^;
-  Self.FCParams := CParams;
-  FCtx := WhisperInitFromFileWithParams(PModel, @FCParams);
+  FCParams := WhisperContextDefaultParams;
+  FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
 end;
 
 procedure TWhisper.PrintTimings;

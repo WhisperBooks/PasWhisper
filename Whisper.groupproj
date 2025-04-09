@@ -3,7 +3,7 @@
         <ProjectGuid>{4B6865E5-EE96-468F-8584-FD852BF11005}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="src\PasWhisper.dproj">
+        <Projects Include="src\WhisperBenchGui.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="src\WhisperCli.dproj">
@@ -17,14 +17,14 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="PasWhisper">
-        <MSBuild Projects="src\PasWhisper.dproj"/>
+    <Target Name="WhisperBenchGui">
+        <MSBuild Projects="src\WhisperBenchGui.dproj"/>
     </Target>
-    <Target Name="PasWhisper:Clean">
-        <MSBuild Projects="src\PasWhisper.dproj" Targets="Clean"/>
+    <Target Name="WhisperBenchGui:Clean">
+        <MSBuild Projects="src\WhisperBenchGui.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="PasWhisper:Make">
-        <MSBuild Projects="src\PasWhisper.dproj" Targets="Make"/>
+    <Target Name="WhisperBenchGui:Make">
+        <MSBuild Projects="src\WhisperBenchGui.dproj" Targets="Make"/>
     </Target>
     <Target Name="WhisperCli">
         <MSBuild Projects="src\WhisperCli.dproj"/>
@@ -36,13 +36,13 @@
         <MSBuild Projects="src\WhisperCli.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="PasWhisper;WhisperCli"/>
+        <CallTarget Targets="WhisperBenchGui;WhisperCli"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="PasWhisper:Clean;WhisperCli:Clean"/>
+        <CallTarget Targets="WhisperBenchGui:Clean;WhisperCli:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="PasWhisper:Make;WhisperCli:Make"/>
+        <CallTarget Targets="WhisperBenchGui:Make;WhisperCli:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
