@@ -1,0 +1,1 @@
+Detailed Readme.MD is high on my TODO list (but behind other documentation)
