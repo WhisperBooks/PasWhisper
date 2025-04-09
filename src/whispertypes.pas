@@ -8,6 +8,9 @@ interface
 
 uses GgmlExternal;
 
+const
+  WHISPER_SUCCESS: Integer = 0;
+
 type
   WhisperBool = ByteBool;
   Float = Single;
