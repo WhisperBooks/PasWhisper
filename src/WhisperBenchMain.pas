@@ -34,7 +34,7 @@ implementation
 
 {$R *.fmx}
 
-uses WhisperTypes;
+uses WhisperTypes, IOUtils;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
@@ -43,10 +43,18 @@ var
   NMels: Int32;
   Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
   Timings: PWhisperTimings;
+  ModelFile: String;
 begin
   Whisp := TWhisper.Create;
   try
-    if Whisp.LoadModel('C:\models\ggml-base.en.bin') then
+    {$if defined(MSWindows)}
+    ModelFile := 'C:\models\ggml-base.en.bin';
+    {$elseif defined(MacOS)}
+    ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
+    {$elseif defined(Linux)}
+    ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
+    {$endif}
+    if Whisp.LoadModel(ModelFile) then
       begin
         NMels := Whisp.ModelNmels;
         if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then

@@ -1,0 +1,253 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Condition="Exists('$(BDS)\bin\CodeGear.Deployment.targets')" Project="$(BDS)\bin\CodeGear.Deployment.targets"/>
+    <ProjectExtensions>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <PropertyGroup>
+        <DeviceId Condition="'$(Platform)'=='Android'"/>
+        <DeviceId Condition="'$(Platform)'=='Android64'"/>
+        <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
+        <DeviceId Condition="'$(Platform)'=='iOSSimARM64'"/>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(Platform)'=='OSX64'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
+        <DeployFile Include="Win32\Debug\WhisperBenchGui.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui\</RemoteDir>
+            <RemoteName>WhisperBenchGui.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Android64'"/>
+    <ItemGroup Condition="'$(Platform)'=='Android'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win64'">
+        <DeployFile Include="Win64\Debug\WhisperBenchGui.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui\</RemoteDir>
+            <RemoteName>WhisperBenchGui.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='OSXARM64'">
+        <DeployFile Include="..\lib\mac\libggml-cpu.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-cpu.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-cpu.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-cpu.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSXARM64\Debug\WhisperBenchGui.dSYM" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF\</RemoteDir>
+            <RemoteName>WhisperBenchGui</RemoteName>
+            <DeployClass>ProjectOSXDebug</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-metal.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-metal.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-metal.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-metal.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.1.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.1.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.1.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.1.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.coreml.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.coreml.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.coreml.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.coreml.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\delphi_PROJECTICNS.icns" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\Resources\</RemoteDir>
+            <RemoteName>WhisperBenchGui.icns</RemoteName>
+            <DeployClass>ProjectOSXResource</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-blas.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-blas.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-blas.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-blas.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSXARM64\Debug\WhisperBenchGui" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>WhisperBenchGui</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="OSXARM64\Debug\WhisperBenchGui.entitlements" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\..\</RemoteDir>
+            <RemoteName>WhisperBenchGui.entitlements</RemoteName>
+            <DeployClass>ProjectOSXEntitlements</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSXARM64\Debug\WhisperBenchGui.info.plist" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\</RemoteDir>
+            <RemoteName>Info.plist</RemoteName>
+            <DeployClass>ProjectOSXInfoPList</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-base.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-base.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libggml-base.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libggml-base.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\lib\mac\libwhisper.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libwhisper.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice64'"/>
+    <ItemGroup Condition="'$(Platform)'=='iOSSimARM64'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win64x'"/>
+    <ItemGroup Condition="'$(Platform)'=='Linux64'"/>
+</Project>
