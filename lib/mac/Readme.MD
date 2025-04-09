@@ -16,19 +16,31 @@ Names can vary a but of course but e.g.
 You can build the libraries on Mac. I do it something like this...
 
 `cmake -B build.coreml -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON`
+
 `cmake --build build.coreml -j --config Release`
 
 `mkdir lib`
+
 `mkdir lib/coreml`
+
 `cp build.coreml/ggml/src/ggml-blas/libggml-blas.dylib lib/coreml`
+
 `cp build.coreml/ggml/src/libggml.dylib lib/coreml`
+
 `cp build.coreml/ggml/src/libggml-base.dylib lib/coreml`
+
 `cp build.coreml/ggml/src/ggml-metal/libggml-metal.dylib lib/coreml`
+
 `cp build.coreml/ggml/src/libggml-cpu.dylib lib/coreml`
+
 `cp build.coreml/src/libwhisper.1.7.5.dylib lib/coreml`
+
 `cp build.coreml/src/libwhisper.dylib lib/coreml`
+
 `cp build.coreml/src/libwhisper.coreml.dylib lib/coreml`
+
 `cp build.coreml/src/libwhisper.1.dylib lib/coreml`
+
 
 Then SFTP the lib folder back to Windows
 
