@@ -11,7 +11,8 @@ Names can vary a but of course but e.g.
 
 You can build the libraries on Linux. I do it something like this...
 
-```make -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
+```
+make -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
 cmake --build build -j --config Release
 
 mkdir lib
