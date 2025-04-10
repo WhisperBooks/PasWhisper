@@ -15,32 +15,24 @@ Names can vary a but of course but e.g.
 
 You can build the libraries on Mac. I do it something like this...
 
-`cmake -B build.coreml -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON`
 
-`cmake --build build.coreml -j --config Release`
+```
+cmake -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
+cmake --build build -j --config Release
 
-`mkdir lib`
+mkdir lib
+mkdir lib/mac
 
-`mkdir lib/coreml`
-
-`cp build.coreml/ggml/src/ggml-blas/libggml-blas.dylib lib/coreml`
-
-`cp build.coreml/ggml/src/libggml.dylib lib/coreml`
-
-`cp build.coreml/ggml/src/libggml-base.dylib lib/coreml`
-
-`cp build.coreml/ggml/src/ggml-metal/libggml-metal.dylib lib/coreml`
-
-`cp build.coreml/ggml/src/libggml-cpu.dylib lib/coreml`
-
-`cp build.coreml/src/libwhisper.1.7.5.dylib lib/coreml`
-
-`cp build.coreml/src/libwhisper.dylib lib/coreml`
-
-`cp build.coreml/src/libwhisper.coreml.dylib lib/coreml`
-
-`cp build.coreml/src/libwhisper.1.dylib lib/coreml`
-
+cp build/ggml/src/ggml-blas/libggml-blas.dylib lib/mac
+cp build/ggml/src/libggml.dylib lib/mac
+cp build/ggml/src/libggml-base.dylib lib/mac
+cp build/ggml/src/ggml-metal/libggml-metal.dylib lib/mac
+cp build/ggml/src/libggml-cpu.dylib lib/mac
+cp build/src/libwhisper.1.7.5.dylib lib/mac
+cp build/src/libwhisper.dylib lib/mac
+cp build/src/libwhisper.coreml.dylib lib/mac
+cp build/src/libwhisper.1.dylib lib/mac
+```
 
 Then SFTP the lib folder back to Windows
 
