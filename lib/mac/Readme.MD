@@ -3,7 +3,6 @@ This directory should hold the Mac libraries
 Names can vary a but of course but e.g.
 
 - libggml-base.dylib
-
 - libggml-blas.dylib
 - libggml-cpu.dylib
 - libggml-metal.dylib

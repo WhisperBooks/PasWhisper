@@ -12,7 +12,12 @@ Names can vary a but of course but e.g.
 You can build the libraries on Linux. I do it something like this...
 
 ```
-make -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
+sudo apt-get install nvidia-cuda-toolkit
+sudo apt-get install libvulkan-dev
+sudo apt-get install libsdl2-dev
+sudo apt-get install glslc
+
+cmake -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
 cmake --build build -j --config Release
 
 mkdir lib
