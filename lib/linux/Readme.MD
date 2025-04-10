@@ -11,30 +11,19 @@ Names can vary a but of course but e.g.
 
 You can build the libraries on Linux. I do it something like this...
 
-> make -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
+```make -B build -DWHISPER_COREML=1 -DBUILD_SHARED_LIBS=ON -DWHISPER_SDL2=ON
+cmake --build build -j --config Release
 
-> cmake --build build -j --config Release
+mkdir lib
+mkdir lib/linux
 
-> 
-
-> mkdir lib
-
-> mkdir lib/linux
-
->
-
-> cp build/src/libwhisper.so lib/linux
-
-> cp build/ggml/src/libggml-cpu.so lib/linux
-
-> cp build/ggml/src/ggml-vulkan/libggml-vulkan.so lib/linux
-
-> cp build/ggml/src/libggml-base.so lib/linux
-
-> cp build/ggml/src/libggml.so lib/linux
-
-> cp build/ggml/src/ggml-cuda/libggml-cuda.so lib/linux
-
+cp build/src/libwhisper.so lib/linux
+cp build/ggml/src/libggml-cpu.so lib/linux
+cp build/ggml/src/ggml-vulkan/libggml-vulkan.so lib/linux
+cp build/ggml/src/libggml-base.so lib/linux
+cp build/ggml/src/libggml.so lib/linux
+cp build/ggml/src/ggml-cuda/libggml-cuda.so lib/linux
+```
 
 
 Then SFTP the lib folder back to Windows
