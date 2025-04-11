@@ -139,8 +139,8 @@ const
   WhisperLibraryName =
     {$if defined(MACOS)} // macOS
     'libwhisper.dylib'
-    {$elseif defined(UNIX)}
-    'libwhisper_api.so'
+    {$elseif defined(LINUX)}
+    'libwhisper.so'
     {$elseif defined(MSWINDOWS) and defined(CPUX64)}
     DLLPath + 'whisper.dll'
     {$else}

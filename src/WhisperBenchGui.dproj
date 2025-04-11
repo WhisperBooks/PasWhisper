@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">OSXARM64</Platform>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>693378</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
@@ -351,6 +351,78 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-base.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-base.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cuda.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cuda.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-vulkan.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-vulkan.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libwhisper.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libwhisper.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\lib\mac\libggml-base.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
@@ -474,6 +546,12 @@
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Linux64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Linux64">
+                        <RemoteName>WhisperBenchGui</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
