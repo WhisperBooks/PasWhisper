@@ -73,7 +73,7 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Debug'">
             <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
             <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
             <DeployClass>File</DeployClass>
@@ -82,7 +82,7 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="..\lib\mac\libwhisper.1.7.5.dylib" Condition="'$(Config)'=='Release'">
             <RemoteDir>WhisperBenchGui.app\Contents\MacOS\</RemoteDir>
             <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
             <DeployClass>File</DeployClass>

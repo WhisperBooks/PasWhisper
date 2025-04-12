@@ -7,7 +7,6 @@ uses
   dynlib in 'dynlib.pas',
   whisperexternal in 'whisperexternal.pas',
   cheaplog in 'cheaplog.pas',
-  whisputils in 'whisputils.pas',
   whisper in 'whisper.pas',
   ggmlexternal in 'ggmlexternal.pas',
   whispertypes in 'whispertypes.pas';

@@ -5,10 +5,11 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>693378</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchGui</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -304,7 +305,6 @@
         <DCCReference Include="dynlib.pas"/>
         <DCCReference Include="whisperexternal.pas"/>
         <DCCReference Include="cheaplog.pas"/>
-        <DCCReference Include="whisputils.pas"/>
         <DCCReference Include="whisper.pas"/>
         <DCCReference Include="ggmlexternal.pas"/>
         <DCCReference Include="whispertypes.pas"/>
@@ -587,6 +587,12 @@
                 <DeployFile LocalName="Win64\Debug\WhisperBenchGui.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchGui.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\WhisperBenchGui.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>WhisperBenchGui.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

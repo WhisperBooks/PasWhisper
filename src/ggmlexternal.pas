@@ -6,7 +6,7 @@ interface
 {$A+}
 
 uses
-  System.Generics.Collections;
+  Generics.Collections;
 
 type
   Size_t = Int32;

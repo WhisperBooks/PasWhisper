@@ -20,10 +20,16 @@ unit DynLib;
 
 interface
 
-uses SysUtils
-    {$ifdef MSWINDOWS}, Windows {$endif};
+uses SysUtils, WhisperTypes
+  {$IF (OS_PLATFORM_TYPE = 'WIN64')}
+  , Windows
+  {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
+  {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
+  {$ENDIF}
+  ;
 
 type
+  EInternalError = class(Exception);
   TDynLibHandle = HModule;
 
 const
@@ -179,7 +185,7 @@ var
 
 implementation
 
-uses CheapLog, WhispUtils;
+uses CheapLog;
   // for BundlePath on Darwin
 //  CastleUtils, CastleFilesUtils;
 
@@ -188,8 +194,8 @@ begin
   inherited Create;
   FName := AName;
   FHandle := AHandle;
-  Check(AHandle <> InvalidDynLibHandle,
-    'TDynLib can not be created with invalid DynLibHandle');
+  if (AHandle = InvalidDynLibHandle) then
+    raise Exception.Create('TDynLib can not be created with invalid DynLibHandle');
   SymbolError := seWarnAndReturnNil; // debug seRaise;
 end;
 
@@ -258,7 +264,7 @@ begin
     { On macOS, search for dynamic libraries in the bundle too.
       This fallback makes sense for libpng, libvorbisfile, libsteam_api...
       It seems that for everything, so just do it always. }
-    {$if defined(DARWIN)}
+    {$IF (OS_PLATFORM_TYPE = 'OSXARM64')}
     if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
       Handle := LoadLibrary(PChar(BundlePath + 'Contents/MacOS/' + AName));
     {$endif}

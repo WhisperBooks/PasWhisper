@@ -47,13 +47,15 @@ var
 begin
   Whisp := TWhisper.Create;
   try
-    {$if defined(MSWindows)}
+  {$IF (OS_PLATFORM_TYPE = 'WIN64')}
     ModelFile := 'C:\models\ggml-base.en.bin';
-    {$elseif defined(MacOS)}
+  {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$elseif defined(Linux)}
+  {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$endif}
+  {$ELSE}
+    Unsupported Platform
+  {$ENDIF}
     if Whisp.LoadModel(ModelFile) then
       begin
         NMels := Whisp.ModelNmels;

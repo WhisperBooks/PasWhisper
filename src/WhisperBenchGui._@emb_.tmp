@@ -1,0 +1,7 @@
+WhisperBenchGui\libggml-cpu.so
+WhisperBenchGui\libggml-base.so
+WhisperBenchGui\libggml.so
+WhisperBenchGui\libggml-vulkan.so
+WhisperBenchGui\libggml-cuda.so
+WhisperBenchGui\libwhisper.so
+WhisperBenchGui\WhisperBenchGui
