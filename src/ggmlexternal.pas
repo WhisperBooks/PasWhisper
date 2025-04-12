@@ -2,35 +2,12 @@ unit GgmlExternal;
 
 interface
 
-{$ALIGN 4}
-{$A+}
-
-uses
-  Generics.Collections;
-
-type
-  Size_t = Int32;
-
-  TLanguageInfo = record
-    Id: Integer;
-    Name: string;
-    class operator Assign (var Dest: TLanguageInfo;
- 		const [ref] Src: TLanguageInfo);
-  end;
-
-  TLanguageElement = record
-    Key: String;
-    Info: TLanguageInfo;
-  end;
-
-  TLanguageArray = Array of TLanguageElement;
-{
-const
-  Langs: TLanguageArray = (
-    ('en', (1, 'English'))
-  );
-}
-
+{$IFDEF FPC}
+  {$packrecords C}
+{$ELSE}
+  {$ALIGN 4}
+{$ENDIF}
+{$MinEnumSize 4}
 
 type
 
@@ -75,43 +52,6 @@ type
     GGML_TYPE_COUNT
   );
 
-{
-struct ggml_tensor
-    enum ggml_type type;
-    enum ggml_backend_type backend;
-
-    struct ggml_backend_buffer * buffer;
-
-    int64_t ne[GGML_MAX_DIMS]; // number of elements
-    size_t  nb[GGML_MAX_DIMS]; // stride in bytes:
-                               // nb[0] = ggml_type_size(type)
-                               // nb[1] = nb[0]   * (ne[0] / ggml_blck_size(type)) + padding
-                               // nb[i] = nb[i-1] * ne[i-1]
-
-    // compute data
-    enum ggml_op op;
-
-    // op params - allocated as int32_t for alignment
-    int32_t op_params[GGML_MAX_OP_PARAMS / sizeof(int32_t)];
-
-    int32_t flags;
-
-    struct ggml_tensor * grad;
-    struct ggml_tensor * src[GGML_MAX_SRC];
-
-    // source tensor and offset for views
-    struct ggml_tensor * view_src;
-    size_t               view_offs;
-
-    void * data;
-
-    char name[GGML_MAX_NAME];
-
-    void * extra; // extra things e.g. for ggml-cuda.cu
-
-    // char padding[4];
-
-}
 const
   GGML_MAX_DIMS = 4;
   GGML_MAX_OP_PARAMS = 32;
@@ -133,14 +73,14 @@ type
     // Deprecated: Backend: TggmlBackendType; // Use Buffer to find storage location
     Buffer: ^TggmlBackendBuffer;
     Ne: array[0..GGML_MAX_DIMS-1] of Int64; // Number of elements
-    Nb: array[0..GGML_MAX_DIMS-1] of Size_t; // Stride in bytes
+    Nb: array[0..GGML_MAX_DIMS-1] of Int32; // Stride in bytes
     Op: TggmlOp;
     OpParams: array[0..(GGML_MAX_OP_PARAMS div SizeOf(Int32))-1] of Int32; // Op params for alignment
     Flags: Int32;
     Grad: PggmlTensor;
     Src: array[0..GGML_MAX_SRC-1] of PggmlTensor;
     ViewSrc: PggmlTensor; // Source tensor for views
-    ViewOffs: Size_t; // Offset for views
+    ViewOffs: Int32; // Offset for views
     Data: Pointer;
     Name: array[0..GGML_MAX_NAME-1] of AnsiChar;
     Extra: Pointer; // Extra things e.g. for ggml-cuda.cu
@@ -149,14 +89,5 @@ type
 implementation
 
 { TLanguageInfo }
-
-
-{ TLanguageInfo }
-
-class operator TLanguageInfo.Assign(var Dest: TLanguageInfo;
-  const [ref] Src: TLanguageInfo);
-begin
-  Dest := Src;
-end;
 
 end.

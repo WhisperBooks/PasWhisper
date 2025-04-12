@@ -308,6 +308,7 @@
         <DCCReference Include="..\..\..\..\src\whisper.pas"/>
         <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\..\src\whispertypes.pas"/>
+        <DCCReference Include="..\..\..\..\src\platform.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

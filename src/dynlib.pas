@@ -12,6 +12,7 @@
 
   ----------------------------------------------------------------------------
 }
+{$I platform.inc}
 
 { Dynamic libraries loading (TDynLib). }
 unit DynLib;
@@ -20,12 +21,11 @@ unit DynLib;
 
 interface
 
-uses SysUtils, WhisperTypes
-  {$IF (OS_PLATFORM_TYPE = 'WIN64')}
+uses SysUtils
+  {$IF DEFINED(OS_WIN64)}
   , Windows
-  {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
-  {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
   {$ENDIF}
+  , platform
   ;
 
 type
@@ -264,7 +264,7 @@ begin
     { On macOS, search for dynamic libraries in the bundle too.
       This fallback makes sense for libpng, libvorbisfile, libsteam_api...
       It seems that for everything, so just do it always. }
-    {$IF (OS_PLATFORM_TYPE = 'OSXARM64')}
+    {$IF DEFINED(OSXARM64)}
     if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
       Handle := LoadLibrary(PChar(BundlePath + 'Contents/MacOS/' + AName));
     {$endif}

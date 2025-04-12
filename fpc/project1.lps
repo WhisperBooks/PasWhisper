@@ -8,9 +8,8 @@
       <Unit>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="15" Y="13"/>
+        <CursorPos Y="4"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
@@ -18,9 +17,11 @@
         <Filename Value="unit1.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <CursorPos X="8" Y="4"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="9" Y="37"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -28,10 +29,10 @@
       <Unit>
         <Filename Value="platform.inc"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit2"/>
-        <EditorIndex Value="-1"/>
+        <EditorIndex Value="2"/>
         <CursorPos Y="8"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="11">

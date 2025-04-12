@@ -34,10 +34,14 @@ begin
   caption := 'UNSET';
   {$IF DEFINED(OS_LINUX64)}
   caption := 'LINUX64';
+  {$ELSEIF DEFINED(OS_LINUX64ARM)}
+  caption := 'LINUX64ARM';
   {$ELSEIF DEFINED(OS_WIN64)}
   caption := 'WIN64';
-  {$ELSEIF DEFINED(OS_MACARM)}
+  {$ELSEIF DEFINED(OS_OSXARM64)}
   caption := 'OSX64ARM';
+  {$ELSEIF DEFINED(OS_OSX64)}
+  caption := 'OSX64';
   {$ELSE}
   caption := 'UNKNOWN';
   {$ENDIF}

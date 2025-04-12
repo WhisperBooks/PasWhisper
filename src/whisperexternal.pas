@@ -1,5 +1,7 @@
 unit WhisperExternal;
 
+{$I platform.inc}
+
 interface
 
 {$define RaiseExeptionOnImportError}
@@ -134,11 +136,13 @@ var
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
 
 const
-  {$IF (OS_PLATFORM_TYPE = 'WIN64')}
+  {$IF DEFINED(OS_WIN64)}
   WhisperLibraryName = 'whisper.dll';
-  {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
+  {$ELSEIF DEFINED(LINUX64)}
   WhisperLibraryName = 'libwhisper.so';
-  {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
+  {$ELSEIF DEFINED(OSXARM64)}
+  WhisperLibraryName = 'libwhisper.dylib';
+  {$ELSEIF DEFINED(OSX64)}
   WhisperLibraryName = 'libwhisper.dylib';
   {$ENDIF}
 

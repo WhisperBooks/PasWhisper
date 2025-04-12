@@ -38,13 +38,13 @@
         <Filename Value="unit1.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit>
       <Unit>
         <Filename Value="platform.inc"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit2"/>
       </Unit>
     </Units>
   </ProjectOptions>

@@ -53,6 +53,8 @@ begin
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
+  {$ELSEIF (OS_PLATFORM_TYPE = 'OSX64')}
+    ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSE}
     Unsupported Platform
   {$ENDIF}
@@ -99,6 +101,7 @@ begin
 
         Timings := Whisp.GetTimings;
 
+        // Log.d('Hello');
         WriteLnLog('Whisper NMels               : %d',[Nmels]);
         WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
         WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
