@@ -135,6 +135,8 @@ var
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
 
+    WhisperLoadBackends: procedure(); CDecl;
+
 const
   {$IF DEFINED(OS_WIN64)}
   WhisperLibraryName = 'whisper.dll';
@@ -214,7 +216,7 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperGetTimings)      := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := Nil;
-
+  Pointer({$ifndef FPC}@{$endif} WhisperLoadBackends)  := Nil;
   FreeAndNil(WhisperLibrary);
 end;
 
@@ -291,6 +293,7 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
       Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
 
+      Pointer({$ifndef FPC}@{$endif} WhisperLoadBackends)    := WhisperLibrary.Symbol('whisper_load_backends');
       WhisperLibraryIsLoaded := True;
 
     end

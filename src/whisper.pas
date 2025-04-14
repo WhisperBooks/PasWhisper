@@ -50,6 +50,7 @@ type
     function  GetTimings: PWhisperTimings;
     procedure PrintTimings;
     procedure ResetTimings;
+    procedure LoadBackends;
     function  LoadModel(const AModel: String): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
@@ -287,6 +288,11 @@ end;
 function TWhisper.GetTokenTranslate: TWhisperToken;
 begin
   Result := WhisperTokenTranslate(FCtx);
+end;
+
+procedure TWhisper.LoadBackends;
+begin
+  WhisperLoadBackends;
 end;
 
 function TWhisper.LoadModel(const AModel: String): Boolean;

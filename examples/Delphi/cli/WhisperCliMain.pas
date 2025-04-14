@@ -22,6 +22,8 @@ var
 begin
   Whisp := TWhisper.Create;
   try
+    Whisp.LoadBackends;
+
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
     ModelFile := 'C:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
