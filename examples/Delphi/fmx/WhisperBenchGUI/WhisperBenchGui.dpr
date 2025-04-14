@@ -8,9 +8,10 @@ uses
   whisperexternal in '..\..\..\..\src\whisperexternal.pas',
   cheaplog in '..\..\..\..\src\cheaplog.pas',
   whisper in '..\..\..\..\src\whisper.pas',
-  ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
+  ggmltypes in '..\..\..\..\src\ggmltypes.pas',
   whispertypes in '..\..\..\..\src\whispertypes.pas',
-  platform in '..\..\..\..\src\platform.pas';
+  platform in '..\..\..\..\src\platform.pas',
+  ggmlexternal in '..\..\..\..\src\ggmlexternal.pas';
 
 {$R *.res}
 

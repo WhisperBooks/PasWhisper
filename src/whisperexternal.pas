@@ -4,13 +4,11 @@ unit WhisperExternal;
 
 interface
 
-{$define RaiseExeptionOnImportError}
 {$ALIGN 4}
 uses
-  System.Generics.Collections,
   SysUtils,
   WhisperTypes,
-  DynLib, ggmlExternal;
+  DynLib, ggmlTypes;
 
 
 var
@@ -18,8 +16,12 @@ var
   WhisperLibraryIsLoaded: Boolean;
 
   WhisperInitFromFileWithParams: function (const AModelFile: PAnsiChar; const params: PWhisperContextParams): TWhisperContext; CDecl;
+  WhisperInitFromFileWithParamsNoState: function (const AModelFile: PAnsiChar; const params: PWhisperContextParams): TWhisperContext; CDecl;
   WhisperContextDefaultParams: function(): TWhisperContextParams; CDecl;
   WhisperFree: procedure (ctx: TWhisperContext); CDecl;
+  WhisperInitState: function(Ctx: TWhisperContext): TWhisperState; CDecl;
+  WhisperFreeState: procedure(State: TWhisperState); CDecl;
+  WhisperGetStateFromContext: function(Ctx: TWhisperContext): TWhisperState; CDecl;
 
 {
     WHISPER_API struct whisper_context * whisper_init_from_file_with_params  (const char * path_model,              struct whisper_context_params params);
@@ -131,6 +133,7 @@ var
     WhisperLangAutoDetectWithState: function(Ctx: TWhisperContext; State: TWhisperState; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
 
     WhisperGetTimings: function(Ctx: TWhisperContext): PWhisperTimings; CDecl;
+    WhisperGetTimingsWithState: function(State: TWhisperState): PWhisperTimings; CDecl;
 
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
@@ -164,8 +167,12 @@ begin
   WhisperLibraryIsLoaded := False;
 
   Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParams) := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParamsNoState) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperContextDefaultParams) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperFree) := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperInitState)    := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperFreeState)    := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext)    := Nil;
 
   Pointer({$ifndef FPC}@{$endif} WhisperNlen) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperNlenFromState) := Nil;
@@ -213,7 +220,8 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperLangStr)         := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperLangStrFull)     := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperGetTimings)      := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetTimings)          := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperLoadBackends)  := Nil;
@@ -238,8 +246,12 @@ begin
     begin
       WhisperLibrary.SymbolError := seRaise;
       Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParams) := WhisperLibrary.Symbol('whisper_init_from_file_with_params');
+      Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParamsNoState) := WhisperLibrary.Symbol('whisper_init_from_file_with_params_no_state');
       Pointer({$ifndef FPC}@{$endif} WhisperContextDefaultParams) := WhisperLibrary.Symbol('whisper_context_default_params');
       Pointer({$ifndef FPC}@{$endif} WhisperFree) := WhisperLibrary.Symbol('whisper_free');
+      Pointer({$ifndef FPC}@{$endif} WhisperInitState)    := WhisperLibrary.Symbol('whisper_init_state');
+      Pointer({$ifndef FPC}@{$endif} WhisperFreeState)    := WhisperLibrary.Symbol('whisper_free_state');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext)    := WhisperLibrary.Symbol('whisper_get_state_from_context');
 
       Pointer({$ifndef FPC}@{$endif} WhisperNlen) := WhisperLibrary.Symbol('whisper_n_len');
       Pointer({$ifndef FPC}@{$endif} WhisperNlenFromState) := WhisperLibrary.Symbol('whisper_n_len_from_state');
@@ -290,10 +302,12 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperLangAutoDetectWithState) := WhisperLibrary.Symbol('whisper_lang_auto_detect_with_state');
 
       Pointer({$ifndef FPC}@{$endif} WhisperGetTimings)      := WhisperLibrary.Symbol('whisper_get_timings');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState)      := WhisperLibrary.Symbol('whisper_get_timings_with_state');
       Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
       Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
 
       Pointer({$ifndef FPC}@{$endif} WhisperLoadBackends)    := WhisperLibrary.Symbol('whisper_load_backends');
+
       WhisperLibraryIsLoaded := True;
 
     end

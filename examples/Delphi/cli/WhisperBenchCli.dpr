@@ -10,8 +10,9 @@ uses
   whispertypes in '..\..\..\src\whispertypes.pas',
   cheaplog in '..\..\..\src\cheaplog.pas',
   dynlib in '..\..\..\src\dynlib.pas',
-  ggmlexternal in '..\..\..\src\ggmlexternal.pas',
-  platform in '..\..\..\src\platform.pas';
+  ggmltypes in '..\..\..\src\ggmltypes.pas',
+  platform in '..\..\..\src\platform.pas',
+  ggmlexternal in '..\..\..\src\ggmlexternal.pas';
 
 {$R *.res}
 begin

@@ -6,11 +6,12 @@ uses
   whispertranscribemain in 'whispertranscribemain.pas' {Form1},
   cheaplog in '..\..\..\..\src\cheaplog.pas',
   dynlib in '..\..\..\..\src\dynlib.pas',
-  ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
+  ggmltypes in '..\..\..\..\src\ggmltypes.pas',
   platform in '..\..\..\..\src\platform.pas',
   whisper in '..\..\..\..\src\whisper.pas',
   whisperexternal in '..\..\..\..\src\whisperexternal.pas',
-  whispertypes in '..\..\..\..\src\whispertypes.pas';
+  whispertypes in '..\..\..\..\src\whispertypes.pas',
+  ggmlexternal in '..\..\..\..\src\ggmlexternal.pas';
 
 {$R *.res}
 

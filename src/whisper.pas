@@ -11,7 +11,7 @@ type
     FState: TWhisperState;
     FModel: String;
     FCParams: TWhisperContextParams;
-    procedure Init;
+    FContextHasState: Boolean;
     function GetNlen                : Int32;
     function GetNlenFromState       : Int32;
     function GetNvocab              : Int32;
@@ -48,13 +48,15 @@ type
     constructor Create;
     destructor Destroy; override;
     function  GetTimings: PWhisperTimings;
+    procedure FreeState;
     procedure PrintTimings;
     procedure ResetTimings;
     procedure LoadBackends;
-    function  LoadModel(const AModel: String): Boolean;
+    function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
     function  Decode(Tokens: PWhisperTokens; const NTokens, NPast, NThreads: Integer): Integer;
+    function  LangAutoDetect(OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Integer;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;
@@ -87,6 +89,7 @@ type
     property TokenLang[const LangId: Int32] : TWhisperToken Read GetTokenLang;
     property TokenToStr[const Token: TWhisperToken] : PAnsiString Read GetTokenToStr;
     property ModelTypeReadable   : PAnsiString Read GetModelTypeReadable;
+    property ContextHasState     : Boolean Read FContextHasState;
  end;
 
 var
@@ -105,11 +108,16 @@ end;
 function TWhisper.Decode(Tokens: PWhisperTokens; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
-  Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads);
+  if FContextHasState then
+    Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads)
+  else
+    Result := WhisperDecodeWithState(FCtx, FState, Tokens, NTokens, NPast, NThreads);
 end;
 
 destructor TWhisper.Destroy;
 begin
+  if (FContextHasState = False) and (FState <> Nil) then
+    FreeState;
   if(FCtx <> Nil) then
     WhisperFree(FCtx);
 
@@ -118,7 +126,17 @@ end;
 
 function TWhisper.Encode(const Offset, NThreads: Integer): Integer;
 begin
-  Result := WhisperEncode(FCtx, Offset, NThreads);
+  if FContextHasState then
+    Result := WhisperEncode(FCtx, Offset, NThreads)
+  else
+    Result := WhisperEncodeWithState(FCtx, FState, Offset, NThreads);
+end;
+
+procedure TWhisper.FreeState;
+begin
+  if FState <> Nil then
+    WhisperFreeState(FState);
+  FState := Nil;
 end;
 
 function TWhisper.GetIsMultilingual: Int32;
@@ -232,7 +250,10 @@ end;
 
 function TWhisper.GetTimings: PWhisperTimings;
 begin
-  Result := WhisperGetTimings(FCtx);
+  if FContextHasState then
+    Result := WhisperGetTimings(FCtx)
+  else
+    Result := WhisperGetTimingsWithState(FState);
 end;
 
 function TWhisper.GetTokenBeg: TWhisperToken;
@@ -290,29 +311,42 @@ begin
   Result := WhisperTokenTranslate(FCtx);
 end;
 
+function TWhisper.LangAutoDetect(OffsetMs, NThreads: Int32;
+  LangProbs: PFloat): Integer;
+begin
+  if FContextHasState then
+    Result := WhisperLangAutoDetect(FCtx, OffsetMs, NThreads, LangProbs)
+  else
+    Result := WhisperLangAutoDetectWithState(FCtx, FState, OffsetMs, NThreads, LangProbs);
+end;
+
 procedure TWhisper.LoadBackends;
 begin
   WhisperLoadBackends;
 end;
 
-function TWhisper.LoadModel(const AModel: String): Boolean;
+function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
 begin
   Result := False;
   if FileExists(AModel) then
     begin
       FModel := AModel;
-      Init;
-      Result := True;
+      FCParams := WhisperContextDefaultParams;
+      if WithState then
+        begin
+          FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+          FState := WhisperInitState(FCtx);
+          FContextHasState := False;
+          Result := True;
+        end
+      else
+        begin
+          FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+          FState := WhisperGetStateFromContext(FCtx);
+          FContextHasState := True;
+          Result := True;
+        end;
     end;
-end;
-
-procedure TWhisper.Init;
-var
-  CParams: TWhisperContextParams;
-  PParams: PWhisperContextParams;
-begin
-  FCParams := WhisperContextDefaultParams;
-  FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
 end;
 
 procedure TWhisper.PrintTimings;
@@ -327,7 +361,10 @@ end;
 
 function TWhisper.SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
 begin
-  Result := WhisperSetMel(FCtx, Data, NLen, NMel);
+  if FContextHasState then
+    Result := WhisperSetMel(FCtx, Data, NLen, NMel)
+  else
+    Result := WhisperSetMelWithState(FCtx, FState, Data, NLen, NMel);
 end;
 
 end.

@@ -312,11 +312,12 @@
         </DCCReference>
         <DCCReference Include="..\..\..\..\src\cheaplog.pas"/>
         <DCCReference Include="..\..\..\..\src\dynlib.pas"/>
-        <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
+        <DCCReference Include="..\..\..\..\src\ggmltypes.pas"/>
         <DCCReference Include="..\..\..\..\src\platform.pas"/>
         <DCCReference Include="..\..\..\..\src\whisper.pas"/>
         <DCCReference Include="..\..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\..\src\whispertypes.pas"/>
+        <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -357,6 +358,18 @@
                 <DeployFile LocalName="Win32\Debug\WhisperTranscribeGUI.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>WhisperTranscribeGUI.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\WhisperTranscribeGUI.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>WhisperTranscribeGUI.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\WhisperTranscribeGUI.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>WhisperTranscribeGUI.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1304,11 +1317,9 @@
             <Platforms>
                 <Platform value="Android">True</Platform>
                 <Platform value="Android64">True</Platform>
-                <Platform value="iOSDevice32">False</Platform>
                 <Platform value="iOSDevice64">True</Platform>
                 <Platform value="iOSSimARM64">True</Platform>
                 <Platform value="Linux64">True</Platform>
-                <Platform value="OSX32">False</Platform>
                 <Platform value="OSX64">True</Platform>
                 <Platform value="OSXARM64">True</Platform>
                 <Platform value="Win32">True</Platform>

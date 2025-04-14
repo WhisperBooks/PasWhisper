@@ -11,7 +11,7 @@ interface
 {$ENDIF}
 {$MinEnumSize 4}
 
-uses GgmlExternal;
+uses GgmlTypes;
 
 const
   {$IF DEFINED(OS_WIN64)}

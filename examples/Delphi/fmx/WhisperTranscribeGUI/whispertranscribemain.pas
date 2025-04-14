@@ -15,6 +15,7 @@ type
     Layout2: TLayout;
     Button1: TButton;
     Memo1: TMemo;
+    CheckBox1: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -66,7 +67,7 @@ begin
   {$ELSE}
     Unsupported Platform
   {$ENDIF}
-    if Whisp.LoadModel(ModelFile) then
+    if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
       begin
         NMels := Whisp.ModelNmels;
         if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
@@ -118,11 +119,14 @@ begin
         // Log.d('Hello');
         Memo1.Lines.Clear;
         WriteLnLog('Whisper NMels               : %d',[Nmels]);
-        WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
-        WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
-        WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
-        WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
-        WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
+        if(Timings <> Nil) then
+          begin
+            WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
+            WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
+            WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
+            WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
+            WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
+          end;
         WriteLnLog('');
         WriteLnLog('Whisper Load Backends       : %8.3f',[(Perf[1] - Perf[0])/1000]);
         WriteLnLog('Whisper Load Model          : %8.3f',[(Perf[2] - Perf[1])/1000]);
