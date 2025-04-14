@@ -9,6 +9,9 @@
         <Projects Include="examples\Delphi\cli\WhisperBenchCli.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="WhisperBenchCli:Make">
         <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj" Targets="Make"/>
     </Target>
+    <Target Name="WhisperTranscribeGUI">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj"/>
+    </Target>
+    <Target Name="WhisperTranscribeGUI:Clean">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WhisperTranscribeGUI:Make">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="WhisperBenchGui;WhisperBenchCli"/>
+        <CallTarget Targets="WhisperBenchGui;WhisperBenchCli;WhisperTranscribeGUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="WhisperBenchGui:Clean;WhisperBenchCli:Clean"/>
+        <CallTarget Targets="WhisperBenchGui:Clean;WhisperBenchCli:Clean;WhisperTranscribeGUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="WhisperBenchGui:Make;WhisperBenchCli:Make"/>
+        <CallTarget Targets="WhisperBenchGui:Make;WhisperBenchCli:Make;WhisperTranscribeGUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

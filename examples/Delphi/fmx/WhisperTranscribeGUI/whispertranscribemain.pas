@@ -1,22 +1,23 @@
-unit WhisperBenchMain;
+unit whispertranscribemain;
 
 interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   Whisper, CheapLog, GgmlExternal,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Memo.Types,
-  FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.StdCtrls, FMX.Layouts;
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
+  FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
+  FMX.Memo;
 
 type
   TForm1 = class(TForm)
     Layout1: TLayout;
     Layout2: TLayout;
-    Memo1: TMemo;
     Button1: TButton;
+    Memo1: TMemo;
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -145,5 +146,6 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   OutLog := Memo1.Lines;
 end;
+
 
 end.
