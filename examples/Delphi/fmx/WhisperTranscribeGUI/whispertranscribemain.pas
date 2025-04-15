@@ -53,7 +53,7 @@ begin
   sw := TStopWatch.StartNew;
   try
     Perf[0] := sw.ElapsedMilliseconds; // Start
-    Whisp.LoadBackends;
+//    Whisp.LoadBackends;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
@@ -149,6 +149,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   OutLog := Memo1.Lines;
+  GgmlBackendLoadAll;
 end;
 
 

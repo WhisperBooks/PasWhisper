@@ -11,6 +11,79 @@ interface
 
 type
 
+  TCallBack = Pointer;
+
+  {$ALIGN 8}
+  TGgmlBackendRegInterface = record
+    GetName: TCallBack;
+    GetDeviceCount: TCallBack;
+    GetDevice: TCallBack;
+    GetProcAddress: TCallBack;
+  end;
+
+  TGgmlBackendReg = record
+    ApiVersion: Int32;
+    IFace: TGgmlBackendRegInterface;
+    Context: Pointer;
+  end;
+  PGgmlBackendReg = ^TGgmlBackendReg;
+
+  TGgmlBackendDeviceInterface = record
+{
+        // device name: short identifier for this device, such as "CPU" or "CUDA0"
+        const char * (*get_name)(ggml_backend_dev_t dev);
+
+        // device description: short informative description of the device, could be the model name
+        const char * (*get_description)(ggml_backend_dev_t dev);
+
+        // device memory in bytes
+        void         (*get_memory)(ggml_backend_dev_t dev, size_t * free, size_t * total);
+
+        // device type
+        enum ggml_backend_dev_type (*get_type)(ggml_backend_dev_t dev);
+
+        // device properties
+        void (*get_props)(ggml_backend_dev_t dev, struct ggml_backend_dev_props * props);
+
+        // backend (stream) initialization
+        ggml_backend_t (*init_backend)(ggml_backend_dev_t dev, const char * params);
+
+        // preferred buffer type
+        ggml_backend_buffer_type_t (*get_buffer_type)(ggml_backend_dev_t dev);
+
+        // (optional) host buffer type (in system memory, typically this is a pinned memory buffer for faster transfers between host and device)
+        ggml_backend_buffer_type_t (*get_host_buffer_type)(ggml_backend_dev_t dev);
+
+        // (optional) buffer from pointer: create a buffer from a host pointer (useful for memory mapped models and importing data from other libraries)
+        ggml_backend_buffer_t (*buffer_from_host_ptr)(ggml_backend_dev_t dev, void * ptr, size_t size, size_t max_tensor_size);
+
+        // check if the backend can compute an operation
+        bool (*supports_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
+
+        // check if the backend can use tensors allocated in a buffer type
+        bool (*supports_buft)(ggml_backend_dev_t dev, ggml_backend_buffer_type_t buft);
+
+        // (optional) check if the backend wants to run an operation, even if the weights are allocated in an incompatible buffer
+        // these should be expensive operations that may benefit from running on this backend instead of the CPU backend
+        bool (*offload_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
+
+        // (optional) event synchronization
+        ggml_backend_event_t (*event_new)         (ggml_backend_dev_t dev);
+        void                 (*event_free)        (ggml_backend_dev_t dev, ggml_backend_event_t event);
+        void                 (*event_synchronize) (ggml_backend_dev_t dev, ggml_backend_event_t event);
+}
+  end;
+  PGgmlBackendDeviceInterface = ^TGgmlBackendDeviceInterface;
+
+  TGgmlBackendDev = record
+    IFace: TGgmlBackendDeviceInterface;
+    Reg: PGgmlBackendReg;
+    Context: Pointer;
+  end;
+  PGgmlBackendDev = ^TGgmlBackendDev;
+
+  {$ALIGN 4}
+
   TFloatArray = array of Single;
   ggmlType = (
     GGML_TYPE_F32     = 0,
@@ -60,15 +133,15 @@ const
 
 
 type
-  TggmlType = (ggmlTypeUnknown, ggmlTypeFloat, ggmlTypeInt); // Example enum values
-  TggmlOp = (ggmlOpNone, ggmlOpAdd, ggmlOpMul); // Example enum values
+  TGgmlType = (ggmlTypeUnknown, ggmlTypeFloat, ggmlTypeInt); // Example enum values
+  TGgmlOp = (ggmlOpNone, ggmlOpAdd, ggmlOpMul); // Example enum values
 
-  TggmlBackendBuffer = record
+  TGgmlBackendBuffer = record
     // Define the structure of ggml_backend_buffer here
   end;
 
-  PggmlTensor = ^TggmlTensor;
-  TggmlTensor = record
+  PGgmlTensor = ^TGgmlTensor;
+  TGgmlTensor = record
     &Type: TggmlType;
     // Deprecated: Backend: TggmlBackendType; // Use Buffer to find storage location
     Buffer: ^TggmlBackendBuffer;
@@ -78,8 +151,8 @@ type
     OpParams: array[0..(GGML_MAX_OP_PARAMS div SizeOf(Int32))-1] of Int32; // Op params for alignment
     Flags: Int32;
     Grad: PggmlTensor;
-    Src: array[0..GGML_MAX_SRC-1] of PggmlTensor;
-    ViewSrc: PggmlTensor; // Source tensor for views
+    Src: array[0..GGML_MAX_SRC-1] of PGgmlTensor;
+    ViewSrc: PGgmlTensor; // Source tensor for views
     ViewOffs: Int32; // Offset for views
     Data: Pointer;
     Name: array[0..GGML_MAX_NAME-1] of AnsiChar;

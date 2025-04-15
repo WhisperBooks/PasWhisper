@@ -225,6 +225,7 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperLoadBackends)  := Nil;
+
   FreeAndNil(WhisperLibrary);
 end;
 
@@ -239,7 +240,7 @@ begin
       if FileExists(WhisperLibraryName) then
         WhisperLibrary := TDynLib.Load(WhisperLibraryName, true)
       else
-        WriteLnLog(WhisperLibraryName + ' not found');
+        Raise Exception.Create(WhisperLibraryName + ' not found');
     end;
 
   if WhisperLibrary <> Nil then

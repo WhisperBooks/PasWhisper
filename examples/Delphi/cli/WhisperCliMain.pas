@@ -1,7 +1,7 @@
 unit WhisperCliMain;
 
 interface
-  uses SysUtils, Whisper, WhisperTypes;
+  uses SysUtils, Whisper, WhisperTypes, GgmlExternal;
 
 procedure WhisperMain;
 
@@ -19,10 +19,14 @@ var
   Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
   Timings: PWhisperTimings;
   ModelFile: String;
+  bet: String;
 begin
   Whisp := TWhisper.Create;
   try
-    Whisp.LoadBackends;
+    bet := 'cpu';
+//    GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(bet))), True,Nil);
+    GgmlBackendLoadAll;
+//    Whisp.LoadBackends;
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
     ModelFile := 'C:\models\ggml-base.en.bin';
