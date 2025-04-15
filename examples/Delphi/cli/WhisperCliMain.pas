@@ -19,14 +19,12 @@ var
   Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
   Timings: PWhisperTimings;
   ModelFile: String;
-  bet: String;
 begin
   Whisp := TWhisper.Create;
   try
-    bet := 'cpu';
-//    GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(bet))), True,Nil);
+//    GgmlBackendLoadBest('cpu', True,Nil);
     GgmlBackendLoadAll;
-//    Whisp.LoadBackends;
+//  Whisp.LoadBackends;
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
     ModelFile := 'C:\models\ggml-base.en.bin';

@@ -332,6 +332,7 @@ begin
     begin
       FModel := AModel;
       FCParams := WhisperContextDefaultParams;
+      // FCParams.use_gpu := False;
       if WithState then
         begin
           FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
