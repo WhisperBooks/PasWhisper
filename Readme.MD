@@ -8,7 +8,7 @@ Whisper.cpp features many optional backends to perform the AI computations. Thes
 
 The whole eco-system, including these bindings, are all multi-platform.
 
-For Delphi FMX can target Windows, Max, Linux (suitable version of Delphi required), Android and iOS. VCL is supported but there is no real benefit to choosing it unless you're lost when it comes to FMX.
+For Delphi FMX can target Windows, Mac, Linux (suitable version of Delphi required), Android and iOS. VCL is supported but there is no real benefit to choosing it unless you're lost when it comes to FMX.
 
 The [TODO] FLC/Lazarus version will allow for an even wider range of platforms (even the Raspberry Pi)
 
