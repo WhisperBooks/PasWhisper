@@ -13,3 +13,7 @@ For Delphi FMX can target Windows, Mac, Linux (suitable version of Delphi requir
 The [TODO] FLC/Lazarus version will allow for an even wider range of platforms (even the Raspberry Pi)
 
 Detailed Readme.MD is high on my TODO list (but behind other documentation)
+
+
+
+Link for self - [whisper fork](https://github.com/WhisperBooks/whisper.cpp)
