@@ -7,7 +7,7 @@
   {$ELSEIF DEFINED(DARWIN)}
     {$DEFINE OS_OSXARM64}
   {$ELSE}
-    Unsupported Platform
+    {$FATAL Unsupported Platform}
   {$ENDIF}
 {$ELSE}
   {$IF DEFINED(LINUX64) and DEFINED(CPUX64)}
@@ -23,7 +23,7 @@
   {$ELSEIF DEFINED(IOS)}
     {$DEFINE OS_IOS)}
   {$ELSE}
-    Unsupported Platform
+    {$MESSAGE FATAL 'Unsupported Platform'}
   {$ENDIF}
 {$ENDIF}
 

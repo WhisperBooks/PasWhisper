@@ -22,8 +22,8 @@ var
 begin
   Whisp := TWhisper.Create;
   try
-//    GgmlBackendLoadBest('cpu', True,Nil);
-    GgmlBackendLoadAll;
+    GgmlBackendLoadBest('vulkan', False,Nil);
+//    GgmlBackendLoadAll;
 //  Whisp.LoadBackends;
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}

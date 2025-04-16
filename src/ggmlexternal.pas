@@ -1,7 +1,7 @@
 unit GgmlExternal;
 
 {$I platform.inc}
-
+{$DEFINE SODALL}
 interface
 
 {$ALIGN 4}
