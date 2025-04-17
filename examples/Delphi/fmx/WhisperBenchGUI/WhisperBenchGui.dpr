@@ -3,7 +3,7 @@ program WhisperBenchGui;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  WhisperBenchMain in 'WhisperBenchMain.pas' {Form1},
+  WhisperBenchMain in 'src\WhisperBenchMain.pas' {Form1},
   dynlib in '..\..\..\..\src\dynlib.pas',
   whisperexternal in '..\..\..\..\src\whisperexternal.pas',
   cheaplog in '..\..\..\..\src\cheaplog.pas',

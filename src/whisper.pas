@@ -52,6 +52,7 @@ type
     procedure PrintTimings;
     procedure ResetTimings;
     procedure LoadBackends;
+    procedure LoadBestBackend(const ADeviceType: String; const APath: String = '');
     function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
@@ -96,6 +97,8 @@ var
   PModel: PAnsiChar;
 
 implementation
+
+uses GgmlExternal;
 
 { TWhisper }
 
@@ -253,7 +256,7 @@ begin
   if FContextHasState then
     Result := WhisperGetTimings(FCtx)
   else
-    Result := WhisperGetTimingsWithState(FState);
+    Result := Nil; // WhisperGetTimingsWithState(FState);
 end;
 
 function TWhisper.GetTokenBeg: TWhisperToken;
@@ -322,7 +325,12 @@ end;
 
 procedure TWhisper.LoadBackends;
 begin
-  WhisperLoadBackends;
+  GgmlBackendLoadAll;
+end;
+
+procedure TWhisper.LoadBestBackend(const ADeviceType, APath: String);
+begin
+  GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), False, PAnsiChar(Pointer(AnsiString(APath))));
 end;
 
 function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
@@ -342,7 +350,9 @@ begin
       else
         begin
           FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+        {  Needs PORT_EXTRA
           FState := WhisperGetStateFromContext(FCtx);
+        }
           FContextHasState := True;
           Result := True;
         end;

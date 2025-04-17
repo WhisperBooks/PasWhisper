@@ -34,7 +34,7 @@ implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, IOUtils, Diagnostics;
+uses WhisperTypes, IOUtils, Diagnostics, GgmlExternal;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
@@ -51,7 +51,8 @@ begin
   sw := TStopWatch.StartNew;
   try
     Perf[0] := sw.ElapsedMilliseconds; // Start
-    Whisp.LoadBackends;
+    Whisp.LoadBestBackend('vulkan');
+//    Whisp.LoadBackends;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
@@ -116,13 +117,16 @@ begin
 
         // Log.d('Hello');
         Memo1.Lines.Clear;
-        WriteLnLog('Whisper NMels               : %d',[Nmels]);
-        WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
-        WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
-        WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
-        WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
-        WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
-        WriteLnLog('');
+        if Timings <> Nil then
+          begin
+            WriteLnLog('Whisper NMels               : %d',[Nmels]);
+            WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
+            WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
+            WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
+            WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
+            WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
+            WriteLnLog('');
+          end;
         WriteLnLog('Whisper Load Backends       : %8.3f',[(Perf[1] - Perf[0])/1000]);
         WriteLnLog('Whisper Load Model          : %8.3f',[(Perf[2] - Perf[1])/1000]);
         WriteLnLog('Whisper Load Heat           : %8.3f',[(Perf[3] - Perf[2])/1000]);

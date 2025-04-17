@@ -3,7 +3,7 @@ program WhisperTranscribeGUI;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  whispertranscribemain in 'whispertranscribemain.pas' {Form1},
+  whispertranscribemain in 'src\whispertranscribemain.pas' {Form1},
   cheaplog in '..\..\..\..\src\cheaplog.pas',
   dynlib in '..\..\..\..\src\dynlib.pas',
   ggmltypes in '..\..\..\..\src\ggmltypes.pas',

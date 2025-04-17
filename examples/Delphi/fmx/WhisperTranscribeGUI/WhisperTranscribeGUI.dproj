@@ -306,7 +306,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="whispertranscribemain.pas">
+        <DCCReference Include="src\whispertranscribemain.pas">
             <Form>Form1</Form>
             <FormType>fmx</FormType>
         </DCCReference>

@@ -4,7 +4,7 @@ program WhisperBenchCli;
 
 uses
   System.SysUtils,
-  WhisperCliMain in 'WhisperCliMain.pas',
+  WhisperCliMain in 'src\WhisperCliMain.pas',
   whisper in '..\..\..\src\whisper.pas',
   whisperexternal in '..\..\..\src\whisperexternal.pas',
   whispertypes in '..\..\..\src\whispertypes.pas',

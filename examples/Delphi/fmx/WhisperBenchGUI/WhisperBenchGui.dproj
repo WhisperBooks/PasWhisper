@@ -298,7 +298,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="WhisperBenchMain.pas">
+        <DCCReference Include="src\WhisperBenchMain.pas">
             <Form>Form1</Form>
             <FormType>fmx</FormType>
         </DCCReference>

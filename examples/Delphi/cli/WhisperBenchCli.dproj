@@ -208,7 +208,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="WhisperCliMain.pas"/>
+        <DCCReference Include="src\WhisperCliMain.pas"/>
         <DCCReference Include="..\..\..\src\whisper.pas"/>
         <DCCReference Include="..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\src\whispertypes.pas"/>
