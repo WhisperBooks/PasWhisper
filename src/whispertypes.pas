@@ -204,7 +204,6 @@ type
   end;
 
   TWhisperHparams = record
-    var
     n_vocab       : Int32; // = 51864;
     n_audio_ctx   : Int32; // = 1500;
     n_audio_state : Int32; // = 384;
@@ -315,7 +314,6 @@ type
   TStdMap32 = Array [0..31] of byte;
 
   TWhisperModel = record
-  var
     mtype:          Int32; // = e_model.MODEL_UNKNOWN;
     hparams:        TWhisperHparams;
     filters:        TWhisperFilters;
@@ -345,7 +343,6 @@ type
   TVocabID = Int32;
 
   TWhisperVocab = record
-  var
     n_vocab: Int64; // 51864;
     token_to_id: TStdMap24; // std::map<token, id>
     id_to_token: TStdMap24; // std::map<id, token>

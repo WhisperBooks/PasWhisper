@@ -22,12 +22,10 @@ var
 begin
   Whisp := TWhisper.Create;
   try
-    GgmlBackendLoadBest('vulkan', False,Nil);
-//    GgmlBackendLoadAll;
-//  Whisp.LoadBackends;
+    Whisp.LoadBackends;
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
-    ModelFile := 'C:\models\ggml-base.en.bin';
+    ModelFile := 'D:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}

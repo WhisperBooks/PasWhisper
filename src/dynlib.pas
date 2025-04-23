@@ -34,7 +34,7 @@ type
 
 const
   { Invalid TDynLibHandle value (meaning : LoadLibrary failed) }
-  InvalidDynLibHandle: TDynLibHandle = {$ifdef FPC} DynLibs.NilHandle {$else} 0 {$endif};
+  InvalidDynLibHandle: TDynLibHandle = {$ifdef FPC} QWord(0) {$else} 0 {$endif};
 
 type
   { }

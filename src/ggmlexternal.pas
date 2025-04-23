@@ -1,7 +1,12 @@
 unit GgmlExternal;
 
 {$I platform.inc}
-{$DEFINE GGML_BACKEND_LOADS}
+{$IFDEF FPC}
+  {$packrecords C}
+{$ELSE}
+  {$ALIGN 4}
+{$ENDIF}
+{$MinEnumSize 4}
 interface
 
 {$ALIGN 4}
@@ -14,9 +19,6 @@ var
   GgmlLibraryIsLoaded: Boolean;
 
   GgmlBackendLoad: function (const BackendLibrary: PAnsiChar): PGgmlBackendReg; CDecl;
- {$IF DEFINED(GGML_BACKEND_LOADS)}
-  GgmlBackendLoadBest: function (const BackendGroup: PAnsiChar; Silent: ByteBool; const UserSearchPath: PAnsiChar): PGgmlBackendReg; CDecl;
- {$ENDIF}
   GgmlBackendLoadAll: procedure (); CDecl;
 const
   {$IF DEFINED(OS_WIN64)}
@@ -40,9 +42,6 @@ begin
   GgmlLibraryIsLoaded := False;
 
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := Nil;
- {$IF DEFINED(GGML_BACKEND_LOADS)}
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadBest) := Nil;
- {$ENDIF}
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := Nil;
 
   FreeAndNil(GgmlLibrary);
@@ -64,10 +63,6 @@ begin
 
   if GgmlLibrary <> Nil then
     begin
- {$IF DEFINED(GGML_BACKEND_LOADS)}
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadBest) := GgmlLibrary.Symbol('ggml_backend_load_best');
-      if @GgmlBackendLoadBest = Nil then raise Exception.Create('GgmlBackendLoadBest failed to load');
- {$ENDIF}
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
       if @GgmlBackendLoad = Nil then raise Exception.Create('GgmlBackendLoad failed to load');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');

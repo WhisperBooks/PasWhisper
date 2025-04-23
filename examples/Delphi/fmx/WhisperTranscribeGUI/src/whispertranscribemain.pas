@@ -21,6 +21,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
+    BackendsLoaded: Boolean;
   public
     { Public declarations }
   end;
@@ -53,11 +54,15 @@ begin
   sw := TStopWatch.StartNew;
   try
     Perf[0] := sw.ElapsedMilliseconds; // Start
-//    Whisp.LoadBackends;
+    if not BackendsLoaded then
+      begin
+        Whisp.LoadBackends;
+        BackendsLoaded := True;
+      end;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
-    ModelFile := 'C:\models\ggml-base.en.bin';
+    ModelFile := 'D:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
@@ -149,7 +154,6 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   OutLog := Memo1.Lines;
-  GgmlBackendLoadAll;
 end;
 
 

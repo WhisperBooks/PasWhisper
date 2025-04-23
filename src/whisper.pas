@@ -1,5 +1,9 @@
 unit whisper;
 
+{$ifdef FPC}
+{$mode delphi}
+{$endif}
+
 interface
 
 uses SysUtils, WhisperExternal, WhisperTypes;
@@ -330,7 +334,7 @@ end;
 
 procedure TWhisper.LoadBestBackend(const ADeviceType, APath: String);
 begin
-  GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), False, PAnsiChar(Pointer(AnsiString(APath))));
+//  GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), False, PAnsiChar(Pointer(AnsiString(APath))));
 end;
 
 function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;

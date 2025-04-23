@@ -19,6 +19,7 @@ type
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
+    BackendsLoaded: Boolean;
   public
     { Public declarations }
   end;
@@ -51,12 +52,17 @@ begin
   sw := TStopWatch.StartNew;
   try
     Perf[0] := sw.ElapsedMilliseconds; // Start
-    Whisp.LoadBestBackend('vulkan');
-//    Whisp.LoadBackends;
+//    Whisp.LoadBestBackend('vulkan');
+//    BackendsLoaded: Boolean;
+    if not BackendsLoaded then
+      begin
+        Whisp.LoadBackends;
+        BackendsLoaded := True;
+      end;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
-    ModelFile := 'C:\models\ggml-base.en.bin';
+    ModelFile := 'd:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
@@ -66,16 +72,15 @@ begin
   {$ELSE}
     Unsupported Platform
   {$ENDIF}
-    if Whisp.LoadModel(ModelFile) then
+    if Whisp.LoadModel(ModelFile, True) then
       begin
+        Perf[2] := sw.ElapsedMilliseconds; // Loaded Model
         NMels := Whisp.ModelNmels;
         if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
           Exit;
 
         for I := 0 to MaxBenchToken - 1 do
             Tokens[I] := 0;
-
-        Perf[2] := sw.ElapsedMilliseconds; // Loaded Model
 
         // Heat
         if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then

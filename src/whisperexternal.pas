@@ -1,6 +1,12 @@
 unit WhisperExternal;
 
 {$I platform.inc}
+{$IFDEF FPC}
+  {$packrecords C}
+{$ELSE}
+  {$ALIGN 4}
+{$ENDIF}
+{$MinEnumSize 4}
 
 interface
 
@@ -151,8 +157,6 @@ const
   {$ELSEIF DEFINED(OSX64)}
   WhisperLibraryName = 'libwhisper.dylib';
   {$ENDIF}
-
-
 
 procedure InitializeWhisperLibrary;
 procedure FinalizeWhisperLibrary;
