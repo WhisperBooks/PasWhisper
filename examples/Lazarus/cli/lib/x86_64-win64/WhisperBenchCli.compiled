@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Compiler Value="C:\fpcupdeluxe\fpc\bin\x86_64-win64\fpc.exe" Date="1512535863"/>
-  <Params Value=" -MObjFPC -Scghi -O1 -gw3 -gl -l -vewnhibq -FiC:\src\Whisper\examples\Lazarus\cli\lib\x86_64-win64 -FiC:\src\Whisper\src -FuC:\src\Whisper\src -FuC:\src\Whisper\examples\Lazarus\cli\ -FUC:\src\Whisper\examples\Lazarus\cli\lib\x86_64-win64\ -FEC:\src\Whisper\examples\Lazarus\cli\ -oC:\src\Whisper\examples\Lazarus\cli\WhisperBenchCli.exe WhisperBenchCli.lpr"/>
+  <Compiler Value="C:\fpcupdeluxe\stable\fpc\bin\x86_64-win64\fpc.exe" Date="1519941825"/>
+  <Params Value=" -MObjFPC -Scaghi -CirotR -O1 -gw3 -gl -gh -gt -l -vewnhibq -FiC:\src\Whisper\examples\Lazarus\cli\lib\x86_64-win64 -FiC:\src\Whisper\src -FuC:\src\Whisper\src -FuC:\src\Whisper\examples\Lazarus\cli\ -FUC:\src\Whisper\examples\Lazarus\cli\lib\x86_64-win64\ -FEC:\src\Whisper\examples\Lazarus\cli\ -oC:\src\Whisper\examples\Lazarus\cli\WhisperBenchCli.exe WhisperBenchCli.lpr"/>
 </CONFIG>

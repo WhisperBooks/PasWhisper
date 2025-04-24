@@ -77,11 +77,14 @@ begin
         Timings := Whisp.GetTimings;
 
         WriteLn(Format('Whisper NMels               : %d',[Nmels]));
-        WriteLn(Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-        WriteLn(Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-        WriteLn(Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-        WriteLn(Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-        WriteLn(Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+        if Timings <> Nil then
+          begin
+            WriteLn(Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
+            WriteLn(Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
+            WriteLn(Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
+            WriteLn(Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
+            WriteLn(Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+          end;
       end;
   finally
     Whisp.Free;

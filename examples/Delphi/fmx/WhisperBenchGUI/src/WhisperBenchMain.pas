@@ -56,7 +56,9 @@ begin
 //    BackendsLoaded: Boolean;
     if not BackendsLoaded then
       begin
-        Whisp.LoadBackends;
+//        Whisp.LoadBackends;
+        Whisp.LoadBestBackend('cuda');
+        Whisp.LoadBestBackend('cpu-sandybridge');
         BackendsLoaded := True;
       end;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends

@@ -25,7 +25,7 @@ uses SysUtils
   {$IF DEFINED(OS_WIN64)}
   , Windows
   {$ENDIF}
-  , platform
+  , platform, Math
   ;
 
 type
@@ -183,11 +183,32 @@ var
   }
   InternalDisableDynamicLibraries: Boolean = false;
 
+var
+  FPUMASK: {$ifdef FPC}TFPUExceptionMask{$else}TArithmeticExceptionMask{$endif};
+
+procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
+
 implementation
 
 uses CheapLog;
   // for BundlePath on Darwin
 //  CastleUtils, CastleFilesUtils;
+
+procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
+begin
+  {$IF Defined(CPUX86) or Defined(CPUX64)}
+  if ExceptionsMasked then
+    begin
+    FPUMASK := GetExceptionMask;
+    SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide,
+      exOverflow, exUnderflow, exPrecision]);
+    end
+  else
+    SetExceptionMask(FPUMASK);
+  {$ELSE}
+//    MaskFPUExceptions(ExceptionsMasked);
+  {$IFEND}
+end;
 
 constructor TDynLib.Create(const AName: string; AHandle: TDynLibHandle);
 begin

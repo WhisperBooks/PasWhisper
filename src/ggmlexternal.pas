@@ -20,6 +20,7 @@ var
 
   GgmlBackendLoad: function (const BackendLibrary: PAnsiChar): PGgmlBackendReg; CDecl;
   GgmlBackendLoadAll: procedure (); CDecl;
+  GgmlBackendTryLoadBest: function (const BackendDeviceClass: PAnsiChar; const LibraryPath: PAnsiChar = Nil): PGgmlBackendReg; CDecl;
 const
   {$IF DEFINED(OS_WIN64)}
   GGMLLibraryName = 'ggml.dll';
@@ -43,6 +44,7 @@ begin
 
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := Nil;
+  Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest) := Nil;
 
   FreeAndNil(GgmlLibrary);
 end;
@@ -63,10 +65,10 @@ begin
 
   if GgmlLibrary <> Nil then
     begin
+      GgmlLibrary.SymbolError := seRaise;
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
-      if @GgmlBackendLoad = Nil then raise Exception.Create('GgmlBackendLoad failed to load');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');
-      if @GgmlBackendLoadAll = Nil then raise Exception.Create('GgmlBackendLoadAll failed to load');
+      Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest)   := GgmlLibrary.Symbol('ggml_backend_try_load_best');
 
       GgmlLibraryIsLoaded := True;
 

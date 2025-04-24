@@ -138,11 +138,10 @@ var
     WhisperLangAutoDetectWithState: function(Ctx: TWhisperContext; State: TWhisperState; OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Int32; CDecl;
 
     WhisperGetTimings: function(Ctx: TWhisperContext): PWhisperTimings; CDecl;
-    {$IF DEFINED(PORT_EXTRA)}
+
     WhisperGetStateFromContext: function(Ctx: TWhisperContext): TWhisperState; CDecl;
     WhisperGetTimingsWithState: function(State: TWhisperState): PWhisperTimings; CDecl;
     WhisperGetSystemInfoJson: function(): PChar; CDecl;
-    {$ENDIF}
 
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
@@ -228,11 +227,9 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := Nil;
 
-  {$IF DEFINED(PORT_EXTRA)}
   Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := Nil;
-  {$ENDIF}
 
   FreeAndNil(WhisperLibrary);
 end;
@@ -313,11 +310,9 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
       Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
 
-      {$IF DEFINED(PORT_EXTRA)}
-      Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_get_state_from_context');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := WhisperLibrary.Symbol('whisper_get_timings_with_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_get_system_info_json');
-      {$ENDIF}
+      Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_flat_get_state_from_context');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := WhisperLibrary.Symbol('whisper_flat_get_timings_with_state');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_flat_get_system_info_json');
 
       WhisperLibraryIsLoaded := True;
 

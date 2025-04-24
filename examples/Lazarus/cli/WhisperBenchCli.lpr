@@ -44,8 +44,9 @@ begin
   try
     if not BackendsLoaded then
       begin
-//        Whisp.LoadBackends;
-        GgmlBackendLoadAll;
+        Whisp.LoadBestBackend('cuda');
+        Whisp.LoadBestBackend('cpu-sandybridge');
+//        GgmlBackendLoadAll;
 
         BackendsLoaded := True;
       end;
@@ -103,6 +104,15 @@ begin
 
         Timings := Whisp.GetTimings;
 
+        WriteLn(Format('Whisper NMels               : %d',[Nmels]));
+        if Timings <> Nil then
+          begin
+            WriteLn(Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
+            WriteLn(Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
+            WriteLn(Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
+            WriteLn(Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
+            WriteLn(Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+          end;
 
       end;
   finally

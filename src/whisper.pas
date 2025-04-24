@@ -6,7 +6,7 @@ unit whisper;
 
 interface
 
-uses SysUtils, WhisperExternal, WhisperTypes;
+uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, dynlib;
 
 type
   TWhisper = class
@@ -56,7 +56,7 @@ type
     procedure PrintTimings;
     procedure ResetTimings;
     procedure LoadBackends;
-    procedure LoadBestBackend(const ADeviceType: String; const APath: String = '');
+    function  LoadBestBackend(const ADeviceType: String; const APath: String = ''): PGgmlBackendReg;
     function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
@@ -260,7 +260,7 @@ begin
   if FContextHasState then
     Result := WhisperGetTimings(FCtx)
   else
-    Result := Nil; // WhisperGetTimingsWithState(FState);
+    Result := WhisperGetTimingsWithState(FState);
 end;
 
 function TWhisper.GetTokenBeg: TWhisperToken;
@@ -329,12 +329,16 @@ end;
 
 procedure TWhisper.LoadBackends;
 begin
+  SafeMaskFPUExceptions(True);
   GgmlBackendLoadAll;
+  SafeMaskFPUExceptions(False);
 end;
 
-procedure TWhisper.LoadBestBackend(const ADeviceType, APath: String);
+function TWhisper.LoadBestBackend(const ADeviceType, APath: String): PGgmlBackendReg;
 begin
-//  GgmlBackendLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), False, PAnsiChar(Pointer(AnsiString(APath))));
+  SafeMaskFPUExceptions(True);
+  Result := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
+  SafeMaskFPUExceptions(False);
 end;
 
 function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
@@ -346,17 +350,19 @@ begin
       FCParams := WhisperContextDefaultParams;
       if WithState then
         begin
+          SafeMaskFPUExceptions(True);
           FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
           FState := WhisperInitState(FCtx);
+          SafeMaskFPUExceptions(False);
           FContextHasState := False;
           Result := True;
         end
       else
         begin
+          SafeMaskFPUExceptions(True);
           FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
-        {  Needs PORT_EXTRA
           FState := WhisperGetStateFromContext(FCtx);
-        }
+          SafeMaskFPUExceptions(False);
           FContextHasState := True;
           Result := True;
         end;
