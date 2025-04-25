@@ -5,21 +5,24 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   Whisper, CheapLog,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Memo.Types,
-  FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.StdCtrls, FMX.Layouts;
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
+  FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
+  FMX.Memo;
 
 type
   TForm1 = class(TForm)
     Layout1: TLayout;
     Layout2: TLayout;
-    Memo1: TMemo;
     Button1: TButton;
+    Memo1: TMemo;
+    CheckBox1: TCheckBox;
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
+    procedure RunBench;
   public
     { Public declarations }
   end;
@@ -29,16 +32,26 @@ var
 
 const
   Threads: Int32 = 4;
-  MaxBenchToken = 512;
+  MaxBenchToken = 256;
 
 implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, IOUtils, Diagnostics, GgmlExternal;
+uses WhisperTypes, IOUtils, Diagnostics;
 
 procedure TForm1.Button1Click(Sender: TObject);
+begin
+  Button1.Enabled := False;
+  Memo1.Lines.Clear;
+  Application.ProcessMessages;
+  RunBench;
+  Button1.Enabled := True;
+end;
+
+procedure TForm1.RunBench;
 var
+  Info: String;
   I: Integer;
   Whisp: TWhisper;
   NMels: Int32;
@@ -52,19 +65,18 @@ begin
   sw := TStopWatch.StartNew;
   try
     Perf[0] := sw.ElapsedMilliseconds; // Start
-//    Whisp.LoadBestBackend('vulkan');
-//    BackendsLoaded: Boolean;
     if not BackendsLoaded then
       begin
 //        Whisp.LoadBackends;
         Whisp.LoadBestBackend('cuda');
+        Whisp.LoadBestBackend('blas');
         Whisp.LoadBestBackend('cpu-sandybridge');
         BackendsLoaded := True;
       end;
     Perf[1] := sw.ElapsedMilliseconds; // Loaded Backends
 
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
-    ModelFile := 'd:\models\ggml-base.en.bin';
+    ModelFile := 'D:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
     ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
@@ -74,15 +86,16 @@ begin
   {$ELSE}
     Unsupported Platform
   {$ENDIF}
-    if Whisp.LoadModel(ModelFile, True) then
+    if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
       begin
-        Perf[2] := sw.ElapsedMilliseconds; // Loaded Model
         NMels := Whisp.ModelNmels;
         if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
           Exit;
 
         for I := 0 to MaxBenchToken - 1 do
             Tokens[I] := 0;
+
+        Perf[2] := sw.ElapsedMilliseconds; // Loaded Model
 
         // Heat
         if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then
@@ -123,22 +136,25 @@ begin
         Timings := Whisp.GetTimings;
 
         // Log.d('Hello');
-        Memo1.Lines.Clear;
-        if Timings <> Nil then
+        Memo1.Lines.Add(FormatDot('Whisper NMels               : %d',[Nmels]));
+        if(Timings <> Nil) then
           begin
-            WriteLnLog('Whisper NMels               : %d',[Nmels]);
-            WriteLnLog('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]);
-            WriteLnLog('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]);
-            WriteLnLog('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]);
-            WriteLnLog('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]);
-            WriteLnLog('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]);
-            WriteLnLog('');
+            Memo1.Lines.Add(FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
+            Memo1.Lines.Add(FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
+            Memo1.Lines.Add(FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
+            Memo1.Lines.Add(FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
+            Memo1.Lines.Add(FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
           end;
-        WriteLnLog('Whisper Load Backends       : %8.3f',[(Perf[1] - Perf[0])/1000]);
-        WriteLnLog('Whisper Load Model          : %8.3f',[(Perf[2] - Perf[1])/1000]);
-        WriteLnLog('Whisper Load Heat           : %8.3f',[(Perf[3] - Perf[2])/1000]);
-        WriteLnLog('Whisper Load Run            : %8.3f',[(Perf[4] - Perf[3])/1000]);
-        WriteLnLog('Whisper Total Runtime       : %8.3f',[(Perf[4] - Perf[0])/1000]);
+        Memo1.Lines.Add('');
+        Memo1.Lines.Add(FormatDot('Whisper Load Backends       : %8.3f',[(Perf[1] - Perf[0])/1000]));
+        Memo1.Lines.Add(FormatDot('Whisper Load Model          : %8.3f',[(Perf[2] - Perf[1])/1000]));
+        Memo1.Lines.Add(FormatDot('Whisper Load Heat           : %8.3f',[(Perf[3] - Perf[2])/1000]));
+        Memo1.Lines.Add(FormatDot('Whisper Load Run            : %8.3f',[(Perf[4] - Perf[3])/1000]));
+        Memo1.Lines.Add(FormatDot('Whisper Total Runtime       : %8.3f',[(Perf[4] - Perf[0])/1000]));
+        Memo1.Lines.Add('');
+
+        Info := Format_JSON(Whisp.GetSystemInfoJson);
+        Memo1.Lines.Add(Format('Info : %s',[Info]));
 
       end;
   finally
@@ -156,5 +172,6 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   OutLog := Memo1.Lines;
 end;
+
 
 end.

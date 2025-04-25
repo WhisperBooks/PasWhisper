@@ -9,28 +9,28 @@
         <Filename Value="WhisperBenchCli.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="62"/>
-        <CursorPos Y="116"/>
-        <UsageCount Value="22"/>
+        <TopLine Value="120"/>
+        <CursorPos Y="150"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\dynlib.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="DynLib"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="159"/>
-        <CursorPos X="3" Y="209"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="168"/>
+        <CursorPos Y="211"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\ggmlexternal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="GgmlExternal"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <CursorPos X="20" Y="15"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -40,7 +40,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\platform.inc"/>
@@ -49,7 +49,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\platform.pas"/>
@@ -58,156 +58,165 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\whisper.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="322"/>
-        <CursorPos Y="354"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="89"/>
+        <CursorPos Y="134"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\whisperexternal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WhisperExternal"/>
-        <EditorIndex Value="5"/>
-        <CursorPos Y="5"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="126"/>
+        <CursorPos X="5" Y="144"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\whispertypes.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="205"/>
         <CursorPos Y="258"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="25"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\src\cheaplog.pas"/>
+        <UnitName Value="CheapLog"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="25" Y="49"/>
+        <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="355" TopLine="320"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="356" TopLine="320"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="357" TopLine="320"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="358" TopLine="320"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="367" TopLine="320"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="370" TopLine="322"/>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="74" TopLine="31"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="66" TopLine="18"/>
+        <Caret Line="76" TopLine="33"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="67" TopLine="19"/>
+        <Caret Line="79" TopLine="37"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="70" TopLine="22"/>
+        <Caret Line="82" TopLine="40"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
+        <Caret Line="85" TopLine="43"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="70" TopLine="23"/>
+        <Caret Line="87" TopLine="45"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
+        <Caret Line="85" TopLine="45"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="74" TopLine="23"/>
+        <Caret Line="103" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
+        <Caret Line="105" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="70" TopLine="23"/>
+        <Caret Line="106" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
+        <Caret Line="108" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="70" TopLine="23"/>
+        <Caret Line="109" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
+        <Caret Line="110" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="70" TopLine="23"/>
+        <Caret Line="111" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="71" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="..\..\..\src\whisper.pas"/>
-        <Caret Line="354" TopLine="322"/>
+        <Caret Line="112" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="74" TopLine="26"/>
+        <Caret Line="114" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="76" TopLine="28"/>
+        <Caret Line="115" TopLine="75"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="78" TopLine="30"/>
+        <Caret Line="44" TopLine="18"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="81" TopLine="33"/>
+        <Caret Line="119" TopLine="95"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="84" TopLine="37"/>
+        <Caret Line="120" TopLine="95"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="87" TopLine="40"/>
+        <Caret Line="47" Column="36" TopLine="11"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="89" TopLine="42"/>
+        <Caret Line="150" Column="3" TopLine="126"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="87" TopLine="42"/>
+        <Caret Line="129" Column="12" TopLine="124"/>
       </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="105" TopLine="72"/>
+        <Caret Line="113" Column="13" TopLine="97"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Column="20"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="106" Column="25" TopLine="64"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="114" Column="20" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="116" Column="23" TopLine="74"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="150" Column="21" TopLine="107"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="171" Column="19" TopLine="128"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -222,13 +231,6 @@
         <Address Value="140706257804059"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-      </Item>
-      <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="WhisperBenchCli.lpr"/>
-        <Line Value="105"/>
       </Item>
     </BreakPoints>
   </Debugging>

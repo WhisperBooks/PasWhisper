@@ -18,7 +18,38 @@ procedure WritelnWarning(const MessageBase: string; const Args: array of const);
 function FormatDot(const Fmt: String; const Args: array of const): String;
 procedure WarningWrite(const Message: string);
 
+function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
+
 implementation
+
+{$ifndef FPC}
+uses JSon;
+{$endif}
+
+function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
+{$ifndef FPC}
+var
+  JV: TJSONValue; // not TJSONObject
+  {$endif}
+begin
+  {$ifndef FPC}
+  JV := nil;
+  try
+    try
+      JV := TJSONObject.ParseJSONValue(Value);
+         // TJSONObject.ParseJSONValue(Value) as TJSONObject cast fails
+      Result := JV.Format(Indentation);
+    except
+      Result := '';;
+    end;
+  finally
+    FreeAndNil(JV);
+  end;
+  {$else}
+  // FixME : FPC version
+  Result := Value;
+  {$endif}
+end;
 
 function FormatDot(const Fmt: String; const Args: array of const): String;
 var

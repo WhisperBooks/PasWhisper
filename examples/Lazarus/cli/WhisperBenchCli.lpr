@@ -6,7 +6,7 @@ uses
   {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, Whisper, WhisperTypes, GGMLExternal
+  Classes, SysUtils, CustApp, Crt, Whisper, WhisperTypes, GGMLExternal
   { you can add units after this };
 {$I platform.inc}
 type
@@ -32,7 +32,7 @@ const
 { WhisperCli }
 procedure WhisperCli.DoWhisper;
 var
-  ErrorMsg: String;
+  Info: String;
   I: Integer;
   Whisp: TWhisper;
   NMels: Int32;
@@ -45,9 +45,8 @@ begin
     if not BackendsLoaded then
       begin
         Whisp.LoadBestBackend('cuda');
+        Whisp.LoadBestBackend('blas');
         Whisp.LoadBestBackend('cpu-sandybridge');
-//        GgmlBackendLoadAll;
-
         BackendsLoaded := True;
       end;
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
@@ -104,15 +103,17 @@ begin
 
         Timings := Whisp.GetTimings;
 
-        WriteLn(Format('Whisper NMels               : %d',[Nmels]));
+        WriteLn(stderr, Format('Whisper NMels               : %d',[Nmels]));
         if Timings <> Nil then
           begin
-            WriteLn(Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-            WriteLn(Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-            WriteLn(Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-            WriteLn(Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-            WriteLn(Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+            WriteLn(stderr, Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
+            WriteLn(stderr, Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
+            WriteLn(stderr, Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
+            WriteLn(stderr, Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
+            WriteLn(stderr, Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
           end;
+      Info := Whisp.GetSystemInfoJson;
+      WriteLn(stderr, Format('Sysinfo : %s',[Info]));
 
       end;
   finally
@@ -125,6 +126,7 @@ end;
 procedure WhisperCli.DoRun;
 var
   ErrorMsg: String;
+  ch: Char;
 begin
   // quick check parameters
   ErrorMsg:=CheckOptions('h', 'help');
@@ -142,7 +144,13 @@ begin
   end;
 
   { add your program here }
-  DoWhisper;
+  repeat
+    DoWhisper;
+    writeln(stderr, '');
+    writeln(stderr, 'Press X to Quit');
+    writeln(stderr, '');
+    ch := ReadKey;
+  until (ch = #88) or (ch = #120);
   // stop program loop
   Terminate;
 end;
@@ -161,7 +169,7 @@ end;
 procedure WhisperCli.WriteHelp;
 begin
   { add your help code here }
-  writeln('Usage: ', ExeName, ' -h');
+  writeln(stderr, 'Usage: ', ExeName, ' -h');
 end;
 
 var

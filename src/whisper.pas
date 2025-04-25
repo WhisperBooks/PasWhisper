@@ -56,6 +56,7 @@ type
     procedure PrintTimings;
     procedure ResetTimings;
     procedure LoadBackends;
+    function  GetSystemInfoJson: String;
     function  LoadBestBackend(const ADeviceType: String; const APath: String = ''): PGgmlBackendReg;
     function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
@@ -115,10 +116,25 @@ end;
 function TWhisper.Decode(Tokens: PWhisperTokens; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
+  Result := 0;
   if FContextHasState then
-    Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads)
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+        Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads)
+      finally
+        SafeMaskFPUExceptions(False);
+      end;
+    end
   else
-    Result := WhisperDecodeWithState(FCtx, FState, Tokens, NTokens, NPast, NThreads);
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+        Result := WhisperDecodeWithState(FCtx, FState, Tokens, NTokens, NPast, NThreads);
+      finally
+        SafeMaskFPUExceptions(False);
+      end;
+    end;
 end;
 
 destructor TWhisper.Destroy;
@@ -133,10 +149,25 @@ end;
 
 function TWhisper.Encode(const Offset, NThreads: Integer): Integer;
 begin
+  Result := 0;
   if FContextHasState then
-    Result := WhisperEncode(FCtx, Offset, NThreads)
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+         Result := WhisperEncode(FCtx, Offset, NThreads)
+      finally
+         SafeMaskFPUExceptions(False);
+      end;
+    end
   else
-    Result := WhisperEncodeWithState(FCtx, FState, Offset, NThreads);
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+        Result := WhisperEncodeWithState(FCtx, FState, Offset, NThreads);
+      finally
+        SafeMaskFPUExceptions(False);
+      end;
+    end;
 end;
 
 procedure TWhisper.FreeState;
@@ -149,6 +180,11 @@ end;
 function TWhisper.GetIsMultilingual: Int32;
 begin
   Result := WhisperIsMultilingual(FCtx);
+end;
+
+function TWhisper.GetSystemInfoJson: String;
+begin
+  Result := String(AnsiString(PAnsiChar(WhisperGetSystemInfoJson)));
 end;
 
 function TWhisper.GetLogits: PFloat;
@@ -330,15 +366,21 @@ end;
 procedure TWhisper.LoadBackends;
 begin
   SafeMaskFPUExceptions(True);
-  GgmlBackendLoadAll;
-  SafeMaskFPUExceptions(False);
+  try
+    GgmlBackendLoadAll;
+  finally
+    SafeMaskFPUExceptions(False);
+  end;
 end;
 
 function TWhisper.LoadBestBackend(const ADeviceType, APath: String): PGgmlBackendReg;
 begin
   SafeMaskFPUExceptions(True);
-  Result := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
-  SafeMaskFPUExceptions(False);
+  try
+    Result := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
+  finally
+    SafeMaskFPUExceptions(False);
+  end;
 end;
 
 function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
@@ -348,21 +390,28 @@ begin
     begin
       FModel := AModel;
       FCParams := WhisperContextDefaultParams;
+//      FCParams.use_gpu := False;
       if WithState then
         begin
           SafeMaskFPUExceptions(True);
-          FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
-          FState := WhisperInitState(FCtx);
-          SafeMaskFPUExceptions(False);
+          try
+            FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+            FState := WhisperInitState(FCtx);
+          finally
+            SafeMaskFPUExceptions(False);
+          end;
           FContextHasState := False;
           Result := True;
         end
       else
         begin
           SafeMaskFPUExceptions(True);
-          FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
-          FState := WhisperGetStateFromContext(FCtx);
-          SafeMaskFPUExceptions(False);
+          try
+            FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+            FState := WhisperGetStateFromContext(FCtx);
+          finally
+            SafeMaskFPUExceptions(False);
+          end;
           FContextHasState := True;
           Result := True;
         end;
