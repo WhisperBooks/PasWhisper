@@ -1,0 +1,22 @@
+program WhisperTranscribeGUI;
+
+uses
+  System.StartUpCopy,
+  FMX.Forms,
+  whispertranscribemain in 'src\whispertranscribemain.pas' {Form1},
+  WhisperUtils in '..\..\..\..\src\WhisperUtils.pas',
+  WhisperDynlib in '..\..\..\..\src\WhisperDynlib.pas',
+  ggmltypes in '..\..\..\..\src\ggmltypes.pas',
+  WhisperPlatform in '..\..\..\..\src\WhisperPlatform.pas',
+  whisper in '..\..\..\..\src\whisper.pas',
+  whisperexternal in '..\..\..\..\src\whisperexternal.pas',
+  whispertypes in '..\..\..\..\src\whispertypes.pas',
+  ggmlexternal in '..\..\..\..\src\ggmlexternal.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.
