@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="WhisperBenchGUI.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="WhisperBenchGUIMain"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="59"/>
+        <CursorPos X="44" Y="84"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\ggmlexternal.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="GgmlExternal"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\ggmltypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\platform.inc"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="22" Y="6"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\whisper.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\WhisperDynlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\whisperexternal.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WhisperExternal"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="128"/>
+        <CursorPos Y="248"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\WhisperPlatform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\whispertypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="29" Y="18"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\src\WhisperUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="14">
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Column="21"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="39" Column="3"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="45" Column="3"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="14" Column="51"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="44" Column="18" TopLine="19"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="9" Column="24"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="44" Column="18" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="81" Column="20" TopLine="66"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="91" Column="5" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="83" Column="3" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="79" TopLine="69"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\..\..\src\whisperexternal.pas"/>
+        <Caret Line="248" TopLine="223"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="79" TopLine="51"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="90" Column="45" TopLine="51"/>
+      </Position>
+      <Position>
+        <Filename Value="whisperbenchguimain.pas"/>
+        <Caret Line="88" Column="42" TopLine="60"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
