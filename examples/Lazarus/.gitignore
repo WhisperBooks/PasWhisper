@@ -1,3 +1,53 @@
-
+# FPC, Lazarus stuff
+*.compiled
+*.rsj
+*.rst
+*.o
+*.or
 *.ppu
+*.a
+*.lps
+*.lrs
+*.dbg
+*.res
+lib/
+
+# Delphi stuff
+*.dproj.local
+*.identcache
+*.stat
+*.dcu
+*.dsk
+*.~dsk
+# https://docwiki.embarcadero.com/RADStudio/Sydney/en/API_(*.rsm)
+*.rsm
+*.local
+__recovery
+*.deployproj
+*.delphilsp.json
+
+# Other backups
+*.blend1
+*.blend2
+*~
+backup
+
+# Other unwanted
+*.apk
+*.aab
+*.log
+*.exe
 *.dll
+
+*.pro.user
+.DS_Store
+xcuserdata
+!xcshareddata
+# used by https://marketplace.visualstudio.com/items?itemName=alefragnani.jenkins-status
+/.jenkins
+AndroidSigningProperties.txt
+
+# Visual Studio stuff
+.vs/
+*.vcxproj.user
+
