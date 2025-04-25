@@ -6,7 +6,7 @@ uses
   {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, Crt, Whisper, WhisperTypes, GGMLExternal
+  Classes, SysUtils, CustApp, Crt, CheapLog, Whisper, WhisperTypes, GGMLExternal
   { you can add units after this };
 {$I platform.inc}
 type
@@ -39,9 +39,12 @@ var
   Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
   Timings: PWhisperTimings;
   ModelFile: String;
+  WTime: TMilliTimer;
+  Timers: Array[0..7] of Single;
 begin
   Whisp := TWhisper.Create;
   try
+  WTime := TMilliTimer.Create;
     if not BackendsLoaded then
       begin
         Whisp.LoadBestBackend('cuda');
@@ -49,6 +52,7 @@ begin
         Whisp.LoadBestBackend('cpu-sandybridge');
         BackendsLoaded := True;
       end;
+    Timers[0] := WTime.Elapsed; // Load Backends
   {$IF (OS_PLATFORM_TYPE = 'WIN64')}
   ModelFile := 'd:\models\ggml-base.en.bin';
   {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
@@ -62,6 +66,7 @@ begin
   {$ENDIF}
     if Whisp.LoadModel(ModelFile, True) then
       begin
+        Timers[1] := WTime.Elapsed; // Load Model
         NMels := Whisp.ModelNmels;
         if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
           Exit;
@@ -77,6 +82,7 @@ begin
         if Whisp.Decode(@Tokens, 1, 256, Threads) <> WHISPER_SUCCESS then
           Exit;
 
+        Timers[2] := WTime.Elapsed; // Heat
         Whisp.ResetTimings;
 
         // Run
@@ -101,6 +107,9 @@ begin
               Exit;
           end;
 
+        Timers[3] := WTime.Elapsed; // Heat
+        Timers[4] := Timers[0] + Timers[1] + Timers[2] + Timers[3];
+
         Timings := Whisp.GetTimings;
 
         WriteLn(stderr, Format('Whisper NMels               : %d',[Nmels]));
@@ -112,6 +121,13 @@ begin
             WriteLn(stderr, Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
             WriteLn(stderr, Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
           end;
+        WriteLn(stderr, '');
+        WriteLn(stderr, Format('Whisper Load Backends       : %8.3f',[Timers[0]]));
+        WriteLn(stderr, Format('Whisper Load Model          : %8.3f',[Timers[1]]));
+        WriteLn(stderr, Format('Whisper Load Heat           : %8.3f',[Timers[2]]));
+        WriteLn(stderr, Format('Whisper Load Run            : %8.3f',[Timers[3]]));
+        WriteLn(stderr, Format('Whisper Total Runtime       : %8.3f',[Timers[4]]));
+        WriteLn(stderr, '');
       Info := Whisp.GetSystemInfoJson;
       WriteLn(stderr, Format('Sysinfo : %s',[Info]));
 

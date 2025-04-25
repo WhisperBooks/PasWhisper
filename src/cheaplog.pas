@@ -4,6 +4,17 @@ interface
 
 uses SysUtils, Classes;
 
+type
+  TMilliTimer = class
+    strict private
+      FTicks: QWord; // GetTickCount64
+      function GetElapsed: Single;
+    public
+      constructor Create;
+      procedure Reset;
+      property Elapsed: Single Read GetElapsed;
+  end;
+
 var
   OutLog: TStrings = Nil;
 
@@ -22,33 +33,50 @@ function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
 
 implementation
 
-{$ifndef FPC}
+{$ifdef FPC}
+uses fpjson, jsonparser;
+{$else}
 uses JSon;
 {$endif}
 
-function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
-{$ifndef FPC}
-var
-  JV: TJSONValue; // not TJSONObject
-  {$endif}
+constructor TMilliTimer.Create;
 begin
-  {$ifndef FPC}
+  FTicks := GetTickCount64;
+end;
+
+procedure TMilliTimer.Reset;
+begin
+  FTicks := GetTickCount64;
+end;
+
+function TMilliTimer.GetElapsed: Single;
+begin
+  Result := (GetTickCount64 - FTicks) / 1000;
+  FTicks := GetTickCount64;
+end;
+
+function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
+var
+  JV: {$ifdef FPC}TJSONData{$else}TJSONValue{$endif};
+begin
   JV := nil;
   try
     try
+      {$ifdef FPC}
+      JV := GetJSON(Value);
+      Result := JV.FormatJSON([], Indentation);
+      {$else}
       JV := TJSONObject.ParseJSONValue(Value);
-         // TJSONObject.ParseJSONValue(Value) as TJSONObject cast fails
       Result := JV.Format(Indentation);
+      {$endif}
     except
       Result := '';;
     end;
   finally
+    {$ifndef FPC}
     FreeAndNil(JV);
+    {$endif}
   end;
-  {$else}
-  // FixME : FPC version
-  Result := Value;
-  {$endif}
 end;
 
 function FormatDot(const Fmt: String; const Args: array of const): String;

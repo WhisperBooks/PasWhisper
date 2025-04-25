@@ -9,9 +9,9 @@
         <Filename Value="WhisperBenchCli.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="120"/>
-        <CursorPos Y="150"/>
-        <UsageCount Value="25"/>
+        <TopLine Value="98"/>
+        <CursorPos X="81" Y="125"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -21,7 +21,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="168"/>
         <CursorPos Y="211"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -30,7 +30,7 @@
         <UnitName Value="GgmlExternal"/>
         <EditorIndex Value="5"/>
         <CursorPos X="20" Y="15"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -40,7 +40,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\platform.inc"/>
@@ -49,7 +49,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\platform.pas"/>
@@ -58,7 +58,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\whisper.pas"/>
@@ -66,7 +66,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="89"/>
         <CursorPos Y="134"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -76,7 +76,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="126"/>
         <CursorPos X="5" Y="144"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -85,43 +85,20 @@
         <EditorIndex Value="2"/>
         <TopLine Value="205"/>
         <CursorPos Y="258"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\cheaplog.pas"/>
         <UnitName Value="CheapLog"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="25" Y="49"/>
+        <TopLine Value="28"/>
+        <CursorPos X="32" Y="42"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="74" TopLine="31"/>
-      </Position>
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="76" TopLine="33"/>
-      </Position>
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="79" TopLine="37"/>
-      </Position>
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="82" TopLine="40"/>
-      </Position>
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="85" TopLine="43"/>
-      </Position>
-      <Position>
-        <Filename Value="WhisperBenchCli.lpr"/>
-        <Caret Line="87" TopLine="45"/>
-      </Position>
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
         <Caret Line="85" TopLine="45"/>
@@ -217,6 +194,30 @@
       <Position>
         <Filename Value="WhisperBenchCli.lpr"/>
         <Caret Line="171" Column="19" TopLine="128"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\..\src\cheaplog.pas"/>
+        <Caret Line="31" Column="13"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\..\src\cheaplog.pas"/>
+        <Caret Line="26" Column="6" TopLine="2"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\..\src\cheaplog.pas"/>
+        <Caret Line="33" Column="34" TopLine="8"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\..\src\cheaplog.pas"/>
+        <Caret Line="48" Column="45" TopLine="3"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="125" Column="80" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="WhisperBenchCli.lpr"/>
+        <Caret Line="9" Column="46"/>
       </Position>
     </JumpHistory>
     <RunParams>
