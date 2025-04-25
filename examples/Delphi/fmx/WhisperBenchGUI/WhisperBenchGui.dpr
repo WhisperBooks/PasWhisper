@@ -4,13 +4,13 @@ uses
   System.StartUpCopy,
   FMX.Forms,
   WhisperBenchMain in 'src\WhisperBenchMain.pas' {Form1},
-  dynlib in '..\..\..\..\src\dynlib.pas',
+  WhisperDynlib in '..\..\..\..\src\WhisperDynlib.pas',
   whisperexternal in '..\..\..\..\src\whisperexternal.pas',
-  cheaplog in '..\..\..\..\src\cheaplog.pas',
+  WhisperUtils in '..\..\..\..\src\WhisperUtils.pas',
   whisper in '..\..\..\..\src\whisper.pas',
   ggmltypes in '..\..\..\..\src\ggmltypes.pas',
   whispertypes in '..\..\..\..\src\whispertypes.pas',
-  platform in '..\..\..\..\src\platform.pas',
+  WhisperPlatform in '..\..\..\..\src\WhisperPlatform.pas',
   ggmlexternal in '..\..\..\..\src\ggmlexternal.pas';
 
 {$R *.res}

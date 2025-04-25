@@ -6,7 +6,7 @@ uses
   {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, Crt, CheapLog, Whisper, WhisperTypes, GGMLExternal
+  Classes, SysUtils, CustApp, Crt, WhisperUtils, Whisper, WhisperTypes, GGMLExternal
   { you can add units after this };
 {$I platform.inc}
 type
@@ -48,9 +48,11 @@ begin
     try
       if not BackendsLoaded then
         begin
-          Whisp.LoadBestBackend('cuda');
-          Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('cpu-sandybridge');
+//          Whisp.LoadBestBackend('cuda');
+          Whisp.LoadBestBackend('opencl');
+//          Whisp.LoadBestBackend('blas');
+//          Whisp.LoadBestBackend('cpu-sandybridge');
+          Whisp.LoadBestBackend('cpu');
           BackendsLoaded := True;
         end;
       Timers[0] := WTime.Elapsed; // Load Backends

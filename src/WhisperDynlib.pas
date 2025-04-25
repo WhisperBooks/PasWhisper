@@ -15,7 +15,7 @@
 {$I platform.inc}
 
 { Dynamic libraries loading (TDynLib). }
-unit DynLib;
+unit WhisperDynlib;
 
 {$define LOGNOTRAISE}
 
@@ -25,7 +25,7 @@ uses SysUtils
   {$IF DEFINED(OS_WIN64)}
   , Windows
   {$ENDIF}
-  , platform, Math
+  , WhisperPlatform, Math
   ;
 
 type
@@ -190,7 +190,7 @@ procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 
 implementation
 
-uses CheapLog;
+uses WhisperUtils;
   // for BundlePath on Darwin
 //  CastleUtils, CastleFilesUtils;
 
@@ -243,7 +243,7 @@ begin
   FreeLibrary(FHandle);
   {$else}
   if not FreeLibrary(FHandle) then
-    WriteLnWarning('Unloading library ' + Name + ' failed');
+    Raise EDynLibError.Create('Unloading library ' + Name + ' failed');
   {$endif}
 
   inherited;
@@ -296,7 +296,6 @@ begin
     if RaiseExceptionOnError then
     {$ifdef LOGNOTRAISE}
       begin
-        WriteLnLog('Cannot load dynamic library "' +AName+ '"');
         Result := nil;
       end
     {$else}
@@ -321,7 +320,7 @@ begin
     case SymbolError of
       seRaise: raise EDynLibError.Create(ErrStr);
       seReturnNil: ;
-      seWarnAndReturnNil: WarningWrite(ErrStr);
+      seWarnAndReturnNil: { TODO: Needs Log };
       {$ifndef COMPILER_CASE_ANALYSIS}
       else raise EInternalError.Create('SymbolError=?');
       {$endif}

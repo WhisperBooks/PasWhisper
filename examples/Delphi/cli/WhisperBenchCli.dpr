@@ -8,10 +8,10 @@ uses
   whisper in '..\..\..\src\whisper.pas',
   whisperexternal in '..\..\..\src\whisperexternal.pas',
   whispertypes in '..\..\..\src\whispertypes.pas',
-  cheaplog in '..\..\..\src\cheaplog.pas',
-  dynlib in '..\..\..\src\dynlib.pas',
+  WhisperUtils in '..\..\..\src\WhisperUtils.pas',
+  WhisperDynlib in '..\..\..\src\WhisperDynlib.pas',
   ggmltypes in '..\..\..\src\ggmltypes.pas',
-  platform in '..\..\..\src\platform.pas',
+  WhisperPlatform in '..\..\..\src\WhisperPlatform.pas',
   ggmlexternal in '..\..\..\src\ggmlexternal.pas';
 
 {$R *.res}

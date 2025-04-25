@@ -12,7 +12,7 @@ interface
 {$ALIGN 4}
 uses
   SysUtils,
-  DynLib, ggmlTypes;
+  WhisperDynLib, ggmlTypes;
 
 var
   GgmlLibrary: TDynLib;

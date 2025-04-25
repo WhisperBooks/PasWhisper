@@ -14,7 +14,7 @@ interface
 uses
   SysUtils,
   WhisperTypes,
-  DynLib, ggmlTypes;
+  WhisperDynLib, ggmlTypes;
 
 
 var
@@ -163,7 +163,7 @@ procedure FinalizeWhisperLibrary;
 implementation
 
 uses
-  CheapLog;
+  WhisperUtils;
 
 
 procedure FinalizeWhisperLibrary;

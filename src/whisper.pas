@@ -6,7 +6,7 @@ unit whisper;
 
 interface
 
-uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, dynlib;
+uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, WhisperDynlib;
 
 type
   TWhisper = class

@@ -1,4 +1,4 @@
-unit platform;
+unit WhisperPlatform;
 
 {$I platform.inc}
 
@@ -12,7 +12,7 @@ uses
 	  Macapi.CoreFoundation, 
 	{$endif}
   {$endif}
-  SysUtils, CheapLog;
+  SysUtils, WhisperUtils;
 
 {$if defined(OS_OSXARM64) or defined(OS_OSX64)}
 var

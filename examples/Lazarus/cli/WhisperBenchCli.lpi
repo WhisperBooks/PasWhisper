@@ -93,11 +93,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="..\..\..\src\dynlib.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="DynLib"/>
-      </Unit>
-      <Unit>
         <Filename Value="..\..\..\src\ggmlexternal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="GgmlExternal"/>
@@ -111,10 +106,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="..\..\..\src\platform.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="..\..\..\src\whisper.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
@@ -125,6 +116,18 @@
       </Unit>
       <Unit>
         <Filename Value="..\..\..\src\whispertypes.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\src\WhisperDynlib.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\src\WhisperPlatform.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\src\WhisperUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

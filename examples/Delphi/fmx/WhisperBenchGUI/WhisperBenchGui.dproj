@@ -302,13 +302,13 @@
             <Form>Form1</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\src\dynlib.pas"/>
+        <DCCReference Include="..\..\..\..\src\WhisperDynlib.pas"/>
         <DCCReference Include="..\..\..\..\src\whisperexternal.pas"/>
-        <DCCReference Include="..\..\..\..\src\cheaplog.pas"/>
+        <DCCReference Include="..\..\..\..\src\WhisperUtils.pas"/>
         <DCCReference Include="..\..\..\..\src\whisper.pas"/>
         <DCCReference Include="..\..\..\..\src\ggmltypes.pas"/>
         <DCCReference Include="..\..\..\..\src\whispertypes.pas"/>
-        <DCCReference Include="..\..\..\..\src\platform.pas"/>
+        <DCCReference Include="..\..\..\..\src\WhisperPlatform.pas"/>
         <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -592,9 +592,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\WhisperBenchGui.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="Win64\Release\WhisperBenchGui.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>WhisperBenchGui.rsm</RemoteName>
+                        <RemoteName>WhisperBenchGui.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

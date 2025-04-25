@@ -212,10 +212,10 @@
         <DCCReference Include="..\..\..\src\whisper.pas"/>
         <DCCReference Include="..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\src\whispertypes.pas"/>
-        <DCCReference Include="..\..\..\src\cheaplog.pas"/>
-        <DCCReference Include="..\..\..\src\dynlib.pas"/>
+        <DCCReference Include="..\..\..\src\WhisperUtils.pas"/>
+        <DCCReference Include="..\..\..\src\WhisperDynlib.pas"/>
         <DCCReference Include="..\..\..\src\ggmltypes.pas"/>
-        <DCCReference Include="..\..\..\src\platform.pas"/>
+        <DCCReference Include="..\..\..\src\WhisperPlatform.pas"/>
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
