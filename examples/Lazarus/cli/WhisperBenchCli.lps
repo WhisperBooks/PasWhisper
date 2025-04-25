@@ -9,8 +9,8 @@
         <Filename Value="WhisperBenchCli.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="98"/>
-        <CursorPos X="81" Y="125"/>
+        <TopLine Value="31"/>
+        <CursorPos X="6" Y="48"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
