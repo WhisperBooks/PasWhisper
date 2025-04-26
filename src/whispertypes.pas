@@ -32,7 +32,9 @@ type
   PFloat = ^Float;
   TWhisperPos = Int32;
   TWhisperToken = Int32;
-  PWhisperTokens = ^TWhisperToken;
+  TWhisperTokenArray = Array of TWhisperToken;
+  PWhisperTokenArray = ^TWhisperTokenArray;
+  PWhisperToken = ^TWhisperToken;
   TWhisperSeqId = Int32;
   TWhisperContext = Pointer;
   TWhisperState = Pointer;

@@ -11,7 +11,8 @@ interface
 
 type
 
-  TCallBack = Pointer;
+  TCallBack = Pointer; // Callback holding type for unused / tdb callbacks
+  TContext = Pointer;
 
   {$ALIGN 8}
   TGgmlBackendRegInterface = record
@@ -28,55 +29,60 @@ type
   end;
   PGgmlBackendReg = ^TGgmlBackendReg;
 
-  TGgmlBackendDeviceInterface = record
-{
-        // device name: short identifier for this device, such as "CPU" or "CUDA0"
-        const char * (*get_name)(ggml_backend_dev_t dev);
+  TGGMLGuid = Array[0..15] of Byte;
+  PGGMLGuid = ^TGGMLGuid;
 
-        // device description: short informative description of the device, could be the model name
-        const char * (*get_description)(ggml_backend_dev_t dev);
-
-        // device memory in bytes
-        void         (*get_memory)(ggml_backend_dev_t dev, size_t * free, size_t * total);
-
-        // device type
-        enum ggml_backend_dev_type (*get_type)(ggml_backend_dev_t dev);
-
-        // device properties
-        void (*get_props)(ggml_backend_dev_t dev, struct ggml_backend_dev_props * props);
-
-        // backend (stream) initialization
-        ggml_backend_t (*init_backend)(ggml_backend_dev_t dev, const char * params);
-
-        // preferred buffer type
-        ggml_backend_buffer_type_t (*get_buffer_type)(ggml_backend_dev_t dev);
-
-        // (optional) host buffer type (in system memory, typically this is a pinned memory buffer for faster transfers between host and device)
-        ggml_backend_buffer_type_t (*get_host_buffer_type)(ggml_backend_dev_t dev);
-
-        // (optional) buffer from pointer: create a buffer from a host pointer (useful for memory mapped models and importing data from other libraries)
-        ggml_backend_buffer_t (*buffer_from_host_ptr)(ggml_backend_dev_t dev, void * ptr, size_t size, size_t max_tensor_size);
-
-        // check if the backend can compute an operation
-        bool (*supports_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
-
-        // check if the backend can use tensors allocated in a buffer type
-        bool (*supports_buft)(ggml_backend_dev_t dev, ggml_backend_buffer_type_t buft);
-
-        // (optional) check if the backend wants to run an operation, even if the weights are allocated in an incompatible buffer
-        // these should be expensive operations that may benefit from running on this backend instead of the CPU backend
-        bool (*offload_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
-
-        // (optional) event synchronization
-        ggml_backend_event_t (*event_new)         (ggml_backend_dev_t dev);
-        void                 (*event_free)        (ggml_backend_dev_t dev, ggml_backend_event_t event);
-        void                 (*event_synchronize) (ggml_backend_dev_t dev, ggml_backend_event_t event);
-}
+  IGgmlBackend = record           // struct ggml_backend_i
+    GetName: TCallback;           // const char * (*get_name)(ggml_backend_t backend);
+    Free: TCallback;              // void (*free)(ggml_backend_t backend);
+    SetTensorAsync: TCallback;    // void (*set_tensor_async)(ggml_backend_t backend,       struct ggml_tensor * tensor, const void * data, size_t offset, size_t size);
+    GetTensorAsync: TCallback;    // void (*get_tensor_async)(ggml_backend_t backend, const struct ggml_tensor * tensor,       void * data, size_t offset, size_t size);
+    CpyTensorAsync: TCallback;    // bool (*cpy_tensor_async)(ggml_backend_t backend_src, ggml_backend_t backend_dst, const struct ggml_tensor * src, struct ggml_tensor * dst);
+    Synchronize: TCallback;       // void (*synchronize)(ggml_backend_t backend);
+    GraphPlanCreate: TCallback;   // ggml_backend_graph_plan_t (*graph_plan_create) (ggml_backend_t backend, const struct ggml_cgraph * cgraph);
+    GraphPlanFree: TCallback;     // void                      (*graph_plan_free)   (ggml_backend_t backend, ggml_backend_graph_plan_t plan);
+    GraphPlanUpdate: TCallback;   // void                      (*graph_plan_update) (ggml_backend_t backend, ggml_backend_graph_plan_t plan, const struct ggml_cgraph * cgraph);
+    GraphPlanCompute: TCallback;  // enum ggml_status          (*graph_plan_compute)(ggml_backend_t backend, ggml_backend_graph_plan_t plan);
+    GraphCompute: TCallback;      // enum ggml_status          (*graph_compute)     (ggml_backend_t backend, struct ggml_cgraph * cgraph);
+    EventRecord: TCallback;       // void (*event_record)(ggml_backend_t backend, ggml_backend_event_t event);
+    EventWait: TCallback;         // void (*event_wait)  (ggml_backend_t backend, ggml_backend_event_t event);
   end;
-  PGgmlBackendDeviceInterface = ^TGgmlBackendDeviceInterface;
+
+  IGgmlBackendDevice = record     // struct ggml_backend_device_i
+    GetName: TCallback;           // const char * (*get_name)(ggml_backend_dev_t dev); // device name: short identifier for this device, such as "CPU" or "CUDA0"
+    GetDescription: TCallback;    // const char * (*get_description)(ggml_backend_dev_t dev); // device description: short informative description of the device, could be the model name
+    GetMemory: TCallback;         // void         (*get_memory)(ggml_backend_dev_t dev, size_t * free, size_t * total);
+    GetType: TCallback;           // enum ggml_backend_dev_type (*get_type)(ggml_backend_dev_t dev);
+    GetProps: TCallback;          // void (*get_props)(ggml_backend_dev_t dev, struct ggml_backend_dev_props * props);
+    InitBackend: TCallback;       // ggml_backend_t (*init_backend)(ggml_backend_dev_t dev, const char * params);
+    GetBufferType: TCallback;     // ggml_backend_buffer_type_t (*get_buffer_type)(ggml_backend_dev_t dev);
+    GetHostBufferType: TCallback; // ggml_backend_buffer_type_t (*get_host_buffer_type)(ggml_backend_dev_t dev);
+    BufferFromHostPtr: TCallback; // ggml_backend_buffer_t (*buffer_from_host_ptr)(ggml_backend_dev_t dev, void * ptr, size_t size, size_t max_tensor_size);
+    SupportsOp: TCallback;        // bool (*supports_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
+    SupportsBuft: TCallback;      // bool (*supports_buft)(ggml_backend_dev_t dev, ggml_backend_buffer_type_t buft);
+    OffloadOp: TCallback;         // bool (*offload_op)(ggml_backend_dev_t dev, const struct ggml_tensor * op);
+    EventNew: TCallback;          // ggml_backend_event_t (*event_new)         (ggml_backend_dev_t dev);
+    EventFree: TCallback;         // void                 (*event_free)        (ggml_backend_dev_t dev, ggml_backend_event_t event);
+    EventSynchronize: TCallback;  // void                 (*event_synchronize) (ggml_backend_dev_t dev, ggml_backend_event_t event);
+  end;
+
+  TGgmlBackendDevice = record     // struct ggml_backend_device
+    IFace: IGgmlBackendDevice;    // struct ggml_backend_device_i iface;
+    Reg: PGgmlBackendReg;         // ggml_backend_reg_t reg;
+    Context: TContext;            // void * context;
+  end;
+  PGgmlBackendDevice = ^TGgmlBackendDevice;
+
+  TGgmlBackend = record         // struct ggml_backend
+    Guid: PGGMLGuid;            // ggml_guid_t guid;
+    IFace: IGgmlBackend;        // struct ggml_backend_i iface;
+    Device: PGgmlBackendDevice; // ggml_backend_dev_t device;
+    Context: TContext;          // void * context;
+  end;
+  PGgmlBackend = ^TGgmlBackend;
 
   TGgmlBackendDev = record
-    IFace: TGgmlBackendDeviceInterface;
+    IFace: IGgmlBackendDevice;
     Reg: PGgmlBackendReg;
     Context: Pointer;
   end;

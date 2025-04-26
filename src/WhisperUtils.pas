@@ -2,7 +2,13 @@ unit WhisperUtils;
 
 interface
 
-uses SysUtils, Classes;
+uses SysUtils, Classes
+{$ifdef FPC}
+  , fpjson, jsonparser
+{$else}
+  , JSon
+{$endif}
+;
 
 type
   { An extremely simple, extremely unreliable, cross-platform + compiler
@@ -21,30 +27,11 @@ type
       property TotalElapsed: Single Read GetTotalElapsed;
   end;
 
-var
-  OutLog: TStrings = Nil;
-{
-procedure WritelnLog(const Category: string; const Message: string); overload;
-procedure WritelnLog(const Message: string); overload;
-procedure WritelnLog(const Category: string; const MessageBase: string; const Args: array of const); overload;
-procedure WritelnLog(const MessageBase: string; const Args: array of const); overload;
-procedure WritelnWarning(const Category: string; const Message: string); overload;
-procedure WritelnWarning(const Message: string); overload;
-procedure WritelnWarning(const Category: string; const MessageBase: string; const Args: array of const); overload;
-procedure WritelnWarning(const MessageBase: string; const Args: array of const); overload;
-procedure WarningWrite(const Message: string);
-}
-
 function FormatDot(const Fmt: String; const Args: array of const): String;
-function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
+function Format_JSON(Value: String; Indentation: Integer = 4): String;
 
 implementation
 
-{$ifdef FPC}
-uses fpjson, jsonparser;
-{$else}
-uses JSon;
-{$endif}
 {$IFNDEF FPC}
 function GetTickCount64: UInt64; inline;
 begin
@@ -108,60 +95,5 @@ begin
   FormatSettings.ThousandSeparator := #0;
   Result := Format(Fmt, Args, FormatSettings);
 end;
-
-{
-procedure WritelnLog(const Category: string; const Message: string);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Category + ' : ' + Message);
-end;
-
-procedure WritelnLog(const Message: string);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Message);
-end;
-
-procedure WarningWrite(const Message: string);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Message);
-end;
-procedure WritelnLog(const Category: string; const MessageBase: string; const Args: array of const);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Category + ' : ' + FormatDot(MessageBase, Args));
-end;
-
-procedure WritelnLog(const MessageBase: string; const Args: array of const);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(FormatDot(MessageBase, Args));
-end;
-
-procedure WritelnWarning(const Category: string; const Message: string);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Category + ' : ' + Message);
-end;
-
-procedure WritelnWarning(const Message: string);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Message);
-end;
-
-procedure WritelnWarning(const Category: string; const MessageBase: string; const Args: array of const);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(Category + ' : ' + FormatDot(MessageBase, Args));
-end;
-
-procedure WritelnWarning(const MessageBase: string; const Args: array of const);
-begin
-  if Assigned(OutLog) then
-    OutLog.Add(FormatDot(MessageBase, Args));
-end;
-}
 
 end.

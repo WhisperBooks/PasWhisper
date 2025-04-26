@@ -7,7 +7,7 @@ uses
   Whisper, WhisperUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo;
+  FMX.Memo, FMX.Menus;
 
 type
   TForm1 = class(TForm)
@@ -16,12 +16,19 @@ type
     Button1: TButton;
     Memo1: TMemo;
     CheckBox1: TCheckBox;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem3: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure MenuItem3Click(Sender: TObject);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
+    PromptCount: Integer;
+    BatchCount: Integer;
+    BatchSize: Integer;
+    TokenCount: Integer;
     procedure RunBench;
   public
     { Public declarations }
@@ -31,14 +38,14 @@ var
   Form1: TForm1;
 
 const
-  Threads: Int32 = 4;
-  MaxBenchToken = 256;
+  Threads: Integer = 4;
+  MaxToken = 256;
 
 implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, IOUtils, Diagnostics;
+uses WhisperTypes, GgmlTypes, IOUtils, Diagnostics;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -55,12 +62,17 @@ var
   I: Integer;
   Whisp: TWhisper;
   NMels: Int32;
-  Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
+  Tokens: TWhisperTokenArray;
   Timings: PWhisperTimings;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
 begin
+  SetLength(Tokens, TokenCount);
+
+  for I := 0 to TokenCount - 1 do
+      Tokens[I] := 0;
+
   Whisp := TWhisper.Create;
   try
     sw := TMilliTimer.Create;
@@ -71,6 +83,7 @@ begin
           Whisp.LoadBestBackend('cuda');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('cpu-sandybridge');
+
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
@@ -88,21 +101,20 @@ begin
     {$ENDIF}
       if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
         begin
+//          Whisp.GetPreferredBackend;
+
           NMels := Whisp.ModelNmels;
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;
-
-          for I := 0 to MaxBenchToken - 1 do
-              Tokens[I] := 0;
 
           Perf[1] := sw.Elapsed; // Loaded Model
 
           // Heat
           if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 1, 256, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, 1, TokenCount, Threads) <> WHISPER_SUCCESS then
             Exit;
 
           Whisp.ResetTimings;
@@ -113,21 +125,21 @@ begin
           if Whisp.Encode(0, Threads) <> 0 then
             Exit;
 
-          for I := 0 to 255 do
+          for I := 0 to TokenCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 63 do
+          for I := 0 to BatchCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 5, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, BatchSize, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 15 do
+          for I := 0 to PromptCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
@@ -163,19 +175,29 @@ begin
     end;
   finally
     Whisp.Free;
+    SetLength(Tokens, 0);
   end;
 
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
- // FreeAndNil(FWhisper);
-end;
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  OutLog := Memo1.Lines;
+  TokenCount := 256;
+  BatchCount := 64;
+  BatchSize := 5;
+  PromptCount := 16;
+  Caption := 'WhisperBenchGUI';
+  Button1.Text := 'Benchmark';
+  CheckBox1.Text := 'InitWithState';
 end;
 
+
+procedure TForm1.MenuItem3Click(Sender: TObject);
+begin
+  Memo1.Lines.Clear;
+  Memo1.Lines.Add(Format('TGgmlBackend       : %d',[SizeOf(TGgmlBackend)]));
+  Memo1.Lines.Add(Format('TGgmlBackendDevice : %d',[SizeOf(TGgmlBackendDevice)]));
+  Memo1.Lines.Add(Format('IGgmlBackendDevice : %d',[SizeOf(IGgmlBackendDevice)]));
+end;
 
 end.

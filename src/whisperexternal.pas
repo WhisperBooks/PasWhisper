@@ -99,15 +99,15 @@ var
     // n_past is the number of tokens to use from previous decoder calls.
     // Returns 0 on success
     // TODO: add support for multiple decoders
-    WhisperDecode: function(Ctx: TWhisperContext; Tokens: PWhisperTokens; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
-    WhisperDecodeWithState: function(Ctx: TWhisperContext; State: TWhisperState; Tokens: PWhisperTokens; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
+    WhisperDecode: function(Ctx: TWhisperContext; Tokens: PWhisperToken; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
+    WhisperDecodeWithState: function(Ctx: TWhisperContext; State: TWhisperState; Tokens: PWhisperToken; NTokens: Int32; NPast: Int32; NThreads: Int32): Int32; CDecl;
 
     // Convert the provided text into tokens.
     // The tokens pointer must be large enough to hold the resulting tokens.
     // Returns the number of tokens on success, no more than n_max_tokens
     // Returns a negative number on failure - the number of tokens that would have been returned
     // TODO: not sure if correct
-    WhisperTokenize: function(Ctx: TWhisperContext; Text: PAnsiString; Tokens: PWhisperTokens; MaxTokens: Int32): Int32; CDecl;
+    WhisperTokenize: function(Ctx: TWhisperContext; Text: PAnsiString; Tokens: PWhisperToken; MaxTokens: Int32): Int32; CDecl;
 
     // Return the number of tokens in the provided text
     // Equivalent to: -whisper_tokenize(ctx, text, NULL, 0)
@@ -142,6 +142,7 @@ var
     WhisperGetStateFromContext: function(Ctx: TWhisperContext): TWhisperState; CDecl;
     WhisperGetTimingsWithState: function(State: TWhisperState): PWhisperTimings; CDecl;
     WhisperGetSystemInfoJson: function(): PChar; CDecl;
+    WhisperGetPreferredBackend: function(State: TWhisperState): PGgmlBackend;
 
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
@@ -230,6 +231,7 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := Nil;
 
   FreeAndNil(WhisperLibrary);
 end;
@@ -313,6 +315,7 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_flat_get_state_from_context');
       Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := WhisperLibrary.Symbol('whisper_flat_get_timings_with_state');
       Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_flat_get_system_info_json');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := WhisperLibrary.Symbol('whisper_flat_get_preferred_backend');
 
       WhisperLibraryIsLoaded := True;
 

@@ -48,10 +48,10 @@ begin
     try
       if not BackendsLoaded then
         begin
-//          Whisp.LoadBestBackend('cuda');
-          Whisp.LoadBestBackend('opencl');
-//          Whisp.LoadBestBackend('blas');
-//          Whisp.LoadBestBackend('cpu-sandybridge');
+          Whisp.LoadBestBackend('cuda');
+          Whisp.LoadBestBackend('vulkan');
+          Whisp.LoadBestBackend('rpc');
+          Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('cpu');
           BackendsLoaded := True;
         end;
@@ -110,11 +110,12 @@ begin
                 Exit;
             end;
 
-          Timers[3] := WTime.Elapsed; // Heat
-          Timers[4] := Timers[0] + Timers[1] + Timers[2] + Timers[3];
+          Timers[3] := WTime.Elapsed; // Run
+          Timers[4] := WTime.TotalElapsed;
 
           Timings := Whisp.GetTimings;
 
+          WriteLn(stderr, '');
           WriteLn(stderr, Format('Whisper NMels               : %d',[Nmels]));
           if Timings <> Nil then
             begin

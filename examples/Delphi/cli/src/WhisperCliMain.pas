@@ -1,15 +1,16 @@
 unit WhisperCliMain;
 
 interface
-  uses SysUtils, Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
+  uses SysUtils, Classes, Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
 
 type
   TWhisperCli = class
     strict private
       BackendsLoaded: Boolean;
+      procedure DoWhisper;
     public
       constructor Create;
-      procedure DoWhisper;
+      procedure MainLoop;
   end;
 
 var
@@ -26,7 +27,7 @@ implementation
 procedure WhisperMain;
 begin
   WhisperCli := TWhisperCli.Create;
-  WhisperCli.DoWhisper;
+  WhisperCli.MainLoop;
 end;
 
 constructor TWhisperCli.Create;
@@ -34,6 +35,18 @@ begin
   // Just an empty constructor
 end;
 
+procedure TWhisperCli.MainLoop;
+var
+  s: String;
+begin
+  repeat
+    DoWhisper;
+    writeln('');
+    writeln('Press X to Quit');
+    writeln('');
+    ReadLn(s);
+  until (s = 'x') or (s = 'X');
+end;
 procedure TWhisperCli.DoWhisper;
 var
   I: Integer;

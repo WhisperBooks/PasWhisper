@@ -61,8 +61,10 @@ type
     function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
-    function  Decode(Tokens: PWhisperTokens; const NTokens, NPast, NThreads: Integer): Integer;
+    function  Decode(Tokens: PWhisperToken; const NTokens, NPast, NThreads: Integer): Integer; overload;
+    function  Decode(Tokens: TWhisperTokenArray; const NTokens, NPast, NThreads: Integer): Integer; overload;
     function  LangAutoDetect(OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Integer;
+    function  GetPreferredBackend: PGgmlBackend;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;
@@ -113,7 +115,31 @@ begin
     Raise Exception.Create('Whisper library not available');
 end;
 
-function TWhisper.Decode(Tokens: PWhisperTokens; const NTokens, NPast,
+function TWhisper.Decode(Tokens: TWhisperTokenArray; const NTokens, NPast,
+  NThreads: Integer): Integer;
+begin
+  Result := 0;
+  if FContextHasState then
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+        Result := WhisperDecode(FCtx, @Tokens[0], NTokens, NPast, NThreads)
+      finally
+        SafeMaskFPUExceptions(False);
+      end;
+    end
+  else
+    begin
+      SafeMaskFPUExceptions(True);
+      try
+        Result := WhisperDecodeWithState(FCtx, FState, @Tokens[0], NTokens, NPast, NThreads);
+      finally
+        SafeMaskFPUExceptions(False);
+      end;
+    end;
+end;
+
+function TWhisper.Decode(Tokens: PWhisperToken; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
   Result := 0;
@@ -289,6 +315,11 @@ end;
 function TWhisper.GetNvocab: Int32;
 begin
   Result := WhisperNvocab(FCtx);
+end;
+
+function TWhisper.GetPreferredBackend: PGgmlBackend;
+begin
+  Result := WhisperGetPreferredBackend(FState);
 end;
 
 function TWhisper.GetTimings: PWhisperTimings;
