@@ -25,11 +25,11 @@ var
 const
   {$IF DEFINED(OS_WIN64)}
   GGMLLibraryName = 'ggml.dll';
-  {$ELSEIF DEFINED(LINUX64)}
+  {$ELSEIF DEFINED(OS_LINUX64)}
   GGMLLibraryName = 'libggml.so';
-  {$ELSEIF DEFINED(OSXARM64)}
+  {$ELSEIF DEFINED(OS_OSXARM64)}
   GGMLLibraryName = 'libggml.dylib';
-  {$ELSEIF DEFINED(OSX64)}
+  {$ELSEIF DEFINED(OS_OSX64)}
   GGMLLibraryName = 'libggml.dylib';
   {$ENDIF}
 

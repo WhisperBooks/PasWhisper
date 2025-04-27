@@ -22,20 +22,31 @@ unit WhisperDynlib;
 interface
 
 uses SysUtils
-  {$IF DEFINED(OS_WIN64)}
-  , Windows
-  {$ENDIF}
+  {$ifdef FPC}
+    { With FPC, use cross-platform DynLibs unit. }
+    {$ifndef WASI}, DynLibs{$endif}
+  {$else}
+    { With Delphi, use Windows functions directly.
+      On non-Windows, Delphi SysUtils defines compatible functions
+      LoadLibrary, FreeLibrary, GetProcAddress
+      (note: using PChar, not PAnsiChar) and HMODULE type. }
+    {$ifdef MSWINDOWS} , Windows {$endif}
+  {$endif}
   , WhisperPlatform, Math
   ;
 
 type
   EInternalError = class(Exception);
-  TDynLibHandle = HModule;
+  TDynLibHandle = {$ifdef FPC} TLibHandle {$else} HModule {$endif};
 
 const
   { Invalid TDynLibHandle value (meaning : LoadLibrary failed) }
-  InvalidDynLibHandle: TDynLibHandle = {$ifdef FPC} QWord(0) {$else} 0 {$endif};
-
+  InvalidDynLibHandle: TDynLibHandle =
+    {$if defined(FPC) and not defined(WASI)}
+    DynLibs.NilHandle
+    {$else}
+    0 // used with Delphi or FPC+WebAssembly
+    {$endif};
 type
   { }
   EDynLibError = class(Exception);
@@ -285,7 +296,7 @@ begin
     { On macOS, search for dynamic libraries in the bundle too.
       This fallback makes sense for libpng, libvorbisfile, libsteam_api...
       It seems that for everything, so just do it always. }
-    {$IF DEFINED(OSXARM64)}
+    {$IF DEFINED(OS_OSXARM64)}
     if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
       Handle := LoadLibrary(PChar(BundlePath + 'Contents/MacOS/' + AName));
     {$endif}

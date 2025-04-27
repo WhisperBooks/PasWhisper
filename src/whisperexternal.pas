@@ -153,11 +153,11 @@ var
 const
   {$IF DEFINED(OS_WIN64)}
   WhisperLibraryName = 'whisper.dll';
-  {$ELSEIF DEFINED(LINUX64)}
+  {$ELSEIF DEFINED(OS_LINUX64)}
   WhisperLibraryName = 'libwhisper.so';
-  {$ELSEIF DEFINED(OSXARM64)}
+  {$ELSEIF DEFINED(OS_OSXARM64)}
   WhisperLibraryName = 'libwhisper.dylib';
-  {$ELSEIF DEFINED(OSX64)}
+  {$ELSEIF DEFINED(OS_OSX64)}
   WhisperLibraryName = 'libwhisper.dylib';
   {$ENDIF}
 

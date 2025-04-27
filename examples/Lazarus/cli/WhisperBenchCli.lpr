@@ -7,7 +7,8 @@ uses
   cthreads,
   {$ENDIF}
   Classes, SysUtils, CustApp, Crt, WhisperUtils, Whisper, WhisperTypes, GGMLExternal
-  { you can add units after this };
+  { you can add units after this }
+  ;
 {$I platform.inc}
 type
 
@@ -16,6 +17,10 @@ type
   WhisperCli = class(TCustomApplication)
   private
     BackendsLoaded: Boolean;
+    PromptCount: Integer;
+    BatchCount: Integer;
+    BatchSize: Integer;
+    TokenCount: Integer;
   protected
     procedure DoRun; override;
   public
@@ -26,8 +31,8 @@ type
   end;
 
 const
-  MaxBenchToken = 256;
-  Threads = 4;
+  Threads: Integer = 4;
+  MaxToken = 256;
 
 { WhisperCli }
 procedure WhisperCli.DoWhisper;
@@ -36,113 +41,153 @@ var
   I: Integer;
   Whisp: TWhisper;
   NMels: Int32;
-  Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
+  Tokens: TWhisperTokenArray;
   Timings: PWhisperTimings;
   ModelFile: String;
-  WTime: TMilliTimer;
-  Timers: Array[0..7] of Single;
+  sw: TMilliTimer;
+  Perf: Array[0..7] of Single; // A few spare just in case
+  dev: TBackendDevice;
+  GgmlBackendCount: Int64;
+  WhisperBackendCount: Int64;
 begin
+  SetLength(Tokens, TokenCount);
+
+  for I := 0 to TokenCount - 1 do
+      Tokens[I] := 0;
+
   Whisp := TWhisper.Create;
   try
-  WTime := TMilliTimer.Create;
+    sw := TMilliTimer.Create;
     try
       if not BackendsLoaded then
         begin
-          Whisp.LoadBestBackend('cuda');
-          Whisp.LoadBestBackend('vulkan');
-          Whisp.LoadBestBackend('rpc');
-          Whisp.LoadBestBackend('blas');
+  //        Whisp.LoadBackends;
           Whisp.LoadBestBackend('cpu');
+          Whisp.LoadBestBackend('blas');
+          Whisp.LoadBestBackend('rpc');
+          Whisp.LoadBestBackend('vulkan');
+          Whisp.LoadBestBackend('cuda');
+
           BackendsLoaded := True;
         end;
-      Timers[0] := WTime.Elapsed; // Load Backends
-    {$IF (OS_PLATFORM_TYPE = 'WIN64')}
-    ModelFile := 'd:\models\ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSX64')}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
+      Perf[0] := sw.Elapsed; // Loaded Backends
+
+    {$IF DEFINED(OS_WIN64)}
+      ModelFile := 'D:\models\ggml-base.en.bin';
+    {$ELSEIF DEFINED(OS_LINUX64)}
+      ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
+    {$ELSEIF DEFINED(OS_OSXARM64)}
+      ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
+    {$ELSEIF DEFINED(OS_OSX64)}
+      ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
     {$ELSE}
-      ModelFile := 'd:\models\ggml-base.en.bin';
+      Unsupported Platform
     {$ENDIF}
-      if Whisp.LoadModel(ModelFile, True) then
+      GgmlBackendCount := GgmlBackendGetDeviceCount();
+      WriteLn(stderr, Format('Available Backend Devices : %d',[GgmlBackendCount]));
+      WriteLn(stderr, '');
+
+      if Whisp.LoadModel(ModelFile) then
         begin
-          Timers[1] := WTime.Elapsed; // Load Model
+          WhisperBackendCount := Whisp.GetBackendCount;
+
+          if WhisperBackendCount < 1 then
+            begin
+              WriteLn(stderr, Format('Insufficient Devices',[WhisperBackendCount]));
+              Exit;
+            end;
+          WriteLn(stderr, Format('Preferred Device (of %d)',[WhisperBackendCount]));
+
+          dev := Whisp.GetPreferredBackend;
+          WriteLn(stderr, Format('Device      : %s',[dev.name]));
+          WriteLn(stderr, Format('Description : %s',[dev.desc]));
+          WriteLn(stderr, '');
+
+          if WhisperBackendCount > 1 then
+            begin
+              WriteLn(stderr, 'Backup Device(s)');
+              for I := 1 to WhisperBackendCount - 1 do
+                begin
+                  dev := Whisp.GetIndexedBackend(I);
+                  WriteLn(stderr, Format('Device      : %s',[dev.name]));
+                  WriteLn(stderr, Format('Description : %s',[dev.desc]));
+                  WriteLn(stderr, '');
+                end;
+            end;
           NMels := Whisp.ModelNmels;
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;
 
-          for I := 0 to MaxBenchToken - 1 do
-              Tokens[I] := 0;
+          Perf[1] := sw.Elapsed; // Loaded Model
 
           // Heat
           if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 1, 256, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, 1, TokenCount, Threads) <> WHISPER_SUCCESS then
             Exit;
 
-          Timers[2] := WTime.Elapsed; // Heat
           Whisp.ResetTimings;
+
+          Perf[2] := sw.Elapsed; // Done Heat
 
           // Run
           if Whisp.Encode(0, Threads) <> 0 then
             Exit;
 
-          for I := 0 to 255 do
+          for I := 0 to TokenCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 63 do
+          for I := 0 to BatchCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 5, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, BatchSize, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 15 do
+          for I := 0 to PromptCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          Timers[3] := WTime.Elapsed; // Run
-          Timers[4] := WTime.TotalElapsed;
+          Perf[3] := sw.Elapsed; // Done Run
+          Perf[4] := sw.TotalElapsed; // Done Run
 
           Timings := Whisp.GetTimings;
 
-          WriteLn(stderr, '');
-          WriteLn(stderr, Format('Whisper NMels               : %d',[Nmels]));
-          if Timings <> Nil then
+          // Log.d('Hello');
+          WriteLn(stderr, FormatDot('Whisper NMels               : %d',[Nmels]));
+          if(Timings <> Nil) then
             begin
-              WriteLn(stderr, Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              WriteLn(stderr, Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              WriteLn(stderr, Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              WriteLn(stderr, Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              WriteLn(stderr, Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              WriteLn(stderr, FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
+              WriteLn(stderr, FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
+              WriteLn(stderr, FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
+              WriteLn(stderr, FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
+              WriteLn(stderr, FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
             end;
           WriteLn(stderr, '');
-          WriteLn(stderr, Format('Whisper Load Backends       : %8.3f',[Timers[0]]));
-          WriteLn(stderr, Format('Whisper Load Model          : %8.3f',[Timers[1]]));
-          WriteLn(stderr, Format('Whisper Load Heat           : %8.3f',[Timers[2]]));
-          WriteLn(stderr, Format('Whisper Load Run            : %8.3f',[Timers[3]]));
-          WriteLn(stderr, Format('Whisper Total Runtime       : %8.3f',[Timers[4]]));
+          WriteLn(stderr, FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
+          WriteLn(stderr, FormatDot('Whisper Load Model          : %8.3f',[Perf[1]]));
+          WriteLn(stderr, FormatDot('Whisper Load Heat           : %8.3f',[Perf[2]]));
+          WriteLn(stderr, FormatDot('Whisper Load Run            : %8.3f',[Perf[3]]));
+          WriteLn(stderr, FormatDot('Whisper Total Runtime       : %8.3f',[Perf[4]]));
           WriteLn(stderr, '');
-        Info := Whisp.GetSystemInfoJson;
-        WriteLn(stderr, Format('Sysinfo : %s',[Info]));
+
+          Info := Format_JSON(Whisp.GetSystemInfoJson);
+          WriteLn(stderr, Format('Info : %s',[Info]));
 
         end;
     finally
-      WTime.Free;
+      sw.Free;
     end;
   finally
     Whisp.Free;
+    SetLength(Tokens, 0);
   end;
-
 
 end;
 
@@ -168,6 +213,11 @@ begin
 
   { add your program here }
   repeat
+    TokenCount := 256;
+    BatchCount := 64;
+    BatchSize := 5;
+    PromptCount := 16;
+
     DoWhisper;
     writeln(stderr, '');
     writeln(stderr, 'Press X to Quit');

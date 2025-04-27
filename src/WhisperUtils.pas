@@ -70,8 +70,8 @@ begin
   try
     try
       {$ifdef FPC}
-      JV := GetJSON(Value);
-      Result := JV.FormatJSON([], Indentation);
+      // JV := GetJSON(Value);
+      Result := Value; // JV.FormatJSON([], Indentation);
       {$else}
       JV := TJSONObject.ParseJSONValue(Value);
       Result := JV.Format(Indentation);
