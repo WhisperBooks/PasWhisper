@@ -21,7 +21,7 @@ var
   GgmlBackendLoad: function (const BackendLibrary: PAnsiChar): PGgmlBackendReg; CDecl;
   GgmlBackendLoadAll: procedure (); CDecl;
   GgmlBackendTryLoadBest: function (const BackendDeviceClass: PAnsiChar; const LibraryPath: PAnsiChar = Nil): PGgmlBackendReg; CDecl;
-  GgmlBackendGetDeviceCount: function(): Integer; CDecl;
+  GgmlBackendGetDeviceCount: function(): Int64; CDecl;
 const
   {$IF DEFINED(OS_WIN64)}
   GGMLLibraryName = 'ggml.dll';

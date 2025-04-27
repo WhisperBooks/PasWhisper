@@ -10,14 +10,22 @@ interface
 {$MinEnumSize 4}
 
 type
+  GgmlBackendDevType   = ( // enum ggml_backend_dev_type
+    // CPU device using system memory
+    GGML_BACKEND_DEVICE_TYPE_CPU,
+    // GPU device using dedicated memory
+    GGML_BACKEND_DEVICE_TYPE_GPU,
+    // accelerator devices intended to be used together with the CPU backend (e.g. BLAS or AMX)
+    GGML_BACKEND_DEVICE_TYPE_ACCEL
+    );
+
   PGgmlBackendDevice = ^TGgmlBackendDevice;
 
   TCallBack = Pointer; // Callback holding type for unused / tdb callbacks
   TContext = Pointer;
   TDeviceGetName = function(dev: PGgmlBackendDevice): PAnsiChar; Cdecl; // const char * (*get_name)(ggml_backend_dev_t dev)
   TDeviceGetDescription = function(dev: PGgmlBackendDevice): PAnsiChar; Cdecl; // const char * (*get_description)(ggml_backend_dev_t dev); // device description: short informative description of the device, could be the model name
-  TDeviceGetMemory = procedure(dev: PGgmlBackendDevice; MemFree: PInt64; MemTotal: PInt64); CDecl;
-// void         (*get_memory)     (ggml_backend_dev_t dev, size_t * free, size_t * total);
+  TDeviceGetMemory = procedure(dev: PGgmlBackendDevice; MemFree: PInt64; MemTotal: PInt64); CDecl; // void         (*get_memory)     (ggml_backend_dev_t dev, size_t * free, size_t * total);
   {$ALIGN 8}
   TGgmlBackendRegInterface = record
     GetName: TCallBack;

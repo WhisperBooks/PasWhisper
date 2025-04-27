@@ -42,7 +42,8 @@ type
   TBackendDevice = record
     name: String;
     desc: String;
-    memory: Uint64;
+    memoryFree: Uint64;
+    memoryTotal: Uint64;
     dtype: int32;
   end;
 
