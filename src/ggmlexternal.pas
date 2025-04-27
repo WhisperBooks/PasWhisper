@@ -21,6 +21,7 @@ var
   GgmlBackendLoad: function (const BackendLibrary: PAnsiChar): PGgmlBackendReg; CDecl;
   GgmlBackendLoadAll: procedure (); CDecl;
   GgmlBackendTryLoadBest: function (const BackendDeviceClass: PAnsiChar; const LibraryPath: PAnsiChar = Nil): PGgmlBackendReg; CDecl;
+  GgmlBackendGetDeviceCount: function(): Integer; CDecl;
 const
   {$IF DEFINED(OS_WIN64)}
   GGMLLibraryName = 'ggml.dll';
@@ -45,6 +46,7 @@ begin
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest) := Nil;
+  Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := Nil;
 
   FreeAndNil(GgmlLibrary);
 end;
@@ -69,7 +71,7 @@ begin
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest)   := GgmlLibrary.Symbol('ggml_backend_try_load_best');
-
+      Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := GgmlLibrary.Symbol('ggml_backend_dev_count');
       GgmlLibraryIsLoaded := True;
 
     end

@@ -39,6 +39,13 @@ type
   TWhisperContext = Pointer;
   TWhisperState = Pointer;
 
+  TBackendDevice = record
+    name: String;
+    desc: String;
+    memory: Uint64;
+    dtype: int32;
+  end;
+
   TWhisperTimings = record
     SampleMs: Float;
     EncodeMs: Float;

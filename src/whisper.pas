@@ -64,7 +64,9 @@ type
     function  Decode(Tokens: PWhisperToken; const NTokens, NPast, NThreads: Integer): Integer; overload;
     function  Decode(Tokens: TWhisperTokenArray; const NTokens, NPast, NThreads: Integer): Integer; overload;
     function  LangAutoDetect(OffsetMs: Int32; NThreads: Int32; LangProbs: PFloat): Integer;
-    function  GetPreferredBackend: PGgmlBackend;
+    function  GetBackendCount: Integer;
+    function  GetIndexedBackend(AIndex: Integer): TBackendDevice;
+    function  GetPreferredBackend: TBackendDevice;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;
@@ -98,7 +100,7 @@ type
     property TokenToStr[const Token: TWhisperToken] : PAnsiString Read GetTokenToStr;
     property ModelTypeReadable   : PAnsiString Read GetModelTypeReadable;
     property ContextHasState     : Boolean Read FContextHasState;
- end;
+  end;
 
 var
   PModel: PAnsiChar;
@@ -118,7 +120,6 @@ end;
 function TWhisper.Decode(Tokens: TWhisperTokenArray; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
-  Result := 0;
   if FContextHasState then
     begin
       SafeMaskFPUExceptions(True);
@@ -142,7 +143,6 @@ end;
 function TWhisper.Decode(Tokens: PWhisperToken; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
-  Result := 0;
   if FContextHasState then
     begin
       SafeMaskFPUExceptions(True);
@@ -175,7 +175,6 @@ end;
 
 function TWhisper.Encode(const Offset, NThreads: Integer): Integer;
 begin
-  Result := 0;
   if FContextHasState then
     begin
       SafeMaskFPUExceptions(True);
@@ -203,6 +202,34 @@ begin
   FState := Nil;
 end;
 
+function TWhisper.GetBackendCount: Integer;
+begin
+  if FState <> Nil then
+    Result := WhisperGetBackendCount(FState)
+  else
+    Result := -1;
+end;
+
+function TWhisper.GetIndexedBackend(AIndex: Integer): TBackendDevice;
+var
+  backend: PGgmlBackend;
+  device: PGgmlBackendDevice;
+begin
+  Result := default(TBackendDevice);
+  if FState = Nil then
+    Exit;
+
+  backend := WhisperGetIndexedBackend(FState, AIndex);
+  if backend = nil then
+    Exit;
+
+  device := backend.Device;
+  if device = nil then
+    Exit;
+
+  Result.name := String(device.IFace.GetName(device));
+  Result.desc := String(device.IFace.GetDescription(device));
+end;
 function TWhisper.GetIsMultilingual: Int32;
 begin
   Result := WhisperIsMultilingual(FCtx);
@@ -317,9 +344,25 @@ begin
   Result := WhisperNvocab(FCtx);
 end;
 
-function TWhisper.GetPreferredBackend: PGgmlBackend;
+function TWhisper.GetPreferredBackend: TBackendDevice;
+var
+  backend: PGgmlBackend;
+  device: PGgmlBackendDevice;
 begin
-  Result := WhisperGetPreferredBackend(FState);
+  Result := default(TBackendDevice);
+  if FState = Nil then
+    Exit;
+
+  backend := WhisperGetPreferredBackend(FState);
+  if backend = nil then
+    Exit;
+
+  device := backend.Device;
+  if device = nil then
+    Exit;
+
+  Result.name := String(device.IFace.GetName(device));
+  Result.desc := String(device.IFace.GetDescription(device));
 end;
 
 function TWhisper.GetTimings: PWhisperTimings;

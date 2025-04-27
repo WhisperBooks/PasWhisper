@@ -45,7 +45,7 @@ implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, GgmlTypes, IOUtils, Diagnostics;
+uses WhisperTypes, GgmlTypes, IOUtils, GgmlExternal;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -67,6 +67,9 @@ var
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
+  dev: TBackendDevice;
+  GgmlBackendCount: Integer;
+  WhisperBackendCount: Integer;
 begin
   SetLength(Tokens, TokenCount);
 
@@ -80,9 +83,11 @@ begin
       if not BackendsLoaded then
         begin
   //        Whisp.LoadBackends;
-          Whisp.LoadBestBackend('cuda');
+          Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('cpu-sandybridge');
+          Whisp.LoadBestBackend('rpc');
+          Whisp.LoadBestBackend('vulkan');
+          Whisp.LoadBestBackend('cuda');
 
           BackendsLoaded := True;
         end;
@@ -99,10 +104,37 @@ begin
     {$ELSE}
       Unsupported Platform
     {$ENDIF}
+      GgmlBackendCount := GgmlBackendGetDeviceCount;
+      Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
+      Memo1.Lines.Add('');
+
       if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
         begin
-//          Whisp.GetPreferredBackend;
+          WhisperBackendCount := Whisp.GetBackendCount;
 
+          if WhisperBackendCount < 1 then
+            begin
+              Memo1.Lines.Add(Format('Insufficient Devices',[WhisperBackendCount]));
+              Exit;
+            end;
+          Memo1.Lines.Add(Format('Preferred Device (of %d)',[WhisperBackendCount]));
+
+          dev := Whisp.GetPreferredBackend;
+          Memo1.Lines.Add(Format('Device      : %s',[dev.name]));
+          Memo1.Lines.Add(Format('Description : %s',[dev.desc]));
+          Memo1.Lines.Add('');
+
+          if WhisperBackendCount > 1 then
+            begin
+              Memo1.Lines.Add('Backup Device(s)');
+              for I := 1 to WhisperBackendCount - 1 do
+                begin
+                  dev := Whisp.GetIndexedBackend(I);
+                  Memo1.Lines.Add(Format('Device      : %s',[dev.name]));
+                  Memo1.Lines.Add(Format('Description : %s',[dev.desc]));
+                  Memo1.Lines.Add('');
+                end;
+            end;
           NMels := Whisp.ModelNmels;
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;

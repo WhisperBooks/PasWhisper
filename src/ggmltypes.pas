@@ -10,10 +10,14 @@ interface
 {$MinEnumSize 4}
 
 type
+  PGgmlBackendDevice = ^TGgmlBackendDevice;
 
   TCallBack = Pointer; // Callback holding type for unused / tdb callbacks
   TContext = Pointer;
-
+  TDeviceGetName = function(dev: PGgmlBackendDevice): PAnsiChar; Cdecl; // const char * (*get_name)(ggml_backend_dev_t dev)
+  TDeviceGetDescription = function(dev: PGgmlBackendDevice): PAnsiChar; Cdecl; // const char * (*get_description)(ggml_backend_dev_t dev); // device description: short informative description of the device, could be the model name
+  TDeviceGetMemory = procedure(dev: PGgmlBackendDevice; MemFree: PInt64; MemTotal: PInt64); CDecl;
+// void         (*get_memory)     (ggml_backend_dev_t dev, size_t * free, size_t * total);
   {$ALIGN 8}
   TGgmlBackendRegInterface = record
     GetName: TCallBack;
@@ -49,9 +53,9 @@ type
   end;
 
   IGgmlBackendDevice = record     // struct ggml_backend_device_i
-    GetName: TCallback;           // const char * (*get_name)(ggml_backend_dev_t dev); // device name: short identifier for this device, such as "CPU" or "CUDA0"
-    GetDescription: TCallback;    // const char * (*get_description)(ggml_backend_dev_t dev); // device description: short informative description of the device, could be the model name
-    GetMemory: TCallback;         // void         (*get_memory)(ggml_backend_dev_t dev, size_t * free, size_t * total);
+    GetName: TDeviceGetName;      // const char * (*get_name)       (ggml_backend_dev_t dev); // device name: short identifier for this device, such as "CPU" or "CUDA0"
+    GetDescription: TDeviceGetDescription;    // const char * (*get_description)(ggml_backend_dev_t dev); // device description: short informative description of the device, could be the model name
+    GetMemory: TCallback;         // void         (*get_memory)     (ggml_backend_dev_t dev, size_t * free, size_t * total);
     GetType: TCallback;           // enum ggml_backend_dev_type (*get_type)(ggml_backend_dev_t dev);
     GetProps: TCallback;          // void (*get_props)(ggml_backend_dev_t dev, struct ggml_backend_dev_props * props);
     InitBackend: TCallback;       // ggml_backend_t (*init_backend)(ggml_backend_dev_t dev, const char * params);
@@ -71,7 +75,6 @@ type
     Reg: PGgmlBackendReg;         // ggml_backend_reg_t reg;
     Context: TContext;            // void * context;
   end;
-  PGgmlBackendDevice = ^TGgmlBackendDevice;
 
   TGgmlBackend = record         // struct ggml_backend
     Guid: PGGMLGuid;            // ggml_guid_t guid;

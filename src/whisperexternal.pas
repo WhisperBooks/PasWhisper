@@ -142,7 +142,10 @@ var
     WhisperGetStateFromContext: function(Ctx: TWhisperContext): TWhisperState; CDecl;
     WhisperGetTimingsWithState: function(State: TWhisperState): PWhisperTimings; CDecl;
     WhisperGetSystemInfoJson: function(): PChar; CDecl;
-    WhisperGetPreferredBackend: function(State: TWhisperState): PGgmlBackend;
+
+    WhisperGetBackendCount: function(State: TWhisperState): Integer; CDecl;
+    WhisperGetIndexedBackend: function(State: TWhisperState; Index: Integer): PGgmlBackend; CDecl;
+    WhisperGetPreferredBackend: function(State: TWhisperState): PGgmlBackend; CDecl;
 
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
@@ -231,7 +234,10 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := Nil;
+
+  Pointer({$ifndef FPC}@{$endif} WhisperGetBackendCount)     := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := Nil;
+  Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend) := Nil;
 
   FreeAndNil(WhisperLibrary);
 end;
@@ -315,6 +321,9 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_flat_get_state_from_context');
       Pointer({$ifndef FPC}@{$endif} WhisperGetTimingsWithState) := WhisperLibrary.Symbol('whisper_flat_get_timings_with_state');
       Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_flat_get_system_info_json');
+
+      Pointer({$ifndef FPC}@{$endif} WhisperGetBackendCount)   := WhisperLibrary.Symbol('whisper_flat_get_backend_count');
+      Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := WhisperLibrary.Symbol('whisper_flat_get_indexed_backend');
       Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := WhisperLibrary.Symbol('whisper_flat_get_preferred_backend');
 
       WhisperLibraryIsLoaded := True;
