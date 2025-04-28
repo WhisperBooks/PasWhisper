@@ -4,6 +4,7 @@ object Form1: TForm1
   Caption = 'Form1'
   ClientHeight = 795
   ClientWidth = 455
+  Position = Default
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -53,6 +54,12 @@ object Form1: TForm1
       Position.Y = 8.000000000000000000
       TabOrder = 1
       Text = 'CheckBox1'
+    end
+    object CheckBox2: TCheckBox
+      Position.X = 168.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 2
+      Text = 'CheckBox2'
     end
   end
   object MainMenu1: TMainMenu

@@ -5,7 +5,7 @@ unit WhisperPlatform;
 interface
 
 uses 
-  {$if defined(OS_OSXARM64) or defined(OS_OSX64)}
+  {$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
     {$ifdef fpc}
 	  MacOSAll,
     {$else}
@@ -14,7 +14,7 @@ uses
   {$endif}
   SysUtils, WhisperUtils;
 
-{$if defined(OS_OSXARM64) or defined(OS_OSX64)}
+{$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
 var
   BundlePathCached: Boolean;
   BundlePathCache: string;
@@ -38,7 +38,7 @@ begin
   Result := IncludeTrailingPathDelimiter(S);
 end;
 
-{$if defined(OS_OSXARM64) or defined(OS_OSX64)}
+{$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
 function BundlePath: string;
 { Based on
   http://wiki.freepascal.org/OS_X_Programming_Tips#How_to_obtain_the_path_to_the_Bundle }
@@ -54,7 +54,7 @@ begin
     if bundle = nil then
     begin
       BundlePathCache := '';
-      WritelnLog('We cannot detect our macOS AppBundle. Probably the application was run directly (like a Unix application, without being wrapped in a directory like "xxx.app"). Some GUI features (like application menu) will not work without running through AppBundle.');
+      Raise Exception.Create('We cannot detect our macOS AppBundle. Probably the application was run directly (like a Unix application, without being wrapped in a directory like "xxx.app"). Some GUI features (like application menu) will not work without running through AppBundle.');
     end else
     begin
       pathRef := CFBundleCopyBundleUrl(bundle);

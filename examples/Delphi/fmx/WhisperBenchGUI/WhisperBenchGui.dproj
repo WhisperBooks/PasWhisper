@@ -4,12 +4,11 @@
         <ProjectVersion>20.2</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>693378</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
-        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchGui</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -108,6 +107,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <SanitizedProjectName>WhisperBenchGui</SanitizedProjectName>
+        <FeatureFilesAdded>false</FeatureFilesAdded>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>fmx;emshosting;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;FireDACCommonDriver;IndyProtocols;IndyIPClient;dbxcds;FmxTeeUI;emsedge;bindcompfmx;FireDACSqliteDriver;DbxClientDriver;soapmidas;fmxFireDAC;dbexpress;Python;inet;DataSnapCommon;fmxase;dbrtl;FireDACDBXDriver;CustomIPTransport;DBXInterBaseDriver;IndySystem;bindcomp;FireDACCommon;emsserverresource;inetstn;IndyCore;RESTBackendComponents;bindcompdbx;rtl;RESTComponents;DBXSqliteDriver;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;DataSnapFireDAC;emsclientfiredac;FireDAC;FireDACDSDriver;xmlrtl;tethering;P4DEnvironment;dsnap;CloudService;DataSnapNativeClient;FMXTee;PythonFmx;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -347,234 +347,336 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource">
+                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource"/>
+                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>WhisperBenchGui.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-base.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-base.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-base.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-base.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-alderlake.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
-                        <RemoteName>libggml-cpu.so</RemoteName>
+                        <RemoteName>libggml-cpu-alderlake.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-alderlake.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
-                        <RemoteName>libggml-cpu.so</RemoteName>
+                        <RemoteName>libggml-cpu-alderlake.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-haswell.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-haswell.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-haswell.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-haswell.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-icelake.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-icelake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-icelake.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-icelake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sandybridge.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sandybridge.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sandybridge.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sandybridge.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sapphirerapids.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sapphirerapids.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sapphirerapids.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sapphirerapids.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-skylakex.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-skylakex.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-skylakex.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-skylakex.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sse42.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sse42.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-sse42.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sse42.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-x64.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-x64.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cpu-x64.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-x64.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cuda.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cuda.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-cuda.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cuda.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-rpc.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-rpc.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-rpc.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-rpc.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-vulkan.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-vulkan.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml-vulkan.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-vulkan.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libggml.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libwhisper.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libwhisper.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libwhisper.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libwhisper.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-base.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-base.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-base.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-base.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-base.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-base.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-blas.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-blas.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-blas.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-blas.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-blas.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-blas.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-cpu.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-cpu.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-cpu.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-cpu.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-cpu.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-cpu.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-metal.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-metal.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-metal.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml-metal.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml-metal.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml-metal.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libggml.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libggml.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libggml.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.1.7.5.dylib" Configuration="Debug" Class="File">
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\MacOS\</RemoteDir>
-                        <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.1.7.5.dylib" Configuration="Release" Class="File">
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\MacOS\</RemoteDir>
-                        <RemoteName>libwhisper.1.7.5.dylib</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.1.dylib" Configuration="Debug" Class="File">
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\MacOS\</RemoteDir>
-                        <RemoteName>libwhisper.1.dylib</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.1.dylib" Configuration="Release" Class="File">
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\MacOS\</RemoteDir>
-                        <RemoteName>libwhisper.1.dylib</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.coreml.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libwhisper.coreml.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.coreml.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.coreml.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libwhisper.coreml.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.coreml.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.dylib" Configuration="Debug" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libwhisper.dylib" Configuration="Debug" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\lib\mac\libwhisper.dylib" Configuration="Release" Class="File">
+                <DeployFile LocalName="..\..\..\..\lib\mac\arm\libwhisper.dylib" Configuration="Release" Class="File">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.dylib</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-base.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-cpu.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-cuda.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml-vulkan.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libggml.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\linux\libwhisper.so" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-base.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-base.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-blas.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-blas.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-cpu.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-cpu.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-metal.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml-metal.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libggml.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.1.7.5.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.1.7.5.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.1.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.1.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.coreml.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.coreml.dylib" Configuration="Release" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.dylib" Configuration="Debug" Class="File"/>
+                <DeployFile LocalName="..\lib\mac\libwhisper.dylib" Configuration="Release" Class="File"/>
                 <DeployFile LocalName="Linux64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Linux64">
                         <RemoteName>WhisperBenchGui</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
-                    <Platform Name="OSXARM64">
+                <DeployFile LocalName="Linux64\Release\WhisperBenchGui" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Linux64">
                         <RemoteName>WhisperBenchGui</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList"/>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="OSXARM64\Release\WhisperBenchGui.entitlements" Configuration="Release" Class="ProjectOSXEntitlements">
                     <Platform Name="OSXARM64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                <DeployFile LocalName="OSXARM64\Release\WhisperBenchGui.info.plist" Configuration="Release" Class="ProjectOSXInfoPList">
                     <Platform Name="OSXARM64">
                         <RemoteName>Info.plist</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="OSXARM64\Release\WhisperBenchGui" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="OSXARM64">
                         <RemoteName>WhisperBenchGui</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -709,16 +811,6 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidSplashStylesV35">
-                    <Platform Name="Android">
-                        <RemoteDir>res\values-v35</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\values-v35</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

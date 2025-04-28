@@ -27,7 +27,7 @@ const
   GGMLLibraryName = 'ggml.dll';
   {$ELSEIF DEFINED(OS_LINUX64)}
   GGMLLibraryName = 'libggml.so';
-  {$ELSEIF DEFINED(OS_OSXARM64)}
+  {$ELSEIF DEFINED(OS_OSX64ARM)}
   GGMLLibraryName = 'libggml.dylib';
   {$ELSEIF DEFINED(OS_OSX64)}
   GGMLLibraryName = 'libggml.dylib';

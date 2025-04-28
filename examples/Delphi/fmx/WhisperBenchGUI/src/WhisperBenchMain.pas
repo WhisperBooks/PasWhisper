@@ -19,6 +19,7 @@ type
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem3: TMenuItem;
+    CheckBox2: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
@@ -86,20 +87,28 @@ begin
           Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
-          Whisp.LoadBestBackend('vulkan');
-          Whisp.LoadBestBackend('cuda');
+          if Checkbox2.IsChecked then
+            begin
+              Whisp.LoadBestBackend('cuda');
+              Whisp.LoadBestBackend('vulkan');
+            end
+          else
+            begin
+              Whisp.LoadBestBackend('vulkan');
+              Whisp.LoadBestBackend('cuda');
+            end;
 
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF (OS_PLATFORM_TYPE = 'WIN64')}
+    {$IF DEFINED(OS_WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
+    {$ELSEIF DEFINED(LINUX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
+    {$ELSEIF DEFINED(OS_OSX64ARM)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSX64')}
+    {$ELSEIF DEFINED(OSX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
     {$ELSE}
       Unsupported Platform
@@ -219,8 +228,11 @@ begin
   BatchSize := 5;
   PromptCount := 16;
   Caption := 'WhisperBenchGUI';
+  Width := 480;
+  Height := 800;
   Button1.Text := 'Benchmark';
   CheckBox1.Text := 'InitWithState';
+  CheckBox2.Text := 'Cuda First';
 end;
 
 

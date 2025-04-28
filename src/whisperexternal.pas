@@ -1,6 +1,7 @@
 unit WhisperExternal;
 
 {$I platform.inc}
+
 {$IFDEF FPC}
   {$packrecords C}
 {$ELSE}
@@ -155,7 +156,7 @@ const
   WhisperLibraryName = 'whisper.dll';
   {$ELSEIF DEFINED(OS_LINUX64)}
   WhisperLibraryName = 'libwhisper.so';
-  {$ELSEIF DEFINED(OS_OSXARM64)}
+  {$ELSEIF DEFINED(OS_OSX64ARM)}
   WhisperLibraryName = 'libwhisper.dylib';
   {$ELSEIF DEFINED(OS_OSX64)}
   WhisperLibraryName = 'libwhisper.dylib';

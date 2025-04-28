@@ -1,7 +1,8 @@
 unit WhisperCliMain;
 
 interface
-  uses SysUtils, Classes, Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
+  uses SysUtils, IOUtils, Classes,
+    Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
 
 type
   TWhisperCli = class
