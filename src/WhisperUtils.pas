@@ -39,6 +39,8 @@ function BundlePath: string;
 implementation
 
 {$ifdef OS_OSX}
+uses MacOSAll;
+
 var
   BundlePathCached: Boolean;
   BundlePathCache: string;
