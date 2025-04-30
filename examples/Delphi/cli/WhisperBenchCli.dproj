@@ -5,11 +5,10 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>131202</TargetedPlatforms>
         <AppType>Console</AppType>
         <MainSource>WhisperBenchCli.dpr</MainSource>
-        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchCli</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -220,22 +219,6 @@
         <DCCReference Include="..\..\..\src\WhisperPlatform.pas"/>
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\src\WhisperLog.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Console.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Files.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Json.Serializer.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.JSON.Utils.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Log.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Logger.Intf.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.RTTI.Utils.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Serializer.Intf.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.SysInfo.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Threads.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Value.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Base64.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Commons.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Console.pas"/>
-        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.FaultControl.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -279,7 +262,19 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-base.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-base.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-blas.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-blas.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-blas.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-blas.so</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -291,7 +286,19 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-alderlake.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-alderlake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-haswell.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-haswell.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-haswell.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cpu-haswell.so</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -303,7 +310,19 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-icelake.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-icelake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sandybridge.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sandybridge.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sandybridge.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cpu-sandybridge.so</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -315,7 +334,19 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sapphirerapids.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sapphirerapids.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-skylakex.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-skylakex.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-skylakex.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cpu-skylakex.so</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -327,9 +358,33 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sse42.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sse42.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-x64.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml-cpu-x64.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-x64.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-x64.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cuda.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cuda.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cuda.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cuda.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -339,13 +394,55 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-rpc.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-rpc.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-vulkan.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-vulkan.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-vulkan.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-vulkan.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libggml.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libggml.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libopenvino.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libopenvino.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libopenvino.so" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libopenvino.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\lib\linux\x64\libwhisper.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libwhisper.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libwhisper.so" Configuration="Release" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libwhisper.so</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -493,12 +590,6 @@
                 <DeployFile LocalName="Win64\Debug\WhisperBenchCli.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchCli.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win64\Debug\WhisperBenchCli.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>WhisperBenchCli.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

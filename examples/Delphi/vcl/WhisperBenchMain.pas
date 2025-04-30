@@ -1,27 +1,23 @@
-unit whispertranscribemain;
+unit WhisperBenchMain;
 
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.Menus;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
   TForm1 = class(TForm)
-    Layout1: TLayout;
-    Layout2: TLayout;
-    Button1: TButton;
+    Panel1: TPanel;
+    Panel2: TPanel;
     Memo1: TMemo;
+    Button1: TButton;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
-    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure MenuItem3Click(Sender: TObject);
-    procedure FormResize(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
@@ -41,24 +37,51 @@ var
 const
   Threads: Integer = 4;
   MaxToken = 256;
-  Appname = 'WhisperTranscribeGUI';
+  Appname = 'WhisperBenchGUI';
 
 implementation
-
-{$R *.fmx}
 
 uses
   // WhisperLog,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
   WhisperExternal, Whisper, WhisperUtils;
 
-procedure TForm1.Button1Click(Sender: TObject);
+  {$R *.dfm}
+
+  procedure TForm1.Button1Click(Sender: TObject);
 begin
   Button1.Enabled := False;
   Memo1.Lines.Clear;
   Application.ProcessMessages;
   RunBench;
   Button1.Enabled := True;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FinalizeWhisperLibrary;
+  FinalizeGgmlLibrary;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  SetMultiByteConversionCodePage(CP_UTF8);
+  InitializeGgmlLibrary;
+  InitializeWhisperLibrary;
+  TokenCount := 256;
+  BatchCount := 64;
+  BatchSize := 5;
+  PromptCount := 16;
+  Caption := AppName;
+  Width := 640;
+  Height := 960;
+  Memo1.Clear;
+  Button1.Caption := 'Benchmark';
+  CheckBox1.Checked := True;
+  CheckBox1.Caption := 'InitWithState';
+  CheckBox2.Caption := 'Cuda First';
+  CheckBox3.Caption := 'Cuda';
+  CheckBox4.Caption := 'AMD';
 end;
 
 procedure TForm1.RunBench;
@@ -76,7 +99,7 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
-  // LogTest();
+//  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
@@ -88,22 +111,23 @@ begin
     try
       if not BackendsLoaded then
         begin
-  //        Whisp.LoadBackends;
+          // Whisp.LoadBackends;
+
           Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
-          if Checkbox2.IsChecked then
+          if Checkbox2.Checked then
             begin
-              if Checkbox3.IsChecked then
+              if Checkbox3.Checked then
                 Whisp.LoadBestBackend('cuda');
-              if Checkbox4.IsChecked then
+              if Checkbox4.Checked then
                 Whisp.LoadBestBackend('vulkan');
             end
           else
             begin
-              if Checkbox4.IsChecked then
+              if Checkbox4.Checked then
                 Whisp.LoadBestBackend('vulkan');
-              if Checkbox3.IsChecked then
+              if Checkbox3.Checked then
                 Whisp.LoadBestBackend('cuda');
             end;
 
@@ -126,7 +150,7 @@ begin
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
       Memo1.Lines.Add('');
 
-      if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
+      if Whisp.LoadModel(ModelFile, not Checkbox1.Checked) then
         begin
           WhisperBackendCount := Whisp.GetBackendCount;
 
@@ -240,45 +264,6 @@ begin
     SetLength(Tokens, 0);
   end;
 
-end;
-
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
-end;
-
-procedure TForm1.FormCreate(Sender: TObject);
-begin
-  SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
-  TokenCount := 256;
-  BatchCount := 64;
-  BatchSize := 5;
-  PromptCount := 16;
-  Caption := AppName;
-  Width := 640;
-  Height := 960;
-  Button1.Text := 'Transcribe';
-  CheckBox1.Text := 'InitWithState';
-  CheckBox2.Text := 'Cuda First';
-  CheckBox3.Text := 'Cuda';
-  CheckBox4.Text := 'AMD';
-end;
-
-
-procedure TForm1.FormResize(Sender: TObject);
-begin
-  Caption := AppName + ' (' + IntToStr(Width) + ' x ' + IntToStr(Height) + ')';
-end;
-
-procedure TForm1.MenuItem3Click(Sender: TObject);
-begin
-  Memo1.Lines.Clear;
-  Memo1.Lines.Add(Format('TGgmlBackend       : %d',[SizeOf(TGgmlBackend)]));
-  Memo1.Lines.Add(Format('TGgmlBackendDevice : %d',[SizeOf(TGgmlBackendDevice)]));
-  Memo1.Lines.Add(Format('IGgmlBackendDevice : %d',[SizeOf(IGgmlBackendDevice)]));
 end;
 
 end.

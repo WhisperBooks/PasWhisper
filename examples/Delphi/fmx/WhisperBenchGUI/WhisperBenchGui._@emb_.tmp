@@ -1,0 +1,15 @@
+WhisperBenchGui\libggml-cpu-skylakex.so
+WhisperBenchGui\libggml-vulkan.so
+WhisperBenchGui\libggml-cpu-x64.so
+WhisperBenchGui\libwhisper.so
+WhisperBenchGui\libggml-cuda.so
+WhisperBenchGui\libggml-cpu-haswell.so
+WhisperBenchGui\WhisperBenchGui
+WhisperBenchGui\libggml-cpu-sapphirerapids.so
+WhisperBenchGui\libggml.so
+WhisperBenchGui\libggml-rpc.so
+WhisperBenchGui\libggml-cpu-icelake.so
+WhisperBenchGui\libggml-cpu-sandybridge.so
+WhisperBenchGui\libggml-base.so
+WhisperBenchGui\libggml-cpu-alderlake.so
+WhisperBenchGui\libggml-cpu-sse42.so

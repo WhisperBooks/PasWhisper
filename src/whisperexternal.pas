@@ -324,10 +324,4 @@ begin
 
 end;
 
-initialization
-  SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeWhisperLibrary;
-
-finalization
-  FinalizeWhisperLibrary;
 end.

@@ -35,13 +35,23 @@ function ExclPathDelim(const s: string): string;
 function InclPathDelim(const s: string): string;
 
 {$ifdef OS_OSX}
+type
+  CFStringRef = Pointer;
+  CFTypeRef = Pointer;
+  CFBundleRef = Pointer;
+  CFURLRef = Pointer;
+
 function BundlePath: string;
 {$ENDIF}
 
 implementation
 
-{$ifdef OS_OSX}
+{$ifdef OS_OSX64ARM}
+{$IFDEF FPC}
 uses MacOSAll;
+{$ELSE}
+uses Macapi.CoreFoundation;
+{$ENDIF}
 
 var
   BundlePathCached: Boolean;
@@ -62,7 +72,7 @@ begin
     if bundle = nil then
     begin
       BundlePathCache := '';
-      WritelnLog('We cannot detect our macOS AppBundle. Probably the application was run directly (like a Unix application, without being wrapped in a directory like "xxx.app"). Some GUI features (like application menu) will not work without running through AppBundle.');
+//      WritelnLog('We cannot detect our macOS AppBundle. Probably the application was run directly (like a Unix application, without being wrapped in a directory like "xxx.app"). Some GUI features (like application menu) will not work without running through AppBundle.');
     end else
     begin
       pathRef := CFBundleCopyBundleUrl(bundle);
@@ -70,7 +80,7 @@ begin
       CFStringGetPascalString(pathCFStr, @pathStr, 255, CFStringGetSystemEncoding());
       CFRelease(pathRef);
       CFRelease(pathCFStr);
-      BundlePathCache := pathStr;
+      BundlePathCache := String(pathStr);
       BundlePathCache := InclPathDelim(BundlePathCache);
     end;
     BundlePathCached := true;

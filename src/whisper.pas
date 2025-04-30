@@ -425,7 +425,8 @@ function TWhisper.LoadBestBackend(const ADeviceType, APath: String): PGgmlBacken
 begin
   SafeMaskFPUExceptions(True);
   try
-    Result := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
+    Result := Nil;
+    GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
   finally
     SafeMaskFPUExceptions(False);
   end;

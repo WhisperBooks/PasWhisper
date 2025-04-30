@@ -72,10 +72,4 @@ begin
 
 end;
 
-initialization
-  InitializeGgmlLibrary;
-
-finalization
-  FinalizeGgmlLibrary;
-
 end.

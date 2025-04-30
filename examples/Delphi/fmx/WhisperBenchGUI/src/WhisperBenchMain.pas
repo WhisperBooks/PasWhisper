@@ -4,8 +4,6 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  WhisperLog,
-  Whisper, WhisperUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
   FMX.Memo, FMX.Menus;
@@ -27,6 +25,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -51,7 +50,10 @@ implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, GgmlTypes, IOUtils, GgmlExternal;
+uses
+  // WhisperLog,
+  WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
+  WhisperExternal, Whisper, WhisperUtils;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -77,7 +79,7 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
-  LogTest();
+  // LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
@@ -89,7 +91,8 @@ begin
     try
       if not BackendsLoaded then
         begin
-  //        Whisp.LoadBackends;
+//          Whisp.LoadBackends;
+
           Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
@@ -243,8 +246,17 @@ begin
 
 end;
 
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FinalizeWhisperLibrary;
+  FinalizeGgmlLibrary;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  SetMultiByteConversionCodePage(CP_UTF8);
+  InitializeGgmlLibrary;
+  InitializeWhisperLibrary;
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;

@@ -1,9 +1,12 @@
 unit WhisperCliMain;
 
 interface
-  uses SysUtils, IOUtils, Classes,
-    WhisperLog,
-    Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
+
+uses
+ SysUtils, IOUtils, Classes,
+//    WhisperLog,
+  WhisperTypes, GgmlTypes, GgmlExternal,
+  WhisperExternal, Whisper, WhisperUtils;
 
 type
   TWhisperCli = class
@@ -12,6 +15,7 @@ type
       procedure DoWhisper;
     public
       constructor Create;
+      Destructor Destroy; override;
       procedure MainLoop;
   end;
 
@@ -34,7 +38,9 @@ end;
 
 constructor TWhisperCli.Create;
 begin
-  // Just an empty constructor
+  SetMultiByteConversionCodePage(CP_UTF8);
+  InitializeGgmlLibrary;
+  InitializeWhisperLibrary;
 end;
 
 procedure TWhisperCli.MainLoop;
@@ -49,6 +55,13 @@ begin
     ReadLn(s);
   until (s = 'x') or (s = 'X');
 end;
+destructor TWhisperCli.Destroy;
+begin
+  FinalizeWhisperLibrary;
+  FinalizeGgmlLibrary;
+ inherited;
+end;
+
 procedure TWhisperCli.DoWhisper;
 var
   I: Integer;
@@ -61,7 +74,7 @@ var
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
 begin
-  LogTest();
+//  LogTest();
   sw := TMilliTimer.Create;
   try
     Whisp := TWhisper.Create;

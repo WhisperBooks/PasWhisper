@@ -287,18 +287,27 @@ class function TDynLib.Load(const AName: string; RaiseExceptionOnError: boolean)
 
 var
   Handle: TDynLibHandle;
+  LPath: String;
 begin
+  LPath := AppPath() + AName;
   if InternalDisableDynamicLibraries then
     Handle := InvalidDynLibHandle
   else
   begin
-    Handle := LoadLibrary(PChar(AppPath() + AName));
+    Handle := LoadLibrary(PChar(LPath));
     { On macOS, search for dynamic libraries in the bundle too.
       This fallback makes sense for libpng, libvorbisfile, libsteam_api...
       It seems that for everything, so just do it always. }
+    {$ifndef OS_WIN64}
+    WriteLn(Format('Trying to load library from %s', [LPath]));
+    {$ENDIF}
   {$ifdef OS_OSX}
     if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
-      Handle := LoadLibrary(PChar(BundlePath + 'Contents/MacOS/' + AName));
+      begin
+        LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
+        WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
+        Handle := LoadLibrary(PChar(LPath));
+      end;
   {$endif}
   end;
 
