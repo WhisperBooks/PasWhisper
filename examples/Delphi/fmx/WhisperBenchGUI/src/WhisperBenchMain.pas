@@ -4,6 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  WhisperLog,
   Whisper, WhisperUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
@@ -76,6 +77,7 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
+  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do

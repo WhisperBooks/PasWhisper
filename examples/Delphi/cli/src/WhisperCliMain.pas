@@ -2,6 +2,7 @@ unit WhisperCliMain;
 
 interface
   uses SysUtils, IOUtils, Classes,
+    WhisperLog,
     Whisper, WhisperTypes, GgmlExternal, WhisperUtils;
 
 type
@@ -60,6 +61,7 @@ var
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
 begin
+  LogTest();
   sw := TMilliTimer.Create;
   try
     Whisp := TWhisper.Create;
@@ -91,7 +93,7 @@ begin
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
+    {$ELSEIF (OS_PLATFORM_TYPE = 'OSX64ARM')}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
     {$ELSE}
       Unsupported Platform

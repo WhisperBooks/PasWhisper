@@ -2,13 +2,14 @@
     <PropertyGroup>
         <ProjectGuid>{4382DDB8-625E-4F53-AEB9-02A42B9A92F4}</ProjectGuid>
         <ProjectVersion>20.2</ProjectVersion>
-        <FrameworkType>None</FrameworkType>
+        <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">OSXARM64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>131202</TargetedPlatforms>
         <AppType>Console</AppType>
         <MainSource>WhisperBenchCli.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchCli</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -218,6 +219,23 @@
         <DCCReference Include="..\..\..\src\ggmltypes.pas"/>
         <DCCReference Include="..\..\..\src\WhisperPlatform.pas"/>
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
+        <DCCReference Include="..\..\..\src\WhisperLog.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Console.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Files.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Json.Serializer.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.JSON.Utils.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Log.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Logger.Intf.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.RTTI.Utils.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Serializer.Intf.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.SysInfo.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Threads.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Value.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Base64.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Commons.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.Console.pas"/>
+        <DCCReference Include="..\..\..\thirdparty\QuickLib\Quick.FaultControl.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -333,6 +351,104 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-base.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-base.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-base.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-base.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-blas.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-blas.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-blas.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-blas.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-cpu.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-cpu.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-cpu.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-cpu.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-metal.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-metal.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml-metal.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml-metal.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libggml.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libggml.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libwhisper.coreml.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libwhisper.coreml.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libwhisper.coreml.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libwhisper.coreml.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libwhisper.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libwhisper.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\mac\arm\libwhisper.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libwhisper.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Linux64\Debug\WhisperBenchCli" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Linux64">
                         <RemoteName>WhisperBenchCli</RemoteName>
@@ -341,6 +457,29 @@
                 </DeployFile>
                 <DeployFile LocalName="Linux64\Release\WhisperBenchCli" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Linux64">
+                        <RemoteName>WhisperBenchCli</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchCli.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>WhisperBenchCli</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchCli.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                    <Platform Name="OSXARM64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchCli.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchCli" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="OSXARM64">
                         <RemoteName>WhisperBenchCli</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -354,6 +493,12 @@
                 <DeployFile LocalName="Win64\Debug\WhisperBenchCli.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchCli.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\WhisperBenchCli.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>WhisperBenchCli.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

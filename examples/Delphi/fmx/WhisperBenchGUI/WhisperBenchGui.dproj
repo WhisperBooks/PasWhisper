@@ -4,11 +4,12 @@
         <ProjectVersion>20.2</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">OSXARM64</Platform>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>693378</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchGui</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -310,6 +311,23 @@
         <DCCReference Include="..\..\..\..\src\whispertypes.pas"/>
         <DCCReference Include="..\..\..\..\src\WhisperPlatform.pas"/>
         <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
+        <DCCReference Include="..\..\..\..\src\WhisperLog.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Console.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Files.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Json.Serializer.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.JSON.Utils.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Log.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Logger.Intf.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.RTTI.Utils.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Serializer.Intf.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.SysInfo.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Threads.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Value.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Base64.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Commons.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Console.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.FaultControl.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -348,6 +366,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource"/>
+                <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>WhisperBenchGui.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>WhisperBenchGui.icns</RemoteName>
@@ -663,8 +687,25 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                    <Platform Name="OSXARM64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList"/>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>WhisperBenchGui</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OSXARM64\Release\WhisperBenchGui.entitlements" Configuration="Release" Class="ProjectOSXEntitlements">
                     <Platform Name="OSXARM64">
                         <Overwrite>true</Overwrite>

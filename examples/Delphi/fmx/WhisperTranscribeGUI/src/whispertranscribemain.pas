@@ -4,10 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  WhisperLog,
   Whisper, WhisperUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo;
+  FMX.Memo, FMX.Menus;
 
 type
   TForm1 = class(TForm)
@@ -16,8 +17,13 @@ type
     Button1: TButton;
     Memo1: TMemo;
     CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -36,12 +42,13 @@ var
 const
   Threads: Integer = 4;
   MaxToken = 256;
+  Appname = 'WhisperTranscribeGUI';
 
 implementation
 
 {$R *.fmx}
 
-uses WhisperTypes, GgmlTypes, IOUtils, Diagnostics;
+uses WhisperTypes, GgmlTypes, IOUtils, GgmlExternal;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -59,11 +66,15 @@ var
   Whisp: TWhisper;
   NMels: Int32;
   Tokens: TWhisperTokenArray;
-  Timings: PWhisperTimings;
+  Timings: PWhisperActivity;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
+  dev: TBackendDevice;
+  GgmlBackendCount: Integer;
+  WhisperBackendCount: Integer;
 begin
+  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
@@ -76,26 +87,82 @@ begin
       if not BackendsLoaded then
         begin
   //        Whisp.LoadBackends;
-          Whisp.LoadBestBackend('cuda');
+          Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('cpu-sandybridge');
+          Whisp.LoadBestBackend('rpc');
+          if Checkbox2.IsChecked then
+            begin
+              if Checkbox3.IsChecked then
+                Whisp.LoadBestBackend('cuda');
+              if Checkbox4.IsChecked then
+                Whisp.LoadBestBackend('vulkan');
+            end
+          else
+            begin
+              if Checkbox4.IsChecked then
+                Whisp.LoadBestBackend('vulkan');
+              if Checkbox3.IsChecked then
+                Whisp.LoadBestBackend('cuda');
+            end;
+
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF (OS_PLATFORM_TYPE = 'WIN64')}
+    {$IF DEFINED(WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'LINUX64')}
+    {$ELSEIF DEFINED(LINUX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSXARM64')}
+    {$ELSEIF DEFINED(OS_OSX64ARM)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF (OS_PLATFORM_TYPE = 'OSX64')}
+    {$ELSEIF DEFINED(OSX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
     {$ELSE}
       Unsupported Platform
     {$ENDIF}
+      GgmlBackendCount := GgmlBackendGetDeviceCount();
+      Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
+      Memo1.Lines.Add('');
+
       if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
         begin
+          WhisperBackendCount := Whisp.GetBackendCount;
+
+          if WhisperBackendCount < 1 then
+            begin
+              Memo1.Lines.Add(Format('Insufficient Devices',[WhisperBackendCount]));
+              Exit;
+            end;
+          Memo1.Lines.Add(Format('Preferred Device (of %d)',[WhisperBackendCount]));
+
+          dev := Whisp.GetPreferredBackend;
+          Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+          Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+          Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+          if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+            begin
+              Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+              Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+            end;
+          Memo1.Lines.Add('');
+
+          if WhisperBackendCount > 1 then
+            begin
+              Memo1.Lines.Add('Backup Device(s)');
+              for I := 1 to WhisperBackendCount - 1 do
+                begin
+                  dev := Whisp.GetIndexedBackend(I);
+                  Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+                  Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+                  Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+                  if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+                    begin
+                      Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+                      Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+                    end;
+                  Memo1.Lines.Add('');
+                end;
+            end;
           NMels := Whisp.ModelNmels;
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;
@@ -139,17 +206,17 @@ begin
           Perf[3] := sw.Elapsed; // Done Run
           Perf[4] := sw.TotalElapsed; // Done Run
 
-          Timings := Whisp.GetTimings;
+          Timings := Whisp.GetActivity;
 
           // Log.d('Hello');
           Memo1.Lines.Add(FormatDot('Whisper NMels               : %d',[Nmels]));
           if(Timings <> Nil) then
             begin
-              Memo1.Lines.Add(FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Sample ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NSample, Timings^.SampleMs * Timings^.NSample, Timings^.SampleMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Encode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NEncode, Timings^.EncodeMs * Timings^.NEncode, Timings^.EncodeMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Decode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NDecode, Timings^.DecodeMs * Timings^.NDecode, Timings^.DecodeMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Batch  ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NBatchd, Timings^.BatchdMs * Timings^.NBatchd, Timings^.BatchdMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Prompt ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NPrompt, Timings^.PromptMs * Timings^.NPrompt, Timings^.PromptMs]));
             end;
           Memo1.Lines.Add('');
           Memo1.Lines.Add(FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
@@ -179,9 +246,28 @@ begin
   BatchCount := 64;
   BatchSize := 5;
   PromptCount := 16;
-  Caption := 'WhisperTrancsribeGUI';
-  Button1.Text := 'Trancsribe';
+  Caption := AppName;
+  Width := 640;
+  Height := 960;
+  Button1.Text := 'Transcribe';
   CheckBox1.Text := 'InitWithState';
+  CheckBox2.Text := 'Cuda First';
+  CheckBox3.Text := 'Cuda';
+  CheckBox4.Text := 'AMD';
+end;
+
+
+procedure TForm1.FormResize(Sender: TObject);
+begin
+  Caption := AppName + ' (' + IntToStr(Width) + ' x ' + IntToStr(Height) + ')';
+end;
+
+procedure TForm1.MenuItem3Click(Sender: TObject);
+begin
+  Memo1.Lines.Clear;
+  Memo1.Lines.Add(Format('TGgmlBackend       : %d',[SizeOf(TGgmlBackend)]));
+  Memo1.Lines.Add(Format('TGgmlBackendDevice : %d',[SizeOf(TGgmlBackendDevice)]));
+  Memo1.Lines.Add(Format('IGgmlBackendDevice : %d',[SizeOf(IGgmlBackendDevice)]));
 end;
 
 end.

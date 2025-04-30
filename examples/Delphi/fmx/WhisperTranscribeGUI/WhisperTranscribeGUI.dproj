@@ -318,6 +318,23 @@
         <DCCReference Include="..\..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\..\src\whispertypes.pas"/>
         <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
+        <DCCReference Include="..\..\..\..\src\WhisperLog.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Console.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLogger\Quick.Logger.Provider.Files.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.SysInfo.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Commons.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Threads.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Value.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.FaultControl.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Json.Serializer.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.JSON.Utils.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Logger.Intf.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Base64.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Serializer.Intf.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.RTTI.Utils.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Console.pas"/>
+        <DCCReference Include="..\..\..\..\thirdparty\QuickLib\Quick.Log.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -1,3 +1,6 @@
 [submodule "thirdparty/QuickLogger"]
 	path = thirdparty/QuickLogger
 	url = https://github.com/exilon/QuickLogger.git
+[submodule "thirdparty/QuickLib"]
+	path = thirdparty/QuickLib
+	url = https://github.com/exilon/QuickLib.git
