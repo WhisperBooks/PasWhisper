@@ -55,7 +55,7 @@ var
   Whisp: TWhisper;
   NMels: Int32;
   Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
-  Timings: PWhisperTimings;
+  Timings: PWhisperActivity;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
@@ -66,12 +66,25 @@ begin
     try
       if not BackendsLoaded then
         begin
-  //        Whisp.LoadBackends;
-          Whisp.LoadBestBackend('cuda');
-          Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('cpu-sandybridge');
+          if(paramcount() = 4) then
+            begin
+              Whisp.LoadBackends;
+            end
+          else
+            begin
+              if(paramcount() = 1) then
+                Whisp.LoadBestBackend('blas');
+              if(paramcount() = 2) then
+                Whisp.LoadBestBackend('vulkan');
+              if(paramcount() = 3) then
+                Whisp.LoadBestBackend('cuda');
+              Whisp.LoadBestBackend('cpu');
+            end;
           BackendsLoaded := True;
         end;
+
+      WriteLn(Format('Drivers = %d',[ GgmlBackendGetDeviceCount()]));
+
       Perf[0] := sw.Elapsed; // Loaded Backends
 
     {$IF (OS_PLATFORM_TYPE = 'WIN64')}
@@ -131,16 +144,16 @@ begin
           Perf[3] := sw.Elapsed; // Done Run
           Perf[4] := sw.TotalElapsed; // Done Run
 
-          Timings := Whisp.GetTimings;
+          Timings := Whisp.GetActivity;
 
           WriteLn(Format('Whisper NMels               : %d',[Nmels]));
           if Timings <> Nil then
             begin
-              WriteLn(Format('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              WriteLn(Format('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              WriteLn(Format('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              WriteLn(Format('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              WriteLn(Format('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              Writeln(Format('Whisper Sample ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NSample, Timings^.SampleMs * Timings^.NSample, Timings^.SampleMs]));
+              Writeln(Format('Whisper Encode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NEncode, Timings^.EncodeMs * Timings^.NEncode, Timings^.EncodeMs]));
+              Writeln(Format('Whisper Decode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NDecode, Timings^.DecodeMs * Timings^.NDecode, Timings^.DecodeMs]));
+              Writeln(Format('Whisper Batch ms  x %6d     : %12.4f tot / %12.4f per',[Timings^.NBatchd, Timings^.BatchdMs * Timings^.NBatchd, Timings^.BatchdMs]));
+              Writeln(Format('Whisper Prompt ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NPrompt, Timings^.PromptMs * Timings^.NPrompt, Timings^.PromptMs]));
             end;
           WriteLn('');
           WriteLn(FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
@@ -153,6 +166,7 @@ begin
           Info := Format_JSON(Whisp.GetSystemInfoJson);
           WriteLn(Format('Info : %s',[Info]));
           Perf[5] := sw.Elapsed; // Timer before Destruction of TWhisper
+          WriteLn(Format('Drivers = %d',[ GgmlBackendGetDeviceCount()]));
         end;
     finally
       Whisp.Free;

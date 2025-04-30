@@ -2,7 +2,7 @@ unit WhisperUtils;
 
 interface
 
-uses SysUtils, Classes
+uses SysUtils, Classes, GgmlTypes
 {$ifdef FPC}
   , fpjson, jsonparser
 {$else}
@@ -29,8 +29,21 @@ type
 
 function FormatDot(const Fmt: String; const Args: array of const): String;
 function Format_JSON(Value: String; Indentation: Integer = 4): String;
+function DeviceTypeToString(dt: TGgmlBackendDevType): String;
 
 implementation
+
+function DeviceTypeToString(dt: TGgmlBackendDevType): String;
+begin
+  case dt of
+    GGML_BACKEND_DEVICE_TYPE_CPU: Result := 'CPU';
+    GGML_BACKEND_DEVICE_TYPE_GPU: Result := 'GPU';
+    GGML_BACKEND_DEVICE_TYPE_ACCEL: Result := 'Accelerator';
+  else
+    Result := 'Unknown';
+  end;
+
+end;
 
 {$IFNDEF FPC}
 function GetTickCount64: UInt64; inline;

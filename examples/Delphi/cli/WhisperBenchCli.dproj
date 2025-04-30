@@ -4,8 +4,8 @@
         <ProjectVersion>20.2</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">OSXARM64</Platform>
         <TargetedPlatforms>131202</TargetedPlatforms>
         <AppType>Console</AppType>
         <MainSource>WhisperBenchCli.dpr</MainSource>
@@ -252,6 +252,90 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-base.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-base.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-blas.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-blas.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-alderlake.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-alderlake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-haswell.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-haswell.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-icelake.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-icelake.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sandybridge.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sandybridge.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sapphirerapids.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sapphirerapids.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-skylakex.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-skylakex.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-sse42.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-sse42.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-cpu-x64.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-cpu-x64.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml-rpc.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml-rpc.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libggml.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libggml.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\linux\x64\libwhisper.so" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libwhisper.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Linux64\Debug\WhisperBenchCli" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Linux64">
+                        <RemoteName>WhisperBenchCli</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

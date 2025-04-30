@@ -27,7 +27,7 @@ const
   WHISPER_SUCCESS: Integer = 0;
 
 type
-  WhisperBool = ByteBool;
+  WhisperBool = Boolean;
   Float = Single;
   PFloat = ^Float;
   TWhisperPos = Int32;
@@ -40,21 +40,26 @@ type
   TWhisperState = Pointer;
 
   TBackendDevice = record
-    name: String;
-    desc: String;
+    devName: String;
+    devDesc: String;
     memoryFree: Uint64;
     memoryTotal: Uint64;
-    dtype: int32;
+    devType: TGgmlBackendDevType;
   end;
 
-  TWhisperTimings = record
+  TWhisperActivity = record
     SampleMs: Float;
     EncodeMs: Float;
     DecodeMs: Float;
     BatchdMs: Float;
     PromptMs: Float;
+    NSample: Integer; // number of tokens sampled
+    NEncode: Integer; // number of encoder calls
+    NDecode: Integer; // number of decoder calls with n_tokens == 1  (text-generation)
+    NBatchd: Integer; // number of decoder calls with n_tokens <  16 (batch decoding)
+    NPrompt: Integer; // number of decoder calls with n_tokens >  1  (prompt encoding)
   end;
-  PWhisperTimings = ^TWhisperTimings;
+  PWhisperActivity = ^TWhisperActivity;
 
   TWhisperAlignmentHeadsPreset = (
     WHISPER_AHEADS_NONE,

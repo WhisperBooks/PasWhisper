@@ -1,0 +1,3 @@
+[submodule "thirdparty/QuickLogger"]
+	path = thirdparty/QuickLogger
+	url = https://github.com/exilon/QuickLogger.git

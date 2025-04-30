@@ -20,9 +20,12 @@ type
     MenuItem1: TMenuItem;
     MenuItem3: TMenuItem;
     CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -41,6 +44,7 @@ var
 const
   Threads: Integer = 4;
   MaxToken = 256;
+  Appname = 'WhisperBenchGUI';
 
 implementation
 
@@ -64,7 +68,7 @@ var
   Whisp: TWhisper;
   NMels: Int32;
   Tokens: TWhisperTokenArray;
-  Timings: PWhisperTimings;
+  Timings: PWhisperActivity;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
@@ -89,20 +93,24 @@ begin
           Whisp.LoadBestBackend('rpc');
           if Checkbox2.IsChecked then
             begin
-              Whisp.LoadBestBackend('cuda');
-              Whisp.LoadBestBackend('vulkan');
+              if Checkbox3.IsChecked then
+                Whisp.LoadBestBackend('cuda');
+              if Checkbox4.IsChecked then
+                Whisp.LoadBestBackend('vulkan');
             end
           else
             begin
-              Whisp.LoadBestBackend('vulkan');
-              Whisp.LoadBestBackend('cuda');
+              if Checkbox4.IsChecked then
+                Whisp.LoadBestBackend('vulkan');
+              if Checkbox3.IsChecked then
+                Whisp.LoadBestBackend('cuda');
             end;
 
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF DEFINED(OS_WIN64)}
+    {$IF DEFINED(WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(LINUX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
@@ -113,7 +121,7 @@ begin
     {$ELSE}
       Unsupported Platform
     {$ENDIF}
-      GgmlBackendCount := GgmlBackendGetDeviceCount;
+      GgmlBackendCount := GgmlBackendGetDeviceCount();
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
       Memo1.Lines.Add('');
 
@@ -129,8 +137,14 @@ begin
           Memo1.Lines.Add(Format('Preferred Device (of %d)',[WhisperBackendCount]));
 
           dev := Whisp.GetPreferredBackend;
-          Memo1.Lines.Add(Format('Device      : %s',[dev.name]));
-          Memo1.Lines.Add(Format('Description : %s',[dev.desc]));
+          Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+          Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+          Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+          if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+            begin
+              Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+              Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+            end;
           Memo1.Lines.Add('');
 
           if WhisperBackendCount > 1 then
@@ -139,8 +153,14 @@ begin
               for I := 1 to WhisperBackendCount - 1 do
                 begin
                   dev := Whisp.GetIndexedBackend(I);
-                  Memo1.Lines.Add(Format('Device      : %s',[dev.name]));
-                  Memo1.Lines.Add(Format('Description : %s',[dev.desc]));
+                  Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+                  Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+                  Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+                  if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+                    begin
+                      Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+                      Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+                    end;
                   Memo1.Lines.Add('');
                 end;
             end;
@@ -187,17 +207,17 @@ begin
           Perf[3] := sw.Elapsed; // Done Run
           Perf[4] := sw.TotalElapsed; // Done Run
 
-          Timings := Whisp.GetTimings;
+          Timings := Whisp.GetActivity;
 
           // Log.d('Hello');
           Memo1.Lines.Add(FormatDot('Whisper NMels               : %d',[Nmels]));
           if(Timings <> Nil) then
             begin
-              Memo1.Lines.Add(FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Sample ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NSample, Timings^.SampleMs * Timings^.NSample, Timings^.SampleMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Encode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NEncode, Timings^.EncodeMs * Timings^.NEncode, Timings^.EncodeMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Decode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NDecode, Timings^.DecodeMs * Timings^.NDecode, Timings^.DecodeMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Batch  ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NBatchd, Timings^.BatchdMs * Timings^.NBatchd, Timings^.BatchdMs]));
+              Memo1.Lines.Add(FormatDot('Whisper Prompt ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NPrompt, Timings^.PromptMs * Timings^.NPrompt, Timings^.PromptMs]));
             end;
           Memo1.Lines.Add('');
           Memo1.Lines.Add(FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
@@ -227,14 +247,21 @@ begin
   BatchCount := 64;
   BatchSize := 5;
   PromptCount := 16;
-  Caption := 'WhisperBenchGUI';
-  Width := 480;
-  Height := 800;
+  Caption := AppName;
+  Width := 640;
+  Height := 960;
   Button1.Text := 'Benchmark';
   CheckBox1.Text := 'InitWithState';
   CheckBox2.Text := 'Cuda First';
+  CheckBox3.Text := 'Cuda';
+  CheckBox4.Text := 'AMD';
 end;
 
+
+procedure TForm1.FormResize(Sender: TObject);
+begin
+  Caption := AppName + ' (' + IntToStr(Width) + ' x ' + IntToStr(Height) + ')';
+end;
 
 procedure TForm1.MenuItem3Click(Sender: TObject);
 begin

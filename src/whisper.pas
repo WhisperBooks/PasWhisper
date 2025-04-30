@@ -51,14 +51,14 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function  GetTimings: PWhisperTimings;
+    function  GetActivity: PWhisperActivity;
     procedure FreeState;
     procedure PrintTimings;
     procedure ResetTimings;
     procedure LoadBackends;
     function  GetSystemInfoJson: String;
     function  LoadBestBackend(const ADeviceType: String; const APath: String = ''): PGgmlBackendReg;
-    function  LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
+    function  LoadModel(const AModel: String; const WithState: Boolean = False; const NoGPU: Boolean = False; const useFlash: Boolean = False): Boolean;
     function  SetMel(const Data: PFloat; NLen, NMel: Integer): Integer;
     function  Encode(const Offset, NThreads: Integer): Integer;
     function  Decode(Tokens: PWhisperToken; const NTokens, NPast, NThreads: Integer): Integer; overload;
@@ -120,47 +120,29 @@ end;
 function TWhisper.Decode(Tokens: TWhisperTokenArray; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
-  if FContextHasState then
-    begin
-      SafeMaskFPUExceptions(True);
-      try
-        Result := WhisperDecode(FCtx, @Tokens[0], NTokens, NPast, NThreads)
-      finally
-        SafeMaskFPUExceptions(False);
-      end;
-    end
-  else
-    begin
-      SafeMaskFPUExceptions(True);
-      try
-        Result := WhisperDecodeWithState(FCtx, FState, @Tokens[0], NTokens, NPast, NThreads);
-      finally
-        SafeMaskFPUExceptions(False);
-      end;
-    end;
+  SafeMaskFPUExceptions(True);
+  try
+    if FContextHasState then
+      Result := WhisperDecode(FCtx, @Tokens[0], NTokens, NPast, NThreads)
+    else
+      Result := WhisperDecodeWithState(FCtx, FState, @Tokens[0], NTokens, NPast, NThreads);
+  finally
+    SafeMaskFPUExceptions(False);
+  end;
 end;
 
 function TWhisper.Decode(Tokens: PWhisperToken; const NTokens, NPast,
   NThreads: Integer): Integer;
 begin
-  if FContextHasState then
-    begin
-      SafeMaskFPUExceptions(True);
-      try
+  SafeMaskFPUExceptions(True);
+    try
+      if FContextHasState then
         Result := WhisperDecode(FCtx, Tokens, NTokens, NPast, NThreads)
-      finally
-        SafeMaskFPUExceptions(False);
-      end;
-    end
-  else
-    begin
-      SafeMaskFPUExceptions(True);
-      try
+      else
         Result := WhisperDecodeWithState(FCtx, FState, Tokens, NTokens, NPast, NThreads);
-      finally
-        SafeMaskFPUExceptions(False);
-      end;
-    end;
+    finally
+      SafeMaskFPUExceptions(False);
+  end;
 end;
 
 destructor TWhisper.Destroy;
@@ -175,24 +157,15 @@ end;
 
 function TWhisper.Encode(const Offset, NThreads: Integer): Integer;
 begin
-  if FContextHasState then
-    begin
-      SafeMaskFPUExceptions(True);
-      try
-         Result := WhisperEncode(FCtx, Offset, NThreads)
-      finally
-         SafeMaskFPUExceptions(False);
-      end;
-    end
-  else
-    begin
-      SafeMaskFPUExceptions(True);
-      try
-        Result := WhisperEncodeWithState(FCtx, FState, Offset, NThreads);
-      finally
-        SafeMaskFPUExceptions(False);
-      end;
-    end;
+  SafeMaskFPUExceptions(True);
+  try
+    if FContextHasState then
+      Result := WhisperEncode(FCtx, Offset, NThreads)
+    else
+      Result := WhisperEncodeWithState(FCtx, FState, Offset, NThreads);
+  finally
+     SafeMaskFPUExceptions(False);
+  end;
 end;
 
 procedure TWhisper.FreeState;
@@ -227,8 +200,10 @@ begin
   if device = nil then
     Exit;
 
-  Result.name := String(device.IFace.GetName(device));
-  Result.desc := String(device.IFace.GetDescription(device));
+  Result.devName := String(device.IFace.GetName(device));
+  Result.devDesc := String(device.IFace.GetDescription(device));
+  device.IFace.GetMemory(device, @Result.memoryFree, @Result.memoryTotal);
+  Result.devType := device.IFace.GetType(device);
 end;
 function TWhisper.GetIsMultilingual: Int32;
 begin
@@ -361,16 +336,15 @@ begin
   if device = nil then
     Exit;
 
-  Result.name := String(device.IFace.GetName(device));
-  Result.desc := String(device.IFace.GetDescription(device));
+  Result.devName := String(device.IFace.GetName(device));
+  Result.devDesc := String(device.IFace.GetDescription(device));
+  device.IFace.GetMemory(device, @Result.memoryFree, @Result.memoryTotal);
+  Result.devType := device.IFace.GetType(device);
 end;
 
-function TWhisper.GetTimings: PWhisperTimings;
+function TWhisper.GetActivity: PWhisperActivity;
 begin
-  if FContextHasState then
-    Result := WhisperGetTimings(FCtx)
-  else
-    Result := WhisperGetTimingsWithState(FState);
+    Result := WhisperGetActivityWithState(FState);
 end;
 
 function TWhisper.GetTokenBeg: TWhisperToken;
@@ -457,19 +431,22 @@ begin
   end;
 end;
 
-function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False): Boolean;
+function TWhisper.LoadModel(const AModel: String; const WithState: Boolean = False; const NoGPU: Boolean = False; const useFlash: Boolean = False): Boolean;
 begin
   Result := False;
   if FileExists(AModel) then
     begin
       FModel := AModel;
       FCParams := WhisperContextDefaultParams;
-//      FCParams.use_gpu := False;
+      if NoGPU then
+        FCParams.use_gpu := False;
+      if useFlash then
+        FCParams.flash_attn := True;
       if WithState then
         begin
           SafeMaskFPUExceptions(True);
           try
-            FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+            FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), FCParams);
             FState := WhisperInitState(FCtx);
           finally
             SafeMaskFPUExceptions(False);
@@ -481,7 +458,7 @@ begin
         begin
           SafeMaskFPUExceptions(True);
           try
-            FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), @FCParams);
+            FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), FCParams);
             FState := WhisperGetStateFromContext(FCtx);
           finally
             SafeMaskFPUExceptions(False);
