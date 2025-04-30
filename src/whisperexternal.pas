@@ -241,18 +241,11 @@ begin
 end;
 
 procedure InitializeWhisperLibrary;
+
 begin
   FinalizeWhisperLibrary;
 
-  WhisperLibrary := Nil;
-
-  if WhisperLibraryName <> '' then
-    begin
-      if FileExists(WhisperLibraryName) then
-        WhisperLibrary := TDynLib.Load(WhisperLibraryName, true)
-      else
-        Raise Exception.Create(WhisperLibraryName + ' not found');
-    end;
+  WhisperLibrary := TDynLib.Load(WhisperLibraryName, true);
 
   if WhisperLibrary <> Nil then
     begin

@@ -55,15 +55,7 @@ procedure InitializeGgmlLibrary;
 begin
   FinalizeGgmlLibrary;
 
-  GgmlLibrary := Nil;
-
-  if GgmlLibraryName <> '' then
-    begin
-      if FileExists(GgmlLibraryName) then
-        GgmlLibrary := TDynLib.Load(GgmlLibraryName, true)
-      else
-        Raise Exception.Create(GgmlLibraryName + ' not found');
-    end;
+  GgmlLibrary := TDynLib.Load(GgmlLibraryName, true);
 
   if GgmlLibrary <> Nil then
     begin

@@ -292,14 +292,14 @@ begin
     Handle := InvalidDynLibHandle
   else
   begin
-    Handle := LoadLibrary(PChar({$IF DEFINED(OS_LINUX64)}'./' + {$ENDIF}AName));
+    Handle := LoadLibrary(PChar(AppPath() + AName));
     { On macOS, search for dynamic libraries in the bundle too.
       This fallback makes sense for libpng, libvorbisfile, libsteam_api...
       It seems that for everything, so just do it always. }
-    {$IF DEFINED(OS_OSX64ARM)}
+  {$ifdef OS_OSX}
     if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
       Handle := LoadLibrary(PChar(BundlePath + 'Contents/MacOS/' + AName));
-    {$endif}
+  {$endif}
   end;
 
   if Handle = InvalidDynLibHandle then

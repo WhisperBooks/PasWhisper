@@ -1,7 +1,7 @@
 unit WhisperBenchGUIMain;
 
 {$mode objfpc}{$H+}
-
+{$I platform.inc}
 interface
 
 uses
@@ -86,14 +86,14 @@ begin
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-      {$IF DEFINED(WIN64)}
+      {$IF DEFINED(OS_WIN64)}
         ModelFile := 'd:\models\ggml-base.en.bin';
-      {$ELSEIF DEFINED(LINUX64)}
-        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(OS_LINUX64)}
+        ModelFile := GetUserDir() + '/models/ggml-base.en.bin';
       {$ELSEIF DEFINED(OS_OSX64ARM)}
-        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
-      {$ELSEIF DEFINED(OSX64)}
-        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
+        ModelFile := GetUserDir() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(OS_OSX64)}
+        ModelFile := GetUserDir() + '/models/ggml-base.en.bin';
       {$ELSE}
         Unsupported Platform
       {$ENDIF}

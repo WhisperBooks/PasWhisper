@@ -1,7 +1,7 @@
 unit WhisperUtils;
 
 interface
-
+{$I platform.inc}
 uses SysUtils, Classes, GgmlTypes
 {$ifdef FPC}
   , fpjson, jsonparser
@@ -30,8 +30,55 @@ type
 function FormatDot(const Fmt: String; const Args: array of const): String;
 function Format_JSON(Value: String; Indentation: Integer = 4): String;
 function DeviceTypeToString(dt: TGgmlBackendDevType): String;
+function  AppPath(): String;
+
+{$ifdef OS_OSX}
+function BundlePath: string;
+{$ENDIF}
 
 implementation
+
+{$ifdef OS_OSX}
+var
+  BundlePathCached: Boolean;
+  BundlePathCache: string;
+
+function BundlePath: string;
+{ Based on
+  http://wiki.freepascal.org/OS_X_Programming_Tips#How_to_obtain_the_path_to_the_Bundle }
+var
+  bundle: CFBundleRef;
+  pathRef: CFUrlRef;
+  pathCFStr: CFStringRef;
+  pathStr: shortstring;
+begin
+  if not BundlePathCached then
+  begin
+    bundle := CFBundleGetMainBundle();
+    if bundle = nil then
+    begin
+      BundlePathCache := '';
+      WritelnLog('We cannot detect our macOS AppBundle. Probably the application was run directly (like a Unix application, without being wrapped in a directory like "xxx.app"). Some GUI features (like application menu) will not work without running through AppBundle.');
+    end else
+    begin
+      pathRef := CFBundleCopyBundleUrl(bundle);
+      pathCFStr := CFUrlCopyFileSystemPath(pathRef, kCFUrlPOSIXPathStyle);
+      CFStringGetPascalString(pathCFStr, @pathStr, 255, CFStringGetSystemEncoding());
+      CFRelease(pathRef);
+      CFRelease(pathCFStr);
+      BundlePathCache := pathStr;
+      BundlePathCache := InclPathDelim(BundlePathCache);
+    end;
+    BundlePathCached := true;
+  end;
+  Result := BundlePathCache;
+end;
+{$ENDIF}
+
+function  AppPath(): String;
+begin
+  Result := ExtractFilePath(ParamStr(0));
+end;
 
 function DeviceTypeToString(dt: TGgmlBackendDevType): String;
 begin
