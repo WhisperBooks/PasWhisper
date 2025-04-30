@@ -6,8 +6,9 @@ uses
   {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, Crt, WhisperUtils, Whisper, WhisperTypes, GGMLExternal
+  Classes, SysUtils, CustApp, Crt,
   { you can add units after this }
+  WhisperUtils, Whisper, WhisperTypes, GGMLExternal
   ;
 {$I platform.inc}
 type
@@ -42,7 +43,7 @@ var
   Whisp: TWhisper;
   NMels: Int32;
   Tokens: TWhisperTokenArray;
-  Timings: PWhisperTimings;
+  Timings: PWhisperActivity;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
@@ -76,7 +77,7 @@ begin
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(OS_LINUX64)}
       ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
-    {$ELSEIF DEFINED(OS_OSXARM64)}
+    {$ELSEIF DEFINED(OS_OSX64ARM)}
       ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
     {$ELSEIF DEFINED(OS_OSX64)}
       ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
@@ -99,8 +100,8 @@ begin
           WriteLn(stderr, Format('Preferred Device (of %d)',[WhisperBackendCount]));
 
           dev := Whisp.GetPreferredBackend;
-          WriteLn(stderr, Format('Device      : %s',[dev.name]));
-          WriteLn(stderr, Format('Description : %s',[dev.desc]));
+          WriteLn(stderr, Format('Device      : %s',[dev.devName]));
+          WriteLn(stderr, Format('Description : %s',[dev.devDesc]));
           WriteLn(stderr, '');
 
           if WhisperBackendCount > 1 then
@@ -109,8 +110,8 @@ begin
               for I := 1 to WhisperBackendCount - 1 do
                 begin
                   dev := Whisp.GetIndexedBackend(I);
-                  WriteLn(stderr, Format('Device      : %s',[dev.name]));
-                  WriteLn(stderr, Format('Description : %s',[dev.desc]));
+                  WriteLn(stderr, Format('Device      : %s',[dev.devName]));
+                  WriteLn(stderr, Format('Description : %s',[dev.devDesc]));
                   WriteLn(stderr, '');
                 end;
             end;
@@ -157,17 +158,16 @@ begin
           Perf[3] := sw.Elapsed; // Done Run
           Perf[4] := sw.TotalElapsed; // Done Run
 
-          Timings := Whisp.GetTimings;
+          Timings := Whisp.GetActivity;
 
-          // Log.d('Hello');
-          WriteLn(stderr, FormatDot('Whisper NMels               : %d',[Nmels]));
-          if(Timings <> Nil) then
+          WriteLn(stderr, Format('Whisper NMels               : %d',[Nmels]));
+          if Timings <> Nil then
             begin
-              WriteLn(stderr, FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              WriteLn(stderr, FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              WriteLn(stderr, FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              WriteLn(stderr, FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              WriteLn(stderr, FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              Writeln(stderr, Format('Whisper Sample ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NSample, Timings^.SampleMs * Timings^.NSample, Timings^.SampleMs]));
+              Writeln(stderr, Format('Whisper Encode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NEncode, Timings^.EncodeMs * Timings^.NEncode, Timings^.EncodeMs]));
+              Writeln(stderr, Format('Whisper Decode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NDecode, Timings^.DecodeMs * Timings^.NDecode, Timings^.DecodeMs]));
+              Writeln(stderr, Format('Whisper Batch ms  x %6d     : %12.4f tot / %12.4f per',[Timings^.NBatchd, Timings^.BatchdMs * Timings^.NBatchd, Timings^.BatchdMs]));
+              Writeln(stderr, Format('Whisper Prompt ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NPrompt, Timings^.PromptMs * Timings^.NPrompt, Timings^.PromptMs]));
             end;
           WriteLn(stderr, '');
           WriteLn(stderr, FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));

@@ -3,13 +3,13 @@ unit WhisperLog;
 interface
 
 uses
+
   System.SysUtils,
-//  Quick.Commons,
-//  Quick.Console,
+  Quick.Commons,
+  Quick.Console,
   Quick.Logger,
   Quick.Logger.Provider.Console,
   Quick.Logger.Provider.Files;
-
 procedure LogTest();
 implementation
 
