@@ -31,6 +31,8 @@ function FormatDot(const Fmt: String; const Args: array of const): String;
 function Format_JSON(Value: String; Indentation: Integer = 4): String;
 function DeviceTypeToString(dt: TGgmlBackendDevType): String;
 function  AppPath(): String;
+function ExclPathDelim(const s: string): string;
+function InclPathDelim(const s: string): string;
 
 {$ifdef OS_OSX}
 function BundlePath: string;
@@ -76,6 +78,26 @@ begin
   Result := BundlePathCache;
 end;
 {$ENDIF}
+
+function InclPathDelim(const s: string): string;
+begin
+  {$if defined(MSWINDOWS) and not defined(FPC)}
+  { On Windows, also accept / as final path delimiter.
+    FPC does it automatically. }
+  if (S <> '') and (S[Length(S)] = '/') then Exit(S);
+  {$endif}
+  Result := IncludeTrailingPathDelimiter(S);
+end;
+
+function ExclPathDelim(const s: string): string;
+begin
+  {$if defined(MSWINDOWS) and not defined(FPC)}
+  { On Windows, also accept / as final path delimiter.
+    FPC does it automatically. }
+  if (S <> '') and (S[Length(S)] = '/') then Exit(Copy(S, 1, Length(S) - 1));
+  {$endif}
+  Result := ExcludeTrailingPathDelimiter(S);
+end;
 
 function  AppPath(): String;
 begin
