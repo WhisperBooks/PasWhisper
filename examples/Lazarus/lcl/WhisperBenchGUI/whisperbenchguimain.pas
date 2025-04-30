@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Whisper, WhisperTypes;
+  Whisper, WhisperTypes, GGMLExternal, GGMLTypes;
 
 type
 
@@ -23,6 +23,10 @@ type
     procedure FormCreate(Sender: TObject);
   private
     BackendsLoaded: Boolean;
+    PromptCount: Integer;
+    BatchCount: Integer;
+    BatchSize: Integer;
+    TokenCount: Integer;
     procedure RunBench;
   public
 
@@ -58,12 +62,16 @@ var
   I: Integer;
   Whisp: TWhisper;
   NMels: Int32;
-  Tokens: array [0..MaxBenchToken-1] of TWhisperToken;
-  Timings: PWhisperTimings;
+  Tokens: TWhisperTokenArray;
+  Timings: PWhisperActivity;
   ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
+  dev: TBackendDevice;
+  GgmlBackendCount: Integer;
+  WhisperBackendCount: Integer;
 begin
+  SetLength(Tokens, TokenCount);
   Whisp := TWhisper.Create;
   try
     sw := TMilliTimer.Create;
@@ -78,20 +86,58 @@ begin
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-
-      {$IF OS_PLATFORM_TYPE = 'WIN64'}
+      {$IF DEFINED(WIN64)}
         ModelFile := 'd:\models\ggml-base.en.bin';
-      {$ELSEIF OS_PLATFORM_TYPE = 'LINUX64'}
-        ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-      {$ELSEIF OS_PLATFORM_TYPE = 'OSXARM64'}
-        ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-      {$ELSEIF OS_PLATFORM_TYPE = 'OSX64')}
-        ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(LINUX64)}
+        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(OS_OSX64ARM)}
+        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(OSX64)}
+        ModelFile := GetHomePath() + '/models/ggml-base.en.bin';
       {$ELSE}
-        ModelFile := 'd:\models\ggml-base.en.bin';
+        Unsupported Platform
       {$ENDIF}
+
       if Whisp.LoadModel(ModelFile, not Checkbox1.Checked) then
-        begin
+        WhisperBackendCount := Whisp.GetBackendCount;
+
+        if WhisperBackendCount < 1 then
+          begin
+            Memo1.Lines.Add(Format('Insufficient Devices',[WhisperBackendCount]));
+            Exit;
+          end;
+        Memo1.Lines.Add(Format('Preferred Device (of %d)',[WhisperBackendCount]));
+
+        dev := Whisp.GetPreferredBackend;
+        Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+        Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+        Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+        if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+          begin
+            Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+            Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+          end;
+        Memo1.Lines.Add('');
+
+        if WhisperBackendCount > 1 then
+          begin
+            Memo1.Lines.Add('Backup Device(s)');
+            for I := 1 to WhisperBackendCount - 1 do
+              begin
+                dev := Whisp.GetIndexedBackend(I);
+                Memo1.Lines.Add(Format('Device      : %s',[dev.devName]));
+                Memo1.Lines.Add(Format('Description : %s',[dev.devDesc]));
+                Memo1.Lines.Add(Format('Type        : %s',[DeviceTypeToString(dev.devType)]));
+                if dev.devType = GGML_BACKEND_DEVICE_TYPE_GPU then
+                  begin
+                    Memo1.Lines.Add(Format('MemoryFree  : %d',[dev.memoryFree]));
+                    Memo1.Lines.Add(Format('MemoryTotal : %d',[dev.memoryTotal]));
+                  end;
+                Memo1.Lines.Add('');
+              end;
+          end;
+
+
           NMels := Whisp.ModelNmels;
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;
@@ -104,9 +150,9 @@ begin
           // Heat
           if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
             Exit;
-          if Whisp.Decode(@Tokens, 1, 256, Threads) <> WHISPER_SUCCESS then
+          if Whisp.Decode(Tokens, 1, TokenCount, Threads) <> WHISPER_SUCCESS then
             Exit;
 
           Whisp.ResetTimings;
@@ -117,40 +163,40 @@ begin
           if Whisp.Encode(0, Threads) <> 0 then
             Exit;
 
-          for I := 0 to 255 do
+          for I := 0 to TokenCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, 1, I, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 63 do
+          for I := 0 to BatchCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 5, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, BatchSize, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
-          for I := 0 to 15 do
+          for I := 0 to PromptCount - 1 do
             begin
-              if Whisp.Decode(@Tokens, 256, 0, Threads) <> WHISPER_SUCCESS then
+              if Whisp.Decode(Tokens, TokenCount, 0, Threads) <> WHISPER_SUCCESS then
                 Exit;
             end;
 
           Perf[3] := sw.Elapsed; // Done Run
           Perf[4] := sw.TotalElapsed; // Done Run
 
-          Timings := Whisp.GetTimings;
-
-          // Log.d('Hello');
           Memo1.Lines.Add(FormatDot('Whisper NMels               : %d',[Nmels]));
-          if(Timings <> Nil) then
+          Timings := Whisp.GetActivity;
+
+          Memo1.Lines.Add(Format('Whisper NMels               : %d',[Nmels]));
+          if Timings <> Nil then
             begin
-              Memo1.Lines.Add(FormatDot('Whisper Sample ms           : %3.8f',[Timings^.SampleMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Encode ms           : %3.8f',[Timings^.EncodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Decode ms           : %3.8f',[Timings^.DecodeMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Batch ms            : %3.8f',[Timings^.BatchdMs]));
-              Memo1.Lines.Add(FormatDot('Whisper Prompt ms           : %3.8f',[Timings^.PromptMs]));
+              Memo1.Lines.Add(Format('Whisper Sample ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NSample, Timings^.SampleMs * Timings^.NSample, Timings^.SampleMs]));
+              Memo1.Lines.Add(Format('Whisper Encode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NEncode, Timings^.EncodeMs * Timings^.NEncode, Timings^.EncodeMs]));
+              Memo1.Lines.Add(Format('Whisper Decode ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NDecode, Timings^.DecodeMs * Timings^.NDecode, Timings^.DecodeMs]));
+              Memo1.Lines.Add(Format('Whisper Batch ms  x %6d     : %12.4f tot / %12.4f per',[Timings^.NBatchd, Timings^.BatchdMs * Timings^.NBatchd, Timings^.BatchdMs]));
+              Memo1.Lines.Add(Format('Whisper Prompt ms x %6d     : %12.4f tot / %12.4f per',[Timings^.NPrompt, Timings^.PromptMs * Timings^.NPrompt, Timings^.PromptMs]));
             end;
-          Memo1.Lines.Add('');
+          WriteLn(stderr, '');
           Memo1.Lines.Add(FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
           Memo1.Lines.Add(FormatDot('Whisper Load Model          : %8.3f',[Perf[1]]));
           Memo1.Lines.Add(FormatDot('Whisper Load Heat           : %8.3f',[Perf[2]]));
@@ -160,13 +206,12 @@ begin
 
           Info := Format_JSON(Whisp.GetSystemInfoJson);
           Memo1.Lines.Add(Format('Info : %s',[Info]));
-
-        end;
-    finally
+     finally
       sw.Free;
     end;
   finally
     Whisp.Free;
+    SetLength(Tokens, 0);
   end;
 
 end;
@@ -178,7 +223,10 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-
+  TokenCount := 256;
+  BatchCount := 64;
+  BatchSize := 5;
+  PromptCount := 16;
 end;
 
 end.

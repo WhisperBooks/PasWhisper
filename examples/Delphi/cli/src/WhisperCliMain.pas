@@ -168,7 +168,6 @@ begin
           Info := Format_JSON(Whisp.GetSystemInfoJson);
           WriteLn(Format('Info : %s',[Info]));
           Perf[5] := sw.Elapsed; // Timer before Destruction of TWhisper
-          WriteLn(Format('Drivers = %d',[ GgmlBackendGetDeviceCount()]));
         end;
     finally
       Whisp.Free;
