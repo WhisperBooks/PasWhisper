@@ -8,8 +8,9 @@ uses
   {$ENDIF}
   Classes, SysUtils, CustApp, Crt,
   { you can add units after this }
-  WhisperUtils, Whisper, WhisperTypes, GGMLExternal
-  ;
+  WhisperTypes, GgmlTypes, GgmlExternal,
+  WhisperExternal, Whisper, WhisperUtils;
+
 {$I platform.inc}
 type
 
@@ -232,10 +233,15 @@ constructor WhisperCli.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   StopOnException:=True;
+  SetMultiByteConversionCodePage(CP_UTF8);
+  InitializeGgmlLibrary;
+  InitializeWhisperLibrary;
 end;
 
 destructor WhisperCli.Destroy;
 begin
+  FinalizeWhisperLibrary;
+  FinalizeGgmlLibrary;
   inherited Destroy;
 end;
 

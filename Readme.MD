@@ -21,7 +21,9 @@ Link for self - [whisper fork](https://github.com/WhisperBooks/whisper.cpp)
 ![Some Tests](img/comparison.png)
 
 CPU Only for top images - AMD 7745HX
+
 Bottom Left - Mac M4 basic
+
 Bottom Right - NVIDIA 4070 Laptop GPU
 
 

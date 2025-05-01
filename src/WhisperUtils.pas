@@ -157,27 +157,27 @@ begin
 end;
 
 function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
+{$ifndef FPC}
 var
   JV: {$ifdef FPC}TJSONData{$else}TJSONValue{$endif};
+{$endif}
 begin
+  {$ifdef FPC}
+  Result := Value; // JV.FormatJSON([], Indentation);
+  {$else}
   JV := nil;
   try
     try
-      {$ifdef FPC}
       // JV := GetJSON(Value);
-      Result := Value; // JV.FormatJSON([], Indentation);
-      {$else}
       JV := TJSONObject.ParseJSONValue(Value);
       Result := JV.Format(Indentation);
-      {$endif}
     except
       Result := '';;
     end;
   finally
-    {$ifndef FPC}
     FreeAndNil(JV);
-    {$endif}
   end;
+  {$endif}
 end;
 
 function FormatDot(const Fmt: String; const Args: array of const): String;

@@ -5,8 +5,7 @@ unit WhisperBenchGUIMain;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Whisper, WhisperTypes, GGMLExternal, GGMLTypes;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls;
 
 type
 
@@ -45,7 +44,9 @@ implementation
 
 { TForm1 }
 
-uses WhisperUtils;
+uses
+  WhisperTypes, GgmlTypes, GgmlExternal,
+  WhisperExternal, Whisper, WhisperUtils;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -68,8 +69,8 @@ var
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
   dev: TBackendDevice;
-  GgmlBackendCount: Integer;
-  WhisperBackendCount: Integer;
+//  GgmlBackendCount: int64;
+  WhisperBackendCount: int64;
 begin
   SetLength(Tokens, TokenCount);
   Whisp := TWhisper.Create;
@@ -218,11 +219,15 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-
+  FinalizeWhisperLibrary;
+  FinalizeGgmlLibrary;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  SetMultiByteConversionCodePage(CP_UTF8);
+  InitializeGgmlLibrary;
+  InitializeWhisperLibrary;
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;
