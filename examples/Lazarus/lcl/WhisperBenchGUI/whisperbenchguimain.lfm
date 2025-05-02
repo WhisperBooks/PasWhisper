@@ -2,27 +2,27 @@ object Form1: TForm1
   Left = 256
   Height = 726
   Top = 145
-  Width = 515
+  Width = 574
   Caption = 'WhisperBenchGUI'
   ClientHeight = 726
-  ClientWidth = 515
+  ClientWidth = 574
+  LCLVersion = '4.0.0.3'
   OnClose = FormClose
   OnCreate = FormCreate
-  LCLVersion = '3.6.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 686
     Top = 0
-    Width = 515
+    Width = 574
     Align = alClient
     ClientHeight = 686
-    ClientWidth = 515
+    ClientWidth = 574
     TabOrder = 0
     object Memo1: TMemo
       Left = 1
       Height = 684
       Top = 1
-      Width = 513
+      Width = 572
       Align = alClient
       Font.Name = 'Courier New'
       ParentFont = False
@@ -34,26 +34,27 @@ object Form1: TForm1
     Left = 0
     Height = 40
     Top = 686
-    Width = 515
+    Width = 574
     Align = alBottom
     ClientHeight = 40
-    ClientWidth = 515
+    ClientWidth = 574
     TabOrder = 1
     object CheckBox1: TCheckBox
       Left = 16
-      Height = 19
+      Height = 26
       Top = 10
-      Width = 69
+      Width = 97
       Caption = 'WithState'
       Checked = True
       State = cbChecked
       TabOrder = 0
     end
     object Button1: TButton
-      Left = 424
+      Left = 456
       Height = 25
-      Top = 4
-      Width = 75
+      Top = 8
+      Width = 107
+      Anchors = [akTop, akRight]
       Caption = 'Benchmark'
       TabOrder = 1
       OnClick = Button1Click

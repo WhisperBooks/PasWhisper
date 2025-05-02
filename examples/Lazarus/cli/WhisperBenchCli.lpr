@@ -67,8 +67,8 @@ begin
           Whisp.LoadBestBackend('cpu');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
-          Whisp.LoadBestBackend('vulkan');
-          Whisp.LoadBestBackend('cuda');
+  //        Whisp.LoadBestBackend('vulkan');
+  //        Whisp.LoadBestBackend('cuda');
 
           BackendsLoaded := True;
         end;
@@ -77,6 +77,8 @@ begin
     {$IF DEFINED(OS_WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(OS_LINUX64)}
+      ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
+    {$ELSEIF DEFINED(OS_LINUX64ARM)}
       ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';
     {$ELSEIF DEFINED(OS_OSX64ARM)}
       ModelFile := {$ifdef fpc}GetUserDir(){$else}TPath.GetHomePath()+ '/' {$endif} + 'models/ggml-base.en.bin';

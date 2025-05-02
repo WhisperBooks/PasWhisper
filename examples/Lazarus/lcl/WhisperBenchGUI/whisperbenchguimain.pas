@@ -80,9 +80,9 @@ begin
       if not BackendsLoaded then
         begin
   //        Whisp.LoadBackends;
-          Whisp.LoadBestBackend('cuda');
+  //        Whisp.LoadBestBackend('cuda');
           Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('cpu-sandybridge');
+          Whisp.LoadBestBackend('cpu');
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
@@ -90,6 +90,8 @@ begin
       {$IF DEFINED(OS_WIN64)}
         ModelFile := 'd:\models\ggml-base.en.bin';
       {$ELSEIF DEFINED(OS_LINUX64)}
+        ModelFile := GetUserDir() + '/models/ggml-base.en.bin';
+      {$ELSEIF DEFINED(OS_LINUX64ARM)}
         ModelFile := GetUserDir() + '/models/ggml-base.en.bin';
       {$ELSEIF DEFINED(OS_OSX64ARM)}
         ModelFile := GetUserDir() + '/models/ggml-base.en.bin';

@@ -12,7 +12,7 @@ interface
 {$ALIGN 4}
 uses
   SysUtils,
-  WhisperDynLib, ggmlTypes;
+  WhisperDynlib, ggmlTypes;
 
 var
   GgmlLibrary: TDynLib;
@@ -26,6 +26,8 @@ const
   {$IF DEFINED(OS_WIN64)}
   GGMLLibraryName = 'ggml.dll';
   {$ELSEIF DEFINED(OS_LINUX64)}
+  GGMLLibraryName = 'libggml.so';
+  {$ELSEIF DEFINED(OS_LINUX64ARM)}
   GGMLLibraryName = 'libggml.so';
   {$ELSEIF DEFINED(OS_OSX64ARM)}
   GGMLLibraryName = 'libggml.dylib';
