@@ -18,7 +18,6 @@ type
     CheckBox4: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -57,17 +56,9 @@ begin
   Button1.Enabled := True;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
-end;
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;

@@ -236,14 +236,14 @@ begin
   inherited Create(TheOwner);
   StopOnException:=True;
   SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
+//  InitializeGgmlLibrary;
+//  InitializeWhisperLibrary;
 end;
 
 destructor WhisperCli.Destroy;
 begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
+//  FinalizeWhisperLibrary;
+//  FinalizeGgmlLibrary;
   inherited Destroy;
 end;
 

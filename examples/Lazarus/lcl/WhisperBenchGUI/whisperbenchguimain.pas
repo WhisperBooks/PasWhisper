@@ -80,7 +80,7 @@ begin
       if not BackendsLoaded then
         begin
   //        Whisp.LoadBackends;
-  //        Whisp.LoadBestBackend('cuda');
+          Whisp.LoadBestBackend('cuda');
           Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('cpu');
           BackendsLoaded := True;
@@ -221,15 +221,11 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;

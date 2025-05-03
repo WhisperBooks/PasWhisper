@@ -6,9 +6,9 @@ object Form1: TForm1
   Caption = 'WhisperBenchGUI'
   ClientHeight = 726
   ClientWidth = 574
-  LCLVersion = '4.0.0.3'
   OnClose = FormClose
   OnCreate = FormCreate
+  LCLVersion = '3.6.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 686
@@ -41,9 +41,9 @@ object Form1: TForm1
     TabOrder = 1
     object CheckBox1: TCheckBox
       Left = 16
-      Height = 26
+      Height = 19
       Top = 10
-      Width = 97
+      Width = 69
       Caption = 'WithState'
       Checked = True
       State = cbChecked

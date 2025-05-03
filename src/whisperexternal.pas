@@ -326,4 +326,13 @@ begin
 
 end;
 
+Initialization
+
+Finalization
+  if WhisperLibraryIsLoaded then
+    begin
+      FinalizeWhisperLibrary;
+      // TODO : Unload Libray?
+    end;
+
 end.

@@ -113,8 +113,26 @@ uses GgmlExternal;
 
 constructor TWhisper.Create;
 begin
-  if Not WhisperLibraryIsLoaded then
-    Raise Exception.Create('Whisper library not available');
+  if not GgmlLibraryIsLoaded then
+    try
+      InitializeGgmlLibrary;
+    finally
+      if Not WhisperLibraryIsLoaded then
+        try
+          InitializeWhisperLibrary;
+        finally
+          // Everything Loaded
+        end;
+    end
+  else
+    begin
+      if Not WhisperLibraryIsLoaded then
+        try
+          InitializeWhisperLibrary;
+        finally
+          // Whisper Loaded
+        end;
+    end;
 end;
 
 function TWhisper.Decode(Tokens: TWhisperTokenArray; const NTokens, NPast,
