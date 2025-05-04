@@ -38,6 +38,7 @@ Android64/
 iOSDevice64/
 Linux64/
 backup/
+scratchpad/
 
 # Delphi compiler-generated binaries (safe to delete)
 *.exe

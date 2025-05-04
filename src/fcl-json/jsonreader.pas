@@ -19,8 +19,8 @@ unit jsonreader;
 interface
 
 uses
-  Classes, SysUtils, fpJSON, jsonscanner, CastleUtils;
-  
+  Classes, SysUtils, fpJSON, jsonscanner{$ifndef fpc}, delphicompatibility{$endif};
+
 Type
 
   { TBaseJSONReader }

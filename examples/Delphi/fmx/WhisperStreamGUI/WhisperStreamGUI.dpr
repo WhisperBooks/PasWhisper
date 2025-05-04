@@ -1,9 +1,9 @@
-program WhisperTranscribeGUI;
+program WhisperStreamGUI;
 
 uses
   System.StartUpCopy,
   FMX.Forms,
-  whispertranscribemain in 'src\whispertranscribemain.pas' {Form1},
+  whisperstreammain in 'src\whisperstreammain.pas' {Form1},
   WhisperUtils in '..\..\..\..\src\WhisperUtils.pas',
   WhisperDynlib in '..\..\..\..\src\WhisperDynlib.pas',
   ggmltypes in '..\..\..\..\src\ggmltypes.pas',

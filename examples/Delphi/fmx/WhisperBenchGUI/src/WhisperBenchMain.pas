@@ -25,7 +25,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -246,17 +245,9 @@ begin
 
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
-end;
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;

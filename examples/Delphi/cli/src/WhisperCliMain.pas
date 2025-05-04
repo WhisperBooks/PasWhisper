@@ -39,8 +39,6 @@ end;
 constructor TWhisperCli.Create;
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
-  InitializeGgmlLibrary;
-  InitializeWhisperLibrary;
 end;
 
 procedure TWhisperCli.MainLoop;
@@ -55,10 +53,9 @@ begin
     ReadLn(s);
   until (s = 'x') or (s = 'X');
 end;
+
 destructor TWhisperCli.Destroy;
 begin
-  FinalizeWhisperLibrary;
-  FinalizeGgmlLibrary;
  inherited;
 end;
 

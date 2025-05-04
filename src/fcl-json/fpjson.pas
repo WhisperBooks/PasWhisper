@@ -19,15 +19,14 @@ unit fpjson;
 interface
 
 uses
-  {$IFNDEF PAS2JS}
   variants,
-  {$ENDIF}
-  {$IFDEF PAS2JS}
-  JS, RTLConsts, Types,
-  {$ENDIF}
   SysUtils,
   classes,
-  contnrs, CastleUtils, Generics.Collections, FPHashCompatibility;
+  {$IFNDEF FPC}
+  delphicompatibility,
+  {$ENDIF}
+  contnrs, FPHashCompatibility,
+  Generics.Collections;
 
 type
   TJSONtype = (jtUnknown, jtNumber, jtString, jtBoolean, jtNull, jtArray, jtObject);

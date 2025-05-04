@@ -19,7 +19,8 @@ unit jsonparser;
 interface
 
 uses
-  Classes, SysUtils, fpJSON, jsonscanner, jsonreader, CastleUtils;
+  Classes, SysUtils, fpJSON, jsonscanner, jsonreader
+  {$IFNDEF FPC},delphicompatibility{$ENDIF};
 
 Type
 

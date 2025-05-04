@@ -13,7 +13,6 @@
 
  **********************************************************************}
 
-{$I castleconf.inc} // hide useless Delphi hints/warnings
 
 /// {$mode objfpc}
 {$h+}

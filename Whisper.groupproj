@@ -9,10 +9,10 @@
         <Projects Include="examples\Delphi\cli\WhisperBenchCli.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj">
+        <Projects Include="examples\Delphi\vcl\WhisperBenchVCL.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="examples\Delphi\vcl\WhisperBenchVCL.dproj">
+        <Projects Include="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -41,15 +41,6 @@
     <Target Name="WhisperBenchCli:Make">
         <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj" Targets="Make"/>
     </Target>
-    <Target Name="WhisperTranscribeGUI">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj"/>
-    </Target>
-    <Target Name="WhisperTranscribeGUI:Clean">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="WhisperTranscribeGUI:Make">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Make"/>
-    </Target>
     <Target Name="WhisperBenchVCL">
         <MSBuild Projects="examples\Delphi\vcl\WhisperBenchVCL.dproj"/>
     </Target>
@@ -59,14 +50,23 @@
     <Target Name="WhisperBenchVCL:Make">
         <MSBuild Projects="examples\Delphi\vcl\WhisperBenchVCL.dproj" Targets="Make"/>
     </Target>
+    <Target Name="WhisperStreamGUI">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj"/>
+    </Target>
+    <Target Name="WhisperStreamGUI:Clean">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WhisperStreamGUI:Make">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="WhisperBenchGui;WhisperBenchCli;WhisperTranscribeGUI;WhisperBenchVCL"/>
+        <CallTarget Targets="WhisperBenchGui;WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="WhisperBenchGui:Clean;WhisperBenchCli:Clean;WhisperTranscribeGUI:Clean;WhisperBenchVCL:Clean"/>
+        <CallTarget Targets="WhisperBenchGui:Clean;WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="WhisperBenchGui:Make;WhisperBenchCli:Make;WhisperTranscribeGUI:Make;WhisperBenchVCL:Make"/>
+        <CallTarget Targets="WhisperBenchGui:Make;WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
