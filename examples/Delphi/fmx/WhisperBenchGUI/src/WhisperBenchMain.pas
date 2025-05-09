@@ -95,7 +95,7 @@ begin
 //          Whisp.LoadBackends;
 
           Whisp.LoadBestBackend('cpu');
-          Whisp.LoadBestBackend('blas');
+//          Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
           if Checkbox2.IsChecked then
             begin
@@ -117,6 +117,8 @@ begin
       Perf[0] := sw.Elapsed; // Loaded Backends
 
     {$IF DEFINED(WIN64)}
+      ModelFile := 'D:\models\ggml-base.en.bin';
+    {$ELSEIF DEFINED(WIN32)}
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(LINUX64)}
       ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
