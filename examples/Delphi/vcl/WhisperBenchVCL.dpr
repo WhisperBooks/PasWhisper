@@ -14,7 +14,7 @@ uses
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
   ggmltypes in '..\..\..\src\ggmltypes.pas',
   ComputeDevice in '..\..\..\src\ComputeDevice.pas',
-  Log4D in '..\..\..\src\Log4D\Log4D.pas';
+  Log4D in '..\..\..\src\Log4D.pas';
 
 {$R *.res}
 

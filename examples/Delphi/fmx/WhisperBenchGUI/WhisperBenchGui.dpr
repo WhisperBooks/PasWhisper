@@ -16,7 +16,7 @@ uses
   WhisperBackend in '..\..\..\..\src\WhisperBackend.pas',
   ComputeDevice in '..\..\..\..\src\ComputeDevice.pas',
   BaseDevice in '..\..\..\..\src\BaseDevice.pas',
-  Log4D in '..\..\..\..\src\Log4D\Log4D.pas';
+  Log4D in '..\..\..\..\src\Log4D.pas';
 
 {$R *.res}
 

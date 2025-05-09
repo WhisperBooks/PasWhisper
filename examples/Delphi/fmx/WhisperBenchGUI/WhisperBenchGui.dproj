@@ -4,12 +4,11 @@
         <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>693379</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
-        <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchGui</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -315,7 +314,7 @@
         <DCCReference Include="..\..\..\..\src\WhisperBackend.pas"/>
         <DCCReference Include="..\..\..\..\src\ComputeDevice.pas"/>
         <DCCReference Include="..\..\..\..\src\BaseDevice.pas"/>
-        <DCCReference Include="..\..\..\..\src\Log4D\Log4D.pas"/>
+        <DCCReference Include="..\..\..\..\src\Log4D.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -522,6 +521,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libopenvino.so.2300" Configuration="Debug" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libopenvino.so.2300</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\lib\linux\x64\libopenvino.so.2300" Configuration="Release" Class="File">
+                    <Platform Name="Linux64">
+                        <RemoteName>libopenvino.so.2300</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\..\..\..\lib\linux\x64\libwhisper.so" Configuration="Debug" Class="File">
                     <Platform Name="Linux64">
                         <RemoteName>libwhisper.so</RemoteName>
@@ -674,6 +685,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>WhisperBenchGui</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGui.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
                     <Platform Name="OSXARM64">
@@ -720,12 +737,6 @@
                 <DeployFile LocalName="Win64\Debug\WhisperBenchGui.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchGui.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win64\Debug\WhisperBenchGui.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>WhisperBenchGui.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

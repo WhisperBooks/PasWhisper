@@ -138,7 +138,7 @@
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\src\ggmltypes.pas"/>
         <DCCReference Include="..\..\..\src\ComputeDevice.pas"/>
-        <DCCReference Include="..\..\..\src\Log4D\Log4D.pas"/>
+        <DCCReference Include="..\..\..\src\Log4D.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

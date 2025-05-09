@@ -95,7 +95,8 @@ begin
 //          Whisp.LoadBackends;
 
           Whisp.LoadBestBackend('cpu');
-//          Whisp.LoadBestBackend('blas');
+          if Checkbox1.IsChecked then
+            Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
           if Checkbox2.IsChecked then
             begin
@@ -116,7 +117,7 @@ begin
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF DEFINED(WIN64)}
+    {$IF DEFINED(OS_WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(WIN32)}
       ModelFile := 'D:\models\ggml-base.en.bin';
@@ -133,7 +134,7 @@ begin
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
       Memo1.Lines.Add('');
 
-      if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
+      if Whisp.LoadModel(ModelFile) then
         begin
           WhisperBackendCount := Whisp.GetBackendCount;
 
@@ -252,7 +253,11 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
+  {$IF DEFINED(OSX64)}
   DebugLogInit('Whisper.log');
+  {$ELSE}
+  DebugLogInit('Whisper.log');
+  {$ENDIF}
   DebugLog.Info('Start');
   TokenCount := 256;
   BatchCount := 64;
@@ -262,7 +267,7 @@ begin
   Width := 640;
   Height := 960;
   Button1.Text := 'Benchmark';
-  CheckBox1.Text := 'InitWithState';
+  CheckBox1.Text := 'Blas';
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
   CheckBox4.Text := 'Vulkan';
