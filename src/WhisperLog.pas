@@ -1,76 +1,65 @@
 unit WhisperLog;
 
 interface
-
 uses
-
+  SysUtils, log4d;
+{
+uses
   System.SysUtils,
-  Quick.Commons,
-  Quick.Console,
-  Quick.Logger,
-  Quick.Logger.Provider.Console,
-  Quick.Logger.Provider.Files;
-procedure LogTest();
+  LoggerPro, //LoggerPro core
+  LoggerPro.FileAppender;
+var
+  Log: ILogWriter;
+}
+
+var
+  DebugLog: TLogLogger;
+
+procedure DebugLogInit(const AFilename: String = 'debug.log');
+
 implementation
 
-procedure LogTest();
+procedure DebugLogInit(const AFilename: String);
+var
+  FileLogger: TLogFileAppender;
+  FileLayout: TLogPatternLayout;
 begin
   try
-    //wait for 60 seconds to flush pending logs in queue on program finishes
-    Logger.WaitForFlushBeforeExit := 60;
-    Logger.CustomTags['MYTAG1'] := 'MyTextTag1';
-    Logger.CustomTags['MYTAG2'] := 'MyTextTag2';
 
-    //configure Console Log provider
-    Logger.Providers.Add(GlobalLogConsoleProvider);
-    with GlobalLogConsoleProvider do
-    begin
-      LogLevel := LOG_ALL;
-      ShowEventColors := True;
-      ShowTimeStamp := True;
-      TimePrecission := True;
-      CustomMsgOutput := True;
-      CustomFormatOutput := '%{DATE} %{TIME} - [%{LEVEL}] : %{MESSAGE} (%{MYTAG1} / %{MYTAG2})';
-      Enabled := True;
-    end;
+    FileLayout := TLogPatternLayout.Create('[%-5p][%8r] %m%n');
 
-    //configure File log provider
-    Logger.Providers.Add(GlobalLogFileProvider);
-    with GlobalLogFileProvider do
-    begin
-      FileName := '.\LoggerDemo.log';
-      LogLevel := LOG_ALL;
-      TimePrecission := True;
-      MaxRotateFiles := 3;
-      MaxFileSizeInMB := 5;
-      RotatedFilesPath := '.\RotatedLogs';
-      CompressRotatedFiles := False;
-      CustomMsgOutput := True;
-      CustomFormatOutput := '%{DATETIME} [%{LEVEL}] : %{MESSAGE} [%{APPNAME}] (%{MYTAG2})';
-      Enabled := True;
-    end;
+    FileLogger := TLogFileAppender.Create('DebugLogger',AFilename, FileLayout, False);
 
-    Logger.Info('This is a info message');
+    TLogBasicConfigurator.Configure(FileLogger);
 
-    Logger.Error('This is a error message');
+    // set the log level
+    TLogLogger.GetRootLogger.Level := Trace;
 
-    Logger.Done('This is a done message');
+    // create a named logger
+    DebugLog := TLogLogger.GetLogger('WhisperLog');
 
-
-
-
-    // ConsoleWaitForEnterKey;
-
-    //check if you press the key before all items are flushed to console/disk
-    {if Logger.QueueCount > 0 then
-    begin
-      cout(Format('There are %d log items in queue. Waiting %d seconds max to flush...',[Logger.QueueCount,Logger.WaitForFlushBeforeExit]),ccYellow);
-    end;
+    // write log Startup messages
+    {
+    DebugLog.Fatal('fatal output 3');
+    DebugLog.Error('error output 3');
+    DebugLog.Warn('warn output 3');
+    DebugLog.Info('info output 3');
+    DebugLog.Debug('debug output 3');
+    DebugLog.Trace('trace %d %s',[312, 'Fred']);
     }
   except
-    on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
+    on E:Exception do
+    begin
+        Raise E.CreateFmt('%s : %s',[E.Classname, E.Message]);
+    end;
   end;
 end;
+
+initialization
+  TLogLogger.GetRootLogger.Level := Off;
+  DebugLog := TLogLogger.GetLogger('NoLog');
+
+finalization
+//  Log := Nil;
 
 end.

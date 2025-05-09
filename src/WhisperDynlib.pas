@@ -12,10 +12,11 @@
 
   ----------------------------------------------------------------------------
 }
-{$I platform.inc}
 
 { Dynamic libraries loading (TDynLib). }
 unit WhisperDynlib;
+
+{$I platform.inc}
 
 {$define LOGNOTRAISE}
 

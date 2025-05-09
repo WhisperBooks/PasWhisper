@@ -47,7 +47,7 @@ implementation
 {$R *.fmx}
 
 uses
-  // WhisperLog,
+  WhisperLog,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
   WhisperExternal, Whisper, WhisperUtils;
 
@@ -75,7 +75,7 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
-  // LogTest();
+  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
@@ -243,12 +243,13 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  LogInit();
   SetMultiByteConversionCodePage(CP_UTF8);
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;
   PromptCount := 16;
-  Caption := AppName;
+  Caption := AppName + ' : ' + IntToStr(System.CPUCount);
   Width := 640;
   Height := 960;
   Button1.Text := 'Stream';
@@ -256,6 +257,9 @@ begin
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
   CheckBox4.Text := 'AMD';
+  CheckBox2.IsChecked := True;
+  CheckBox3.IsChecked := True;
+  CheckBox4.IsChecked := True;
 end;
 
 

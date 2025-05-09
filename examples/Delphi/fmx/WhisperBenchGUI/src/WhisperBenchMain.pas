@@ -25,6 +25,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     BackendsLoaded: Boolean;
@@ -50,7 +51,8 @@ implementation
 {$R *.fmx}
 
 uses
-  // WhisperLog,
+  WhisperLog,
+  BaseDevice,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
   WhisperExternal, Whisper, WhisperUtils;
 
@@ -248,6 +250,8 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
+  DebugLogInit('Whisper.log');
+  DebugLog.Info('Start');
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;
@@ -259,9 +263,15 @@ begin
   CheckBox1.Text := 'InitWithState';
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
-  CheckBox4.Text := 'AMD';
+  CheckBox4.Text := 'Vulkan';
+  CheckBox3.isChecked := True;
 end;
 
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  DebugLog.Info('Stop');
+end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin

@@ -12,7 +12,9 @@ uses
   whispertypes in '..\..\..\src\whispertypes.pas',
   WhisperUtils in '..\..\..\src\WhisperUtils.pas',
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
-  ggmltypes in '..\..\..\src\ggmltypes.pas';
+  ggmltypes in '..\..\..\src\ggmltypes.pas',
+  ComputeDevice in '..\..\..\src\ComputeDevice.pas',
+  Log4D in '..\..\..\src\Log4D\Log4D.pas';
 
 {$R *.res}
 

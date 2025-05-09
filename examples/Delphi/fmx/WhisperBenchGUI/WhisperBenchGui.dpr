@@ -13,7 +13,10 @@ uses
   WhisperPlatform in '..\..\..\..\src\WhisperPlatform.pas',
   ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
   WhisperLog in '..\..\..\..\src\WhisperLog.pas',
-  WhisperBackend in '..\..\..\..\src\WhisperBackend.pas';
+  WhisperBackend in '..\..\..\..\src\WhisperBackend.pas',
+  ComputeDevice in '..\..\..\..\src\ComputeDevice.pas',
+  BaseDevice in '..\..\..\..\src\BaseDevice.pas',
+  Log4D in '..\..\..\..\src\Log4D\Log4D.pas';
 
 {$R *.res}
 

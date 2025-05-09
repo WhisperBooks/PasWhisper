@@ -12,7 +12,8 @@ uses
   whisperexternal in '..\..\..\..\src\whisperexternal.pas',
   whispertypes in '..\..\..\..\src\whispertypes.pas',
   ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
-  WhisperLog in '..\..\..\..\src\WhisperLog.pas';
+  WhisperLog in '..\..\..\..\src\WhisperLog.pas',
+  ComputeDevice in '..\..\..\..\src\ComputeDevice.pas';
 
 {$R *.res}
 

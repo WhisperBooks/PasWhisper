@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{DAFEE855-391C-4C16-870D-8970220E699D}</ProjectGuid>
-        <ProjectVersion>20.2</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -137,6 +137,8 @@
         <DCCReference Include="..\..\..\src\WhisperUtils.pas"/>
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\src\ggmltypes.pas"/>
+        <DCCReference Include="..\..\..\src\ComputeDevice.pas"/>
+        <DCCReference Include="..\..\..\src\Log4D\Log4D.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -177,9 +179,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\WhisperBenchVCL.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="Win64\Release\WhisperBenchVCL.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>WhisperBenchVCL.rsm</RemoteName>
+                        <RemoteName>WhisperBenchVCL.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -294,6 +296,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV35">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v35</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-v35</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

@@ -1,12 +1,12 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{19B63537-992F-4AC9-92DD-2AF8D82C02DF}</ProjectGuid>
-        <ProjectVersion>20.2</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
-        <TargetedPlatforms>693378</TargetedPlatforms>
+        <TargetedPlatforms>693250</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>WhisperBenchGui.dpr</MainSource>
         <ProjectName Condition="'$(ProjectName)'==''">WhisperBenchGui</ProjectName>
@@ -313,6 +313,9 @@
         <DCCReference Include="..\..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\..\src\WhisperLog.pas"/>
         <DCCReference Include="..\..\..\..\src\WhisperBackend.pas"/>
+        <DCCReference Include="..\..\..\..\src\ComputeDevice.pas"/>
+        <DCCReference Include="..\..\..\..\src\BaseDevice.pas"/>
+        <DCCReference Include="..\..\..\..\src\Log4D\Log4D.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -720,6 +723,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win64\Debug\WhisperBenchGui.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>WhisperBenchGui.rsm</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win64\Release\WhisperBenchGui.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchGui.exe</RemoteName>
@@ -837,6 +846,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV35">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v35</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-v35</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -1672,7 +1691,7 @@
                 <Platform value="Android64">True</Platform>
                 <Platform value="iOSDevice64">True</Platform>
                 <Platform value="iOSSimARM64">True</Platform>
-                <Platform value="Linux64">True</Platform>
+                <Platform value="Linux64">False</Platform>
                 <Platform value="OSX64">True</Platform>
                 <Platform value="OSXARM64">True</Platform>
                 <Platform value="Win32">False</Platform>

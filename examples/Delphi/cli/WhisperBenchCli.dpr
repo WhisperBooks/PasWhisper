@@ -13,7 +13,8 @@ uses
   ggmltypes in '..\..\..\src\ggmltypes.pas',
   WhisperPlatform in '..\..\..\src\WhisperPlatform.pas',
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
-  WhisperLog in '..\..\..\src\WhisperLog.pas';
+  WhisperLog in '..\..\..\src\WhisperLog.pas',
+  ComputeDevice in '..\..\..\src\ComputeDevice.pas';
 
 {$R *.res}
 begin

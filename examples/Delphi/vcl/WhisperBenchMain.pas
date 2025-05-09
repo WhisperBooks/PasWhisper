@@ -41,7 +41,7 @@ const
 implementation
 
 uses
-  // WhisperLog,
+  WhisperLog,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
   WhisperExternal, Whisper, WhisperUtils;
 
@@ -58,6 +58,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  LogInit();
   SetMultiByteConversionCodePage(CP_UTF8);
   TokenCount := 256;
   BatchCount := 64;
@@ -90,7 +91,7 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
-//  LogTest();
+  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
