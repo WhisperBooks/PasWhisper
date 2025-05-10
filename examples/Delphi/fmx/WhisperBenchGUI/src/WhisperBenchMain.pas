@@ -254,7 +254,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-//  SetWhisperLibraryPath('C:\src\Whisper\lib\windows\x64\');
+  SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
   SetMultiByteConversionCodePage(CP_UTF8);
   DebugLogInit('Whisper.log');
   DebugLog.Info('Start');
@@ -272,7 +272,6 @@ begin
   CheckBox4.Text := 'Vulkan';
   CheckBox3.isChecked := True;
   Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
-  Memo1.Lines.Add('GGML path is ' + GGMLGlobalLibraryPath);
 
 end;
 

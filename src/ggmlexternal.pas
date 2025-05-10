@@ -61,7 +61,7 @@ procedure InitializeGgmlLibrary;
 begin
   FinalizeGgmlLibrary;
 
-  GgmlLibrary := TDynLib.Load(GgmlLibraryName, GGMLGlobalLibraryPath, true);
+  GgmlLibrary := TDynLib.Load(GgmlLibraryName, '', true);
 
   if GgmlLibrary <> Nil then
     begin

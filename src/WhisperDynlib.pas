@@ -202,7 +202,7 @@ procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 
 implementation
 
-uses WhisperUtils;
+uses WhisperUtils, WhisperTypes;
 
 procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 begin
@@ -292,21 +292,36 @@ begin
     Handle := InvalidDynLibHandle
   else if APath.IsEmpty then
     begin
-      LPath := AppPath() + AName;
-
-      DebugLog.Debug('Trying to load library from %s', [LPath]);
-      Handle := LoadLibrary(PChar(LPath));
-      { On macOS, search for dynamic libraries in the bundle too.
-        This fallback makes sense for libpng, libvorbisfile, libsteam_api...
-        It seems that for everything, so just do it always. }
-      {$ifdef OS_OSX}
-      if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
+      if WhisperGlobalLibraryPath.IsEmpty then
         begin
-          LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
-          WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
+          LPath := InclPathDelim(AppPath()) + AName;
+
+          DebugLog.Debug('Trying to load library from %s', [LPath]);
           Handle := LoadLibrary(PChar(LPath));
+          { On macOS, search for dynamic libraries in the bundle too.
+            This fallback makes sense for libpng, libvorbisfile, libsteam_api...
+            It seems that for everything, so just do it always. }
+          {$ifdef OS_OSX}
+          if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
+            begin
+              LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
+              WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
+              Handle := LoadLibrary(PChar(LPath));
+            end;
+          {$endif}
+        end
+      else
+        begin
+          {$IFDEF MSWINDOWS}
+          SetDllDirectory(PWideChar(Pointer(String(InclPathDelim(WhisperGlobalLibraryPath)))));
+          {$ENDIF}
+          LPath := InclPathDelim(WhisperGlobalLibraryPath) + AName;
+          DebugLog.Debug('Trying to load library from %s', [LPath]);
+          Handle := LoadLibrary(PChar(LPath));
+          {$IFDEF MSWINDOWS}
+          SetDllDirectory(Nil);
+          {$ENDIF}
         end;
-      {$endif}
     end
   else
     begin

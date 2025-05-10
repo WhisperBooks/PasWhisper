@@ -249,7 +249,7 @@ procedure InitializeWhisperLibrary;
 begin
   FinalizeWhisperLibrary;
 
-  WhisperLibrary := TDynLib.Load(WhisperLibraryName, WhisperGlobalLibraryPath, true);
+  WhisperLibrary := TDynLib.Load(WhisperLibraryName, '', true);
 
   if WhisperLibrary <> Nil then
     begin

@@ -442,7 +442,7 @@ begin
     if WhisperGlobalLibraryPath.IsEmpty then
       GgmlBackendLoadAll
     else
-      GgmlBackendLoadAllFromPath(PAnsiChar(Pointer(AnsiString(GGMLGlobalLibraryPath))));
+      GgmlBackendLoadAllFromPath(PAnsiChar(Pointer(AnsiString(WhisperGlobalLibraryPath))));
   finally
     SafeMaskFPUExceptions(False);
   end;
@@ -538,7 +538,6 @@ end;
 procedure SetWhisperLibraryPath(const APath: String = '');
 begin
   WhisperGlobalLibraryPath := APath;
-  GGMLGlobalLibraryPath := APath;
   DebugLog.Debug('Library Path Set To : "%s"', [APath]);
   {$IF DEFINED(MSWINDOWS)}
 //  if IsDebuggerPresent() then

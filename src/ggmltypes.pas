@@ -178,9 +178,6 @@ type
     // Padding: array[0..3] of AnsiChar; // Optional padding
   end;
 
-var
-  GGMLGlobalLibraryPath: String;
-
 implementation
 
 end.
