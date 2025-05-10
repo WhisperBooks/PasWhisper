@@ -117,7 +117,9 @@ begin
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF DEFINED(OS_WIN64)}
+    {$IF DEFINED(MSWINDOWS)}
+      ModelFile := 'D:\models\ggml-base.en.bin';
+    {$ELSEIF DEFINED(OS_WIN64)}
       ModelFile := 'D:\models\ggml-base.en.bin';
     {$ELSEIF DEFINED(WIN32)}
       ModelFile := 'D:\models\ggml-base.en.bin';
@@ -252,12 +254,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+//  SetWhisperLibraryPath('C:\src\Whisper\lib\windows\x64\');
   SetMultiByteConversionCodePage(CP_UTF8);
-  {$IF DEFINED(OSX64)}
   DebugLogInit('Whisper.log');
-  {$ELSE}
-  DebugLogInit('Whisper.log');
-  {$ENDIF}
   DebugLog.Info('Start');
   TokenCount := 256;
   BatchCount := 64;
@@ -272,6 +271,9 @@ begin
   CheckBox3.Text := 'Cuda';
   CheckBox4.Text := 'Vulkan';
   CheckBox3.isChecked := True;
+  Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
+  Memo1.Lines.Add('GGML path is ' + GGMLGlobalLibraryPath);
+
 end;
 
 

@@ -20,6 +20,7 @@ var
 
   GgmlBackendLoad: function (const BackendLibrary: PAnsiChar): PGgmlBackendReg; CDecl;
   GgmlBackendLoadAll: procedure (); CDecl;
+  GgmlBackendLoadAllFromPath: procedure (const LibraryPath: PAnsiChar = Nil); CDecl;
   GgmlBackendTryLoadBest: function (const BackendDeviceClass: PAnsiChar; const LibraryPath: PAnsiChar = Nil): PGgmlBackendReg; CDecl;
   GgmlBackendGetDeviceCount: function(): Int32; CDecl;
 const
@@ -49,6 +50,7 @@ begin
 
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := Nil;
+  Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAllFromPath) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest) := Nil;
   Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := Nil;
 
@@ -59,13 +61,14 @@ procedure InitializeGgmlLibrary;
 begin
   FinalizeGgmlLibrary;
 
-  GgmlLibrary := TDynLib.Load(GgmlLibraryName, true);
+  GgmlLibrary := TDynLib.Load(GgmlLibraryName, GGMLGlobalLibraryPath, true);
 
   if GgmlLibrary <> Nil then
     begin
       GgmlLibrary.SymbolError := seRaise;
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');
+      Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAllFromPath) := GgmlLibrary.Symbol('ggml_backend_load_all_from_path');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest)   := GgmlLibrary.Symbol('ggml_backend_try_load_best');
       Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := GgmlLibrary.Symbol('ggml_backend_dev_count');
       GgmlLibraryIsLoaded := True;

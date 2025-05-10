@@ -140,7 +140,7 @@ type
 
       @raises(EDynLibError If library not found and RaiseExceptionOnError
         is @true.) }
-    class function Load(const AName: string; RaiseExceptionOnError: boolean = true): TDynLib;
+    class function Load(const AName: string; const APath: String = ''; RaiseExceptionOnError: boolean = true): TDynLib;
 
     { What happens when @link(Symbol) fails. }
     property SymbolError: TDynLibSymbolError
@@ -203,8 +203,6 @@ procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 implementation
 
 uses WhisperUtils;
-  // for BundlePath on Darwin
-//  CastleUtils, CastleFilesUtils;
 
 procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 begin
@@ -261,7 +259,7 @@ begin
   inherited;
 end;
 
-class function TDynLib.Load(const AName: string; RaiseExceptionOnError: boolean): TDynLib;
+class function TDynLib.Load(const AName: string; const APath: String = ''; RaiseExceptionOnError: boolean = True): TDynLib;
 
   { On Unix, right now this simply uses LoadLibrary that calls dlopen(..., RTLD_LAZY)
     (see in FPC rtl/unix/dynlibs.inc).
@@ -290,25 +288,32 @@ var
   Handle: TDynLibHandle;
   LPath: String;
 begin
-  LPath := AppPath() + AName;
   if InternalDisableDynamicLibraries then
     Handle := InvalidDynLibHandle
+  else if APath.IsEmpty then
+    begin
+      LPath := AppPath() + AName;
+
+      DebugLog.Debug('Trying to load library from %s', [LPath]);
+      Handle := LoadLibrary(PChar(LPath));
+      { On macOS, search for dynamic libraries in the bundle too.
+        This fallback makes sense for libpng, libvorbisfile, libsteam_api...
+        It seems that for everything, so just do it always. }
+      {$ifdef OS_OSX}
+      if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
+        begin
+          LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
+          WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
+          Handle := LoadLibrary(PChar(LPath));
+        end;
+      {$endif}
+    end
   else
-  begin
-    DebugLog.Debug('Trying to load library from %s', [LPath]);
-    Handle := LoadLibrary(PChar(LPath));
-    { On macOS, search for dynamic libraries in the bundle too.
-      This fallback makes sense for libpng, libvorbisfile, libsteam_api...
-      It seems that for everything, so just do it always. }
-  {$ifdef OS_OSX}
-    if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
-      begin
-        LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
-        WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
-        Handle := LoadLibrary(PChar(LPath));
-      end;
-  {$endif}
-  end;
+    begin
+      LPath := InclPathDelim(APath) + AName;
+      DebugLog.Debug('Trying to load library from "%s"', [LPath]);
+      Handle := LoadLibrary(PChar(LPath));
+    end;
 
   if Handle = InvalidDynLibHandle then
   begin

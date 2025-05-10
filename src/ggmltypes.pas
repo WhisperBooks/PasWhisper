@@ -177,8 +177,10 @@ type
     Extra: Pointer; // Extra things e.g. for ggml-cuda.cu
     // Padding: array[0..3] of AnsiChar; // Optional padding
   end;
-implementation
 
-{ TLanguageInfo }
+var
+  GGMLGlobalLibraryPath: String;
+
+implementation
 
 end.

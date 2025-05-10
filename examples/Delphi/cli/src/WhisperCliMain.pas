@@ -4,9 +4,9 @@ interface
 
 uses
  SysUtils, IOUtils, Classes,
-//    WhisperLog,
-  WhisperTypes, GgmlTypes, GgmlExternal,
-  WhisperExternal, Whisper, WhisperUtils;
+ WhisperLog,
+ WhisperTypes, GgmlTypes, GgmlExternal,
+ WhisperExternal, Whisper, WhisperUtils;
 
 type
   TWhisperCli = class
@@ -32,12 +32,16 @@ implementation
 
 procedure WhisperMain;
 begin
+  DebugLogInit('Whisper.log');
+//  SetWhisperLibraryPath('C:\src\Whisper\lib\windows\x64');
+  SetWhisperLibraryPath('..\..\..\..\..\lib\windows\x64');
   WhisperCli := TWhisperCli.Create;
   WhisperCli.MainLoop;
 end;
 
 constructor TWhisperCli.Create;
 begin
+  WriteLn('Whisper path is ' + WhisperGlobalLibraryPath);
   SetMultiByteConversionCodePage(CP_UTF8);
 end;
 

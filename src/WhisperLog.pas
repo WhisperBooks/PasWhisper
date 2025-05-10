@@ -29,7 +29,6 @@ begin
     FileLayout := TLogPatternLayout.Create('[%-5p][%8r] %m%n');
 
     FileLogger := TLogFileAppender.Create('DebugLogger',AFilename, FileLayout, False);
-
     TLogBasicConfigurator.Configure(FileLogger);
 
     // set the log level

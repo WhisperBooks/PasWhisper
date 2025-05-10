@@ -14,7 +14,8 @@ uses
   WhisperPlatform in '..\..\..\src\WhisperPlatform.pas',
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
   WhisperLog in '..\..\..\src\WhisperLog.pas',
-  ComputeDevice in '..\..\..\src\ComputeDevice.pas';
+  ComputeDevice in '..\..\..\src\ComputeDevice.pas',
+  Log4D in '..\..\..\src\Log4D.pas';
 
 {$R *.res}
 begin

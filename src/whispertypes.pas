@@ -375,6 +375,8 @@ type
     token_beg: TVocabID; // 50363; // begin timestamps
   end;
 
+var
+  WhisperGlobalLibraryPath: String;
 
 implementation
 

@@ -105,9 +105,15 @@ type
 var
   PModel: PAnsiChar;
 
+procedure SetWhisperLibraryPath(const APath: String = '');
+
 implementation
 
-uses GgmlExternal;
+uses
+  {$IF DEFINED(MSWINDOWS)}
+  Windows,
+  {$ENDIF}
+  WhisperLog,WhisperUtils,GgmlExternal;
 
 { TWhisper }
 
@@ -433,18 +439,41 @@ procedure TWhisper.LoadBackends;
 begin
   SafeMaskFPUExceptions(True);
   try
-    GgmlBackendLoadAll;
+    if WhisperGlobalLibraryPath.IsEmpty then
+      GgmlBackendLoadAll
+    else
+      GgmlBackendLoadAllFromPath(PAnsiChar(Pointer(AnsiString(GGMLGlobalLibraryPath))));
   finally
     SafeMaskFPUExceptions(False);
   end;
 end;
 
 function TWhisper.LoadBestBackend(const ADeviceType, APath: String): PGgmlBackendReg;
+var
+  LPath: String;
+  LLib: PGGMLBackendReg;
 begin
+  if WhisperGlobalLibraryPath.IsEmpty then
+    LPath := APath
+  else
+    begin
+      if APath.IsEmpty then
+        LPath := WhisperGlobalLibraryPath
+      else
+        LPath := APath;
+    end;
+
   SafeMaskFPUExceptions(True);
   try
     Result := Nil;
-    GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(APath))));
+
+    DebugLog.Debug('Trying to load device "%s" library from "%s"', [ADeviceType, LPath]);
+    LLib := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(LPath))));
+    if LLib <> Nil then
+      DebugLog.Debug('API Version is %d', [LLib^.ApiVersion])
+    else
+      DebugLog.Debug('Load failed');
+
   finally
     SafeMaskFPUExceptions(False);
   end;
@@ -505,5 +534,23 @@ begin
   else
     Result := WhisperSetMelWithState(FCtx, FState, Data, NLen, NMel);
 end;
+
+procedure SetWhisperLibraryPath(const APath: String = '');
+begin
+  WhisperGlobalLibraryPath := APath;
+  GGMLGlobalLibraryPath := APath;
+  DebugLog.Debug('Library Path Set To : "%s"', [APath]);
+  {$IF DEFINED(MSWINDOWS)}
+//  if IsDebuggerPresent() then
+  SetDllDirectory(PWideChar(Pointer(AnsiString(APath))));
+  {$ENDIF}
+
+end;
+
+initialization
+  SetWhisperLibraryPath;
+
+finalization
+
 
 end.
