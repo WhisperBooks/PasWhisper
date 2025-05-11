@@ -46,7 +46,7 @@ implementation
 
 uses
   WhisperTypes, GgmlTypes, GgmlExternal,
-  WhisperExternal, Whisper, WhisperUtils;
+  WhisperExternal, Whisper, WhisperUtils, WhisperLog;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -225,6 +225,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
   SetMultiByteConversionCodePage(CP_UTF8);
   TokenCount := 256;
   BatchCount := 64;

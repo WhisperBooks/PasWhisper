@@ -3,9 +3,6 @@
         <ProjectGuid>{4B6865E5-EE96-468F-8584-FD852BF11005}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGui.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="examples\Delphi\cli\WhisperBenchCli.dproj">
             <Dependencies/>
         </Projects>
@@ -13,6 +10,9 @@
             <Dependencies/>
         </Projects>
         <Projects Include="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -23,15 +23,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="WhisperBenchGui">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGui.dproj"/>
-    </Target>
-    <Target Name="WhisperBenchGui:Clean">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGui.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="WhisperBenchGui:Make">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGui.dproj" Targets="Make"/>
-    </Target>
     <Target Name="WhisperBenchCli">
         <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj"/>
     </Target>
@@ -59,14 +50,23 @@
     <Target Name="WhisperStreamGUI:Make">
         <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="WhisperBenchGUI">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj"/>
+    </Target>
+    <Target Name="WhisperBenchGUI:Clean">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WhisperBenchGUI:Make">
+        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="WhisperBenchGui;WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI"/>
+        <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="WhisperBenchGui:Clean;WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean"/>
+        <CallTarget Targets="WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean;WhisperBenchGUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="WhisperBenchGui:Make;WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make"/>
+        <CallTarget Targets="WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make;WhisperBenchGUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

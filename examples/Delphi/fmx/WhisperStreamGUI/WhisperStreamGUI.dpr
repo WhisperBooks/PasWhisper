@@ -13,7 +13,9 @@ uses
   whispertypes in '..\..\..\..\src\whispertypes.pas',
   ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
   WhisperLog in '..\..\..\..\src\WhisperLog.pas',
-  ComputeDevice in '..\..\..\..\src\ComputeDevice.pas';
+  ComputeDevice in '..\..\..\..\src\ComputeDevice.pas',
+  Settings in 'src\Settings.pas',
+  Log4D in '..\..\..\..\src\Log4D.pas';
 
 {$R *.res}
 

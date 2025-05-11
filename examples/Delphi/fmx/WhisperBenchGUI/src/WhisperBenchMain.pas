@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.Menus;
+  FMX.Memo, FMX.Menus,
+  Whisper, Settings;
 
 type
   TForm1 = class(TForm)
@@ -28,6 +29,8 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    Whisp: TWhisper;
+    Settings: TSettings;
     BackendsLoaded: Boolean;
     PromptCount: Integer;
     BatchCount: Integer;
@@ -54,7 +57,7 @@ uses
   WhisperLog,
   BaseDevice,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
-  WhisperExternal, Whisper, WhisperUtils;
+  WhisperExternal, WhisperUtils;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -69,7 +72,6 @@ procedure TForm1.RunBench;
 var
   Info: String;
   I: Integer;
-  Whisp: TWhisper;
   NMels: Int32;
   Tokens: TWhisperTokenArray;
   Timings: PWhisperActivity;
@@ -86,7 +88,6 @@ begin
   for I := 0 to TokenCount - 1 do
       Tokens[I] := 0;
 
-  Whisp := TWhisper.Create;
   try
     sw := TMilliTimer.Create;
     try
@@ -136,7 +137,10 @@ begin
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
       Memo1.Lines.Add('');
 
-      if Whisp.LoadModel(ModelFile) then
+      if not Whisp.IsModelLoaded then
+        Whisp.LoadModel(ModelFile, True);
+
+      if Whisp.IsModelLoaded then
         begin
           WhisperBackendCount := Whisp.GetBackendCount;
 
@@ -246,7 +250,6 @@ begin
       sw.Free;
     end;
   finally
-    Whisp.Free;
     SetLength(Tokens, 0);
   end;
 
@@ -254,9 +257,14 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  Settings := TSettings.Create;
+  {$IFDEF MACOS}
+  //SetWhisperLibraryPath('/Volumes/SN770/whisper_libs/minimal/');
+  {$ELSE}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
+  {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);
-  DebugLogInit('Whisper.log');
+  DebugLogInit(TPath.Combine(Settings.AppHome, 'Whisper.log'));
   DebugLog.Info('Start');
   TokenCount := 256;
   BatchCount := 64;
@@ -272,6 +280,8 @@ begin
   CheckBox4.Text := 'Vulkan';
   CheckBox3.isChecked := True;
   Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
+  Memo1.Lines.Add('Settings path is ' + Settings.AppHome);
+  Whisp := TWhisper.Create;
 
 end;
 
@@ -279,6 +289,8 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   DebugLog.Info('Stop');
+  FreeAndNil(Settings);
+  FreeAndNil(Whisp);
 end;
 
 procedure TForm1.FormResize(Sender: TObject);

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.Menus;
+  FMX.Memo, FMX.Menus, Settings;
 
 type
   TForm1 = class(TForm)
@@ -24,6 +24,7 @@ type
     procedure FormResize(Sender: TObject);
   private
     { Private declarations }
+    Settings: TSettings;
     BackendsLoaded: Boolean;
     PromptCount: Integer;
     BatchCount: Integer;
@@ -75,7 +76,6 @@ var
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
-  LogTest();
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
@@ -123,6 +123,7 @@ begin
     {$ENDIF}
       GgmlBackendCount := GgmlBackendGetDeviceCount();
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
+      Memo1.Lines.Add(Format('Model : %s',[ModelFile]));
       Memo1.Lines.Add('');
 
       if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
@@ -243,8 +244,14 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  LogInit();
+  Settings := TSettings.Create;
+  {$IFDEF MACOS}
+  SetWhisperLibraryPath('');//Volumes/SN770/whisper_libs/vino');
+  {$ELSE}
+  SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
+  {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);
+  DebugLogInit(TPath.Combine(Settings.AppHome, 'Whisper.log'));
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;
@@ -260,6 +267,10 @@ begin
   CheckBox2.IsChecked := True;
   CheckBox3.IsChecked := True;
   CheckBox4.IsChecked := True;
+  Memo1.Lines.Add('');
+  Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
+  Memo1.Lines.Add('Settings path is ' + Settings.AppHome);
+  Memo1.Lines.Add('Bundle path is ' + BundlePath);
 end;
 
 

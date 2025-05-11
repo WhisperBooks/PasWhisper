@@ -67,6 +67,8 @@ type
     function  GetBackendCount: Integer;
     function  GetIndexedBackend(AIndex: Integer): TBackendDevice;
     function  GetPreferredBackend: TBackendDevice;
+    Function IsModelLoaded: Boolean;
+    procedure UnloadModel;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;
@@ -426,6 +428,13 @@ begin
   Result := WhisperTokenTranslate(FCtx);
 end;
 
+function TWhisper.IsModelLoaded: Boolean;
+begin
+  Result := False;
+  if (FCtx <> Nil) AND (FState <> Nil) then
+    Result := True;
+end;
+
 function TWhisper.LangAutoDetect(OffsetMs, NThreads: Int32;
   LangProbs: PFloat): Integer;
 begin
@@ -466,7 +475,6 @@ begin
   SafeMaskFPUExceptions(True);
   try
     Result := Nil;
-
     DebugLog.Debug('Trying to load device "%s" library from "%s"', [ADeviceType, LPath]);
     LLib := GgmlBackendTryLoadBest(PAnsiChar(Pointer(AnsiString(ADeviceType))), PAnsiChar(Pointer(AnsiString(LPath))));
     if LLib <> Nil then
@@ -540,10 +548,18 @@ begin
   WhisperGlobalLibraryPath := APath;
   DebugLog.Debug('Library Path Set To : "%s"', [APath]);
   {$IF DEFINED(MSWINDOWS)}
-//  if IsDebuggerPresent() then
-  SetDllDirectory(PWideChar(Pointer(AnsiString(APath))));
   {$ENDIF}
+end;
 
+procedure TWhisper.UnloadModel;
+begin
+  if (FContextHasState = False) and (FState <> Nil) then
+    FreeState;
+  if(FCtx <> Nil) then
+    begin
+      WhisperFree(FCtx);
+      FCtx := Nil;
+    end;
 end;
 
 initialization

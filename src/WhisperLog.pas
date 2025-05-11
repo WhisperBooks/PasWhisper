@@ -2,16 +2,21 @@ unit WhisperLog;
 
 interface
 uses
-  SysUtils, log4d;
-{
-uses
-  System.SysUtils,
-  LoggerPro, //LoggerPro core
-  LoggerPro.FileAppender;
-var
-  Log: ILogWriter;
-}
+  SysUtils
+  {$IFNDEF FPC}
+  , log4d;
+{$ELSE}
+ ;
 
+type
+  TLogLogger = class
+  public
+    constructor Create;
+    procedure Debug(const A: String); overload;
+    procedure Debug(const Fmt: string; const Args: array of Const); overload;
+  end;
+
+{$ENDIF}
 var
   DebugLog: TLogLogger;
 
@@ -19,6 +24,7 @@ procedure DebugLogInit(const AFilename: String = 'debug.log');
 
 implementation
 
+{$IFNDEF FPC}
 procedure DebugLogInit(const AFilename: String);
 var
   FileLogger: TLogFileAppender;
@@ -53,12 +59,33 @@ begin
     end;
   end;
 end;
+{$ELSE}
+constructor TLogLogger.Create;
+begin
+end;
+procedure TLogLogger.Debug(const A: String);
+begin
+
+end;
+
+procedure TLogLogger.Debug(const Fmt: string; const Args: array of Const);
+begin
+end;
+
+
+procedure DebugLogInit(const AFilename: String);
+begin
+end;
+{$ENDIF}
 
 initialization
+  {$IFNDEF FPC}
   TLogLogger.GetRootLogger.Level := Off;
   DebugLog := TLogLogger.GetLogger('NoLog');
-
+  {$ELSE}
+  DebugLog := TLogLogger.Create;
+  {$ENDIF}
 finalization
-//  Log := Nil;
+  DebugLog := Nil;
 
 end.

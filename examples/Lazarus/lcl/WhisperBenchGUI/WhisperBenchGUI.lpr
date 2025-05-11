@@ -11,8 +11,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, WhisperBenchGUIMain, GgmlExternal, ggmltypes, whisper, WhisperDynlib,
-  WhisperExternal, WhisperPlatform, whispertypes, WhisperUtils
-  { you can add units after this };
+  WhisperExternal, WhisperPlatform, whispertypes, WhisperUtils, WhisperLog;
 
 {$R *.res}
 

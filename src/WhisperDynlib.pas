@@ -24,6 +24,7 @@ interface
 
 uses SysUtils
   {$ifdef FPC}
+    {$ifdef MSWINDOWS}, jwawinbase {$endif}
     { With FPC, use cross-platform DynLibs unit. }
     {$ifndef WASI}, DynLibs{$endif}
   {$else}
@@ -304,7 +305,7 @@ begin
           {$ifdef OS_OSX}
           if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
             begin
-              LPath := 'BundlePath' + 'Contents/MacOS/' + AName;
+              LPath := BundlePath + '/Contents/MacOS/' + AName;
               WriteLn(Format('Fail - Trying to load library from %s', [LPath]));
               Handle := LoadLibrary(PChar(LPath));
             end;
@@ -313,7 +314,7 @@ begin
       else
         begin
           {$IFDEF MSWINDOWS}
-          SetDllDirectory(PWideChar(Pointer(String(InclPathDelim(WhisperGlobalLibraryPath)))));
+          SetDllDirectory({$ifndef FPC}PWideChar{$else}PChar{$endif}(Pointer(String(InclPathDelim(WhisperGlobalLibraryPath)))));
           {$ENDIF}
           LPath := InclPathDelim(WhisperGlobalLibraryPath) + AName;
           DebugLog.Debug('Trying to load library from %s', [LPath]);
