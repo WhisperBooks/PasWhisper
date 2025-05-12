@@ -3,8 +3,7 @@ program WhisperBenchGUI;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  Settings in 'src\Settings.pas',
-  WhisperBenchMain in 'src\WhisperBenchMain.pas',
+  WhisperBenchMain in 'src\WhisperBenchMain.pas', { Form1 }
   BaseDevice in '..\..\..\..\src\BaseDevice.pas',
   ComputeDevice in '..\..\..\..\src\ComputeDevice.pas',
   ggmlexternal in '..\..\..\..\src\ggmlexternal.pas',
@@ -17,7 +16,8 @@ uses
   WhisperLog in '..\..\..\..\src\WhisperLog.pas',
   WhisperPlatform in '..\..\..\..\src\WhisperPlatform.pas',
   whispertypes in '..\..\..\..\src\whispertypes.pas',
-  WhisperUtils in '..\..\..\..\src\WhisperUtils.pas';
+  WhisperUtils in '..\..\..\..\src\WhisperUtils.pas',
+  Settings in 'src\Settings.pas';
 
 {$R *.res}
 
