@@ -149,6 +149,8 @@ var
     WhisperPrintTimings: procedure(Ctx: TWhisperContext); CDecl;
     WhisperResetTimings: procedure(Ctx: TWhisperContext); CDecl;
 
+    WhisperSetContextState: procedure(Ctx: TWhisperContext; State: TWhisperState); CDecl;
+
 const
   {$IF DEFINED(OS_WIN64)}
   WhisperLibraryName = 'whisper.dll';
@@ -241,6 +243,8 @@ begin
   Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := Nil;
   Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend) := Nil;
 
+  Pointer({$ifndef FPC}@{$endif} WhisperSetContextState) := Nil;
+
   FreeAndNil(WhisperLibrary);
 end;
 
@@ -319,6 +323,8 @@ begin
       Pointer({$ifndef FPC}@{$endif} WhisperGetBackendCount)   := WhisperLibrary.Symbol('whisper_flat_get_backend_count');
       Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := WhisperLibrary.Symbol('whisper_flat_get_indexed_backend');
       Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := WhisperLibrary.Symbol('whisper_flat_get_preferred_backend');
+
+      Pointer({$ifndef FPC}@{$endif} WhisperSetContextState) := WhisperLibrary.Symbol('whisper_flat_set_context_state');
 
       WhisperLibraryIsLoaded := True;
 

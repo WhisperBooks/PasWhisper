@@ -11,9 +11,8 @@ uses
 type
   TSettingsRec = record
     WipeOnStart: Boolean;
-    PythonInstalled: Boolean;
-    LastOpenStyleDir: String;
-    LastSaveStyleDir: String;
+    LastUsedModel: String;
+    ModelDirectory: String;
     AppHome: String;
     SettingsHome: String;
     WhisperVersion: String;
@@ -23,6 +22,10 @@ type
   strict private
     FSettings: TSettingsRec;
     function GetAppHome: String;
+    function GetLastUsedModel: String;
+    procedure SetLastUsedModel(AValue: String);
+    function GetModelDirectory: String;
+    procedure SetModelDirectory(AValue: String);
   public
     constructor Create;
     destructor Destroy; Override;
@@ -31,6 +34,8 @@ type
     procedure MakeDefaultValues;
     procedure Save;
     property AppHome: String read GetAppHome;
+    property LastUsedModel: String read GetLastUsedModel write SetLastUsedModel;
+    property ModelDirectory: String read GetModelDirectory write SetModelDirectory;
   end;
 
 var
@@ -71,15 +76,13 @@ begin
       Load;
       // If AppHome has been removed (e.g. USB) then it won't exist any more
       // so reset it back to default in that situation
-    end;
-
-  Initialise;
+    end
+  else
+    Initialise;
 end;
 
 destructor TSettings.Destroy;
 begin
-  Save;
-
   inherited;
 end;
 
@@ -88,19 +91,23 @@ begin
   Result := FSettings.AppHome;
 end;
 
+function TSettings.GetLastUsedModel: String;
+begin
+  Result := FSettings.LastUsedModel;
+end;
+
+function TSettings.GetModelDirectory: String;
+begin
+  Result := FSettings.ModelDirectory;
+end;
+
 procedure TSettings.Initialise;
   begin
-  if not DirectoryExists(FSettings.AppHome) then
+  if not DirectoryExists(FSettings.AppHome) and not FSettings.AppHome.IsEmpty() then
     begin
       ForceDirectories(FSettings.AppHome);
       InstallRequired := True;
     end;
-
-  if not FSettings.PythonInstalled then
-    InstallRequired := True;
-
-  if not FileExists(TPath.Combine(FSettings.AppHome, pycode)) then
-    InstallRequired := True;
 
   FSettings.WhisperVersion := appver;
   Save;
@@ -112,6 +119,9 @@ var
   JsonText: String;
   LSettings: TSettingsRec;
 begin
+  if FSettings.SettingsHome.IsEmpty() then
+    Exit;
+
   try
     JsonText := TFile.ReadAllText(IncludeTrailingPathDelimiter(FSettings.SettingsHome) + 'Settings.json');
   except
@@ -128,10 +138,9 @@ begin
       lSerializer := TJsonSerializer.Create;
       try
         try
-          LSettings := lSerializer.Deserialize<TSettingsRec>(JsonText);
+          FSettings := lSerializer.Deserialize<TSettingsRec>(JsonText);
           if FSettings.WhisperVersion <> appver then
             VersionUpdate := True;
-
         except
          on E : EJsonSerializationException do
            LSettings := Default(TSettingsRec);
@@ -179,10 +188,13 @@ var
   lSerializer: TJsonSerializer;
   JsonText: String;
 begin
+  if FSettings.SettingsHome.IsEmpty() then
+    Exit;
+
   lSerializer := TJsonSerializer.Create;
   try
     try
-      JsonText := lSerializer.Serialize<TSettings>(Self);
+      JsonText := lSerializer.Serialize<TSettingsRec>(FSettings);
       try
         TFile.WriteAllText(IncludeTrailingPathDelimiter(FSettings.SettingsHome) + 'Settings.json', JsonText);
       except
@@ -200,6 +212,18 @@ begin
   finally
     FreeAndNil(lSerializer);
   end;
+end;
+
+procedure TSettings.SetLastUsedModel(AValue: String);
+begin
+  if AValue <> '' then
+    FSettings.LastUsedModel := AValue;
+end;
+
+procedure TSettings.SetModelDirectory(AValue: String);
+begin
+  if AValue <> '' then
+    FSettings.ModelDirectory := AValue;
 end;
 
 end.

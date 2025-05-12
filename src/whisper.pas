@@ -176,7 +176,10 @@ begin
   if (FContextHasState = False) and (FState <> Nil) then
     FreeState;
   if(FCtx <> Nil) then
-    WhisperFree(FCtx);
+    begin
+      WhisperFree(FCtx);
+      FCtx := Nil;
+    end;
 
   inherited;
 end;
@@ -503,24 +506,39 @@ begin
           SafeMaskFPUExceptions(True);
           try
             FCtx := WhisperInitFromFileWithParamsNoState(PAnsiChar(Pointer(AnsiString(FModel))), FCParams);
-            FState := WhisperInitState(FCtx);
+            if FCtx <> Nil then
+              begin
+                FState := WhisperInitState(FCtx);
+                if FState <> Nil then
+                  begin
+                    WhisperSetContextState(FCtx, FState);
+                    FContextHasState := False;
+                    Result := True;
+                  end
+                else
+                  begin
+                    WhisperFree(FCtx);
+                    FCtx := Nil;
+                  end;
+              end;
           finally
             SafeMaskFPUExceptions(False);
           end;
-          FContextHasState := False;
-          Result := True;
         end
       else
         begin
           SafeMaskFPUExceptions(True);
           try
             FCtx := WhisperInitFromFileWithParams(PAnsiChar(Pointer(AnsiString(FModel))), FCParams);
-            FState := WhisperGetStateFromContext(FCtx);
+            if FCtx <> Nil then
+              begin
+                FState := WhisperGetStateFromContext(FCtx);
+                FContextHasState := True;
+                Result := True;
+              end;
           finally
             SafeMaskFPUExceptions(False);
           end;
-          FContextHasState := True;
-          Result := True;
         end;
     end;
 end;
