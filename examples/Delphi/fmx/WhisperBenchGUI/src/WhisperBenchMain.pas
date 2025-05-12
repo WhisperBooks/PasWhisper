@@ -31,6 +31,7 @@ type
     procedure MenuItem2Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MenuItem3Click(Sender: TObject);
+    procedure CheckBoxChange(Sender: TObject);
   private
     { Private declarations }
     Whisp: TWhisper;
@@ -279,8 +280,23 @@ begin
 
 end;
 
+procedure TForm1.CheckBoxChange(Sender: TObject);
+var
+  CBX: TCheckBox;
+begin
+  if Sender is TCheckBox then
+    begin
+      CBX := Sender as TCheckBox;
+      Settings.GenOpt[CBX.Tag] := CBX.IsChecked;
+    end;
+end;
+
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  Settings.GenOpt[0] := CheckBox1.IsChecked;
+  Settings.GenOpt[1] := CheckBox2.IsChecked;
+  Settings.GenOpt[2] := CheckBox3.IsChecked;
+  Settings.GenOpt[3] := CheckBox4.IsChecked;
   Settings.Save;
 end;
 
@@ -306,14 +322,17 @@ begin
   CheckBox2.Text := 'Metal';
   CheckBox3.Text := 'RPC';
   CheckBox4.Text := 'State';
-  CheckBox4.isChecked := True;
   {$ELSE}
   CheckBox1.Text := 'Blas';
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
   CheckBox4.Text := 'Vulkan';
-  CheckBox3.isChecked := True;
   {$ENDIF}
+  CheckBox1.IsChecked := Settings.GenOpt[0];
+  CheckBox2.IsChecked := Settings.GenOpt[1];
+  CheckBox3.IsChecked := Settings.GenOpt[2];
+  CheckBox4.IsChecked := Settings.GenOpt[3];
+
   Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
   Memo1.Lines.Add('Settings path is ' + Settings.AppHome);
   Memo1.Lines.Add(Format('Model is %s - %s',[Settings.ModelDirectory, Settings.LastUsedModel]));

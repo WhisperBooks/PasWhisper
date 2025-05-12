@@ -8,11 +8,18 @@ uses
   System.SysUtils, System.IOUtils, System.Types, System.UITypes, System.Classes,
   System.Variants{, FMX.Forms, FMX.Dialogs, StyleModel};
 
+const
+  GenOptCount = 4;
+
 type
+
+  TGenOpts = Array[0..GenOptCount - 1] of Boolean;
+
   TSettingsRec = record
     WipeOnStart: Boolean;
     LastUsedModel: String;
     ModelDirectory: String;
+    GenOpt: TGenOpts;
     AppHome: String;
     SettingsHome: String;
     WhisperVersion: String;
@@ -26,6 +33,8 @@ type
     procedure SetLastUsedModel(AValue: String);
     function GetModelDirectory: String;
     procedure SetModelDirectory(AValue: String);
+    function GetGenOpt(Index: Cardinal): Boolean;
+    procedure SetGenOpt(Index: Cardinal; AValue: Boolean);
   public
     constructor Create;
     destructor Destroy; Override;
@@ -36,6 +45,7 @@ type
     property AppHome: String read GetAppHome;
     property LastUsedModel: String read GetLastUsedModel write SetLastUsedModel;
     property ModelDirectory: String read GetModelDirectory write SetModelDirectory;
+    property GenOpt[Index: Cardinal]: Boolean read GetGenOpt write SetGenOpt;
   end;
 
 var
@@ -91,6 +101,11 @@ begin
   Result := FSettings.AppHome;
 end;
 
+function TSettings.GetGenOpt(Index: Cardinal): Boolean;
+begin
+  Result := FSettings.GenOpt[Index];
+end;
+
 function TSettings.GetLastUsedModel: String;
 begin
   Result := FSettings.LastUsedModel;
@@ -136,6 +151,7 @@ begin
   else
     begin
       lSerializer := TJsonSerializer.Create;
+      LSerializer.MaxDepth := 2;
       try
         try
           FSettings := lSerializer.Deserialize<TSettingsRec>(JsonText);
@@ -161,11 +177,16 @@ begin
   InstallRequired := False;
   VersionUpdate := False;
   EnableGPU := False;
-  {$IF DEFINED(MACOS) AND DEFINED(CPUARM)}
-  EnableGPU := True;
-  {$ENDIF}
-  {$IF DEFINED(MSWINDOWS)}
-  EnableGPU := True;
+  {$IF DEFINED(MACOS)}
+  FSettings.GenOpt[0] := True;
+  FSettings.GenOpt[1] := True;
+  FSettings.GenOpt[2] := False;
+  FSettings.GenOpt[3] := True;
+  {$ELSE}
+  FSettings.GenOpt[0] := False;
+  FSettings.GenOpt[1] := False;
+  FSettings.GenOpt[2] := True;
+  FSettings.GenOpt[3] := False;
   {$ENDIF}
 
   AllowGPU := EnableGPU;
@@ -192,6 +213,7 @@ begin
     Exit;
 
   lSerializer := TJsonSerializer.Create;
+  lSerializer.MaxDepth := 2;
   try
     try
       JsonText := lSerializer.Serialize<TSettingsRec>(FSettings);
@@ -212,6 +234,11 @@ begin
   finally
     FreeAndNil(lSerializer);
   end;
+end;
+
+procedure TSettings.SetGenOpt(Index: Cardinal; AValue: Boolean);
+begin
+  FSettings.GenOpt[Index] := AValue;
 end;
 
 procedure TSettings.SetLastUsedModel(AValue: String);
