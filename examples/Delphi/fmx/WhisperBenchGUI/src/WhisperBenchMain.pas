@@ -116,6 +116,14 @@ begin
 //          Whisp.LoadBackends;
 
           Whisp.LoadBestBackend('cpu');
+          {$IFDEF MACOS}
+          if Checkbox1.IsChecked then
+            Whisp.LoadBestBackend('blas');
+          if Checkbox2.IsChecked then
+            Whisp.LoadBestBackend('metal');
+          if Checkbox3.IsChecked then
+            Whisp.LoadBestBackend('rpc');
+          {$ELSE}
           if Checkbox1.IsChecked then
             Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
@@ -133,7 +141,7 @@ begin
               if Checkbox3.IsChecked then
                 Whisp.LoadBestBackend('cuda');
             end;
-
+          {$ENDIF}
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
@@ -149,7 +157,7 @@ begin
       Memo1.Lines.Add('');
 
       if not Whisp.IsModelLoaded then
-        Whisp.LoadModel(Model, True);
+        Whisp.LoadModel(Model, {$IFDEF MACOS}Checkbox4.IsChecked{$ELSE}True{$ENDIF});
 
       if Whisp.IsModelLoaded then
         begin
@@ -279,9 +287,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Settings := TSettings.Create;
-  {$IFDEF MACOS}
-  //SetWhisperLibraryPath('/Volumes/SN770/whisper_libs/minimal/');
-  {$ELSE}
+  {$IFDEF MSWINDOWS}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
   {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);
@@ -295,11 +301,19 @@ begin
   Width := 640;
   Height := 960;
   Button1.Text := 'Benchmark';
+  {$IFDEF MACOS}
+  CheckBox1.Text := 'Blas';
+  CheckBox2.Text := 'Metal';
+  CheckBox3.Text := 'RPC';
+  CheckBox4.Text := 'State';
+  CheckBox4.isChecked := True;
+  {$ELSE}
   CheckBox1.Text := 'Blas';
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
   CheckBox4.Text := 'Vulkan';
   CheckBox3.isChecked := True;
+  {$ENDIF}
   Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
   Memo1.Lines.Add('Settings path is ' + Settings.AppHome);
   Memo1.Lines.Add(Format('Model is %s - %s',[Settings.ModelDirectory, Settings.LastUsedModel]));
