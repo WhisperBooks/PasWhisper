@@ -2,11 +2,7 @@ unit ggmltypes;
 
 interface
 
-{$IFDEF FPC}
-  {$packrecords C}
-{$ELSE}
-  {$ALIGN 4}
-{$ENDIF}
+{$ALIGN 4}
 {$MinEnumSize 4}
 
 type

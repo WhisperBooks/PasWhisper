@@ -1,20 +1,14 @@
 unit WhisperPlatform;
 
-{$I platform.inc}
-
 interface
 
-uses 
-  {$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
-    {$ifdef fpc}
-	  MacOSAll,
-    {$else}
-	  Macapi.CoreFoundation, 
-	{$endif}
+uses
+  {$if defined(MACOS)}
+	  Macapi.CoreFoundation,
   {$endif}
   SysUtils, WhisperUtils;
 
-{$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
+{$if defined(MACOS)}
 var
   BundlePathCached: Boolean;
   BundlePathCache: string;
@@ -30,15 +24,14 @@ implementation
 
 function InclPathDelim(const s: string): string;
 begin
-  {$if defined(MSWINDOWS) and not defined(FPC)}
-  { On Windows, also accept / as final path delimiter.
-    FPC does it automatically. }
+  {$if defined(MSWINDOWS)}
+  { On Windows, also accept / as final path delimiter. }
   if (S <> '') and (S[Length(S)] = '/') then Exit(S);
   {$endif}
   Result := IncludeTrailingPathDelimiter(S);
 end;
 
-{$if defined(OS_OSX64ARM) or defined(OS_OSX64)}
+{$if defined(MACOS)}
 function BundlePath: string;
 { Based on
   http://wiki.freepascal.org/OS_X_Programming_Tips#How_to_obtain_the_path_to_the_Bundle }
@@ -63,11 +56,7 @@ begin
       CFRelease(pathRef);
       CFRelease(pathCFStr);
       BundlePathCache := String(pathStr);
-      {$ifdef FPC}
       BundlePathCache := InclPathDelim(BundlePathCache);
-      {$else}
-      BundlePathCache := InclPathDelim(BundlePathCache);
-      {$endif}
     end;
     BundlePathCached := true;
   end;

@@ -2,28 +2,12 @@ unit whispertypes;
 
 interface
 
-{$I platform.inc}
-
-{$IFDEF FPC}
-  {$packrecords C}
-{$ELSE}
-  {$ALIGN 4}
-{$ENDIF}
+{$ALIGN 4}
 {$MinEnumSize 4}
 
 uses GgmlTypes;
 
 const
-  {$IF DEFINED(OS_WIN64)}
-  OS_PLATFORM_TYPE = 'WIN64';
-  {$ELSEIF DEFINED(OS_LINUX64)}
-  OS_PLATFORM_TYPE = 'LINUX64';
-  {$ELSEIF DEFINED(OS_OSX64ARM)}
-  OS_PLATFORM_TYPE = 'OSX64ARM';
-  {$ELSEIF DEFINED(OS_OSX64)}
-  OS_PLATFORM_TYPE = 'OSX64';
-  {$ENDIF}
-
   WHISPER_SUCCESS: Integer = 0;
 
 type

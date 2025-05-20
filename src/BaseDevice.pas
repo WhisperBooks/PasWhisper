@@ -1,7 +1,5 @@
 unit BaseDevice;
 
-{$I platform.inc}
-
 interface
 
 uses WhisperDynlib;

@@ -1,17 +1,10 @@
 unit WhisperExternal;
 
-{$I platform.inc}
-
-{$IFDEF FPC}
-  {$packrecords C}
-{$ELSE}
-  {$ALIGN 4}
-{$ENDIF}
+{$ALIGN 4}
 {$MinEnumSize 4}
 
 interface
 
-{$ALIGN 4}
 uses
   SysUtils,
   WhisperTypes,
@@ -152,17 +145,11 @@ var
     WhisperSetContextState: procedure(Ctx: TWhisperContext; State: TWhisperState); CDecl;
 
 const
-  {$IF DEFINED(OS_WIN64)}
+  {$IF DEFINED(MSWINDOWS)}
   WhisperLibraryName = 'whisper.dll';
-  {$ELSEIF DEFINED(OS_WIN32)}
-  WhisperLibraryName = 'whisper.dll';
-  {$ELSEIF DEFINED(OS_LINUX64)}
+  {$ELSEIF DEFINED(LINUX64)}
   WhisperLibraryName = 'libwhisper.so';
-  {$ELSEIF DEFINED(OS_LINUX64ARM)}
-  WhisperLibraryName = 'libwhisper.so';
-  {$ELSEIF DEFINED(OS_OSX64ARM)}
-  WhisperLibraryName = 'libwhisper.dylib';
-  {$ELSEIF DEFINED(OS_OSX64)}
+  {$ELSEIF DEFINED(MACOS)}
   WhisperLibraryName = 'libwhisper.dylib';
   {$ENDIF}
 
@@ -179,71 +166,71 @@ procedure FinalizeWhisperLibrary;
 begin
   WhisperLibraryIsLoaded := False;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParams) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParamsNoState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperContextDefaultParams) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperFree) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperInitState)    := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperFreeState)    := Nil;
+  Pointer(@WhisperInitFromFileWithParams) := Nil;
+  Pointer(@WhisperInitFromFileWithParamsNoState) := Nil;
+  Pointer(@WhisperContextDefaultParams) := Nil;
+  Pointer(@WhisperFree) := Nil;
+  Pointer(@WhisperInitState)    := Nil;
+  Pointer(@WhisperFreeState)    := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperNlen) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperNlenFromState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperNvocab) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperNtextCtx) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperNaudioCtx) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperIsMultilingual) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNvocab) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioCtx) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioHead) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioLayer) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNtextCtx) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNtextState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNtextHead) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNtextLayer) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelNmels) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelftype) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModeltype) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetLogits) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetLogitsFromState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenToStr) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperModelTypeReadable) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenEot) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenSot) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenSolm) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenPrev) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenNosp) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenNot) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenBeg) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenLang) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenTranslate) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenTranscribe) := Nil;
+  Pointer(@WhisperNlen) := Nil;
+  Pointer(@WhisperNlenFromState) := Nil;
+  Pointer(@WhisperNvocab) := Nil;
+  Pointer(@WhisperNtextCtx) := Nil;
+  Pointer(@WhisperNaudioCtx) := Nil;
+  Pointer(@WhisperIsMultilingual) := Nil;
+  Pointer(@WhisperModelNvocab) := Nil;
+  Pointer(@WhisperModelNaudioCtx) := Nil;
+  Pointer(@WhisperModelNaudioState) := Nil;
+  Pointer(@WhisperModelNaudioHead) := Nil;
+  Pointer(@WhisperModelNaudioLayer) := Nil;
+  Pointer(@WhisperModelNtextCtx) := Nil;
+  Pointer(@WhisperModelNtextState) := Nil;
+  Pointer(@WhisperModelNtextHead) := Nil;
+  Pointer(@WhisperModelNtextLayer) := Nil;
+  Pointer(@WhisperModelNmels) := Nil;
+  Pointer(@WhisperModelftype) := Nil;
+  Pointer(@WhisperModeltype) := Nil;
+  Pointer(@WhisperGetLogits) := Nil;
+  Pointer(@WhisperGetLogitsFromState) := Nil;
+  Pointer(@WhisperTokenToStr) := Nil;
+  Pointer(@WhisperModelTypeReadable) := Nil;
+  Pointer(@WhisperTokenEot) := Nil;
+  Pointer(@WhisperTokenSot) := Nil;
+  Pointer(@WhisperTokenSolm) := Nil;
+  Pointer(@WhisperTokenPrev) := Nil;
+  Pointer(@WhisperTokenNosp) := Nil;
+  Pointer(@WhisperTokenNot) := Nil;
+  Pointer(@WhisperTokenBeg) := Nil;
+  Pointer(@WhisperTokenLang) := Nil;
+  Pointer(@WhisperTokenTranslate) := Nil;
+  Pointer(@WhisperTokenTranscribe) := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperSetMel)          := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperSetMelWithState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperEncode)          := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperEncodeWithState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperDecode)          := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperDecodeWithState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenize)        := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperTokenCount)      := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperLangMaxId)       := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperLangId)          := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperLangStr)         := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperLangStrFull)     := Nil;
+  Pointer(@WhisperSetMel)          := Nil;
+  Pointer(@WhisperSetMelWithState) := Nil;
+  Pointer(@WhisperEncode)          := Nil;
+  Pointer(@WhisperEncodeWithState) := Nil;
+  Pointer(@WhisperDecode)          := Nil;
+  Pointer(@WhisperDecodeWithState) := Nil;
+  Pointer(@WhisperTokenize)        := Nil;
+  Pointer(@WhisperTokenCount)      := Nil;
+  Pointer(@WhisperLangMaxId)       := Nil;
+  Pointer(@WhisperLangId)          := Nil;
+  Pointer(@WhisperLangStr)         := Nil;
+  Pointer(@WhisperLangStrFull)     := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := Nil;
+  Pointer(@WhisperPrintTimings)    := Nil;
+  Pointer(@WhisperResetTimings)    := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperGetActivityWithState) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := Nil;
+  Pointer(@WhisperGetActivityWithState) := Nil;
+  Pointer(@WhisperGetStateFromContext) := Nil;
+  Pointer(@WhisperGetSystemInfoJson)   := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperGetBackendCount)     := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := Nil;
-  Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend) := Nil;
+  Pointer(@WhisperGetBackendCount)     := Nil;
+  Pointer(@WhisperGetIndexedBackend)   := Nil;
+  Pointer(@WhisperGetPreferredBackend) := Nil;
 
-  Pointer({$ifndef FPC}@{$endif} WhisperSetContextState) := Nil;
+  Pointer(@WhisperSetContextState) := Nil;
 
   FreeAndNil(WhisperLibrary);
 end;
@@ -258,73 +245,73 @@ begin
   if WhisperLibrary <> Nil then
     begin
       WhisperLibrary.SymbolError := seRaise;
-      Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParams) := WhisperLibrary.Symbol('whisper_init_from_file_with_params');
-      Pointer({$ifndef FPC}@{$endif} WhisperInitFromFileWithParamsNoState) := WhisperLibrary.Symbol('whisper_init_from_file_with_params_no_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperContextDefaultParams) := WhisperLibrary.Symbol('whisper_context_default_params');
-      Pointer({$ifndef FPC}@{$endif} WhisperFree) := WhisperLibrary.Symbol('whisper_free');
-      Pointer({$ifndef FPC}@{$endif} WhisperInitState)    := WhisperLibrary.Symbol('whisper_init_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperFreeState)    := WhisperLibrary.Symbol('whisper_free_state');
+      Pointer(@WhisperInitFromFileWithParams) := WhisperLibrary.Symbol('whisper_init_from_file_with_params');
+      Pointer(@WhisperInitFromFileWithParamsNoState) := WhisperLibrary.Symbol('whisper_init_from_file_with_params_no_state');
+      Pointer(@WhisperContextDefaultParams) := WhisperLibrary.Symbol('whisper_context_default_params');
+      Pointer(@WhisperFree) := WhisperLibrary.Symbol('whisper_free');
+      Pointer(@WhisperInitState)    := WhisperLibrary.Symbol('whisper_init_state');
+      Pointer(@WhisperFreeState)    := WhisperLibrary.Symbol('whisper_free_state');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperNlen) := WhisperLibrary.Symbol('whisper_n_len');
-      Pointer({$ifndef FPC}@{$endif} WhisperNlenFromState) := WhisperLibrary.Symbol('whisper_n_len_from_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperNvocab) := WhisperLibrary.Symbol('whisper_n_vocab');
-      Pointer({$ifndef FPC}@{$endif} WhisperNtextCtx) := WhisperLibrary.Symbol('whisper_n_text_ctx');
-      Pointer({$ifndef FPC}@{$endif} WhisperNaudioCtx) := WhisperLibrary.Symbol('whisper_n_audio_ctx');
-      Pointer({$ifndef FPC}@{$endif} WhisperIsMultilingual) := WhisperLibrary.Symbol('whisper_is_multilingual');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNvocab) := WhisperLibrary.Symbol('whisper_model_n_vocab');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioCtx) := WhisperLibrary.Symbol('whisper_model_n_audio_ctx');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioState) := WhisperLibrary.Symbol('whisper_model_n_audio_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioHead) := WhisperLibrary.Symbol('whisper_model_n_audio_head');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNaudioLayer) := WhisperLibrary.Symbol('whisper_model_n_audio_layer');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNtextCtx) := WhisperLibrary.Symbol('whisper_model_n_text_ctx');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNtextState) := WhisperLibrary.Symbol('whisper_model_n_text_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNtextHead) := WhisperLibrary.Symbol('whisper_model_n_text_head');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNtextLayer) := WhisperLibrary.Symbol('whisper_model_n_text_layer');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelNmels) := WhisperLibrary.Symbol('whisper_model_n_mels');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelftype) := WhisperLibrary.Symbol('whisper_model_ftype');
-      Pointer({$ifndef FPC}@{$endif} WhisperModeltype) := WhisperLibrary.Symbol('whisper_model_type');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetLogits) := WhisperLibrary.Symbol('whisper_get_logits');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetLogitsFromState) := WhisperLibrary.Symbol('whisper_get_logits_from_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenToStr) := WhisperLibrary.Symbol('whisper_token_to_str');
-      Pointer({$ifndef FPC}@{$endif} WhisperModelTypeReadable) := WhisperLibrary.Symbol('whisper_model_type_readable');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenEot) := WhisperLibrary.Symbol('whisper_token_eot');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenSot) := WhisperLibrary.Symbol('whisper_token_sot');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenSolm) := WhisperLibrary.Symbol('whisper_token_solm');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenPrev) := WhisperLibrary.Symbol('whisper_token_prev');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenNosp) := WhisperLibrary.Symbol('whisper_token_nosp');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenNot) := WhisperLibrary.Symbol('whisper_token_not');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenBeg) := WhisperLibrary.Symbol('whisper_token_beg');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenLang) := WhisperLibrary.Symbol('whisper_token_lang');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenTranslate) := WhisperLibrary.Symbol('whisper_token_translate');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenTranscribe) := WhisperLibrary.Symbol('whisper_token_transcribe');
+      Pointer(@WhisperNlen) := WhisperLibrary.Symbol('whisper_n_len');
+      Pointer(@WhisperNlenFromState) := WhisperLibrary.Symbol('whisper_n_len_from_state');
+      Pointer(@WhisperNvocab) := WhisperLibrary.Symbol('whisper_n_vocab');
+      Pointer(@WhisperNtextCtx) := WhisperLibrary.Symbol('whisper_n_text_ctx');
+      Pointer(@WhisperNaudioCtx) := WhisperLibrary.Symbol('whisper_n_audio_ctx');
+      Pointer(@WhisperIsMultilingual) := WhisperLibrary.Symbol('whisper_is_multilingual');
+      Pointer(@WhisperModelNvocab) := WhisperLibrary.Symbol('whisper_model_n_vocab');
+      Pointer(@WhisperModelNaudioCtx) := WhisperLibrary.Symbol('whisper_model_n_audio_ctx');
+      Pointer(@WhisperModelNaudioState) := WhisperLibrary.Symbol('whisper_model_n_audio_state');
+      Pointer(@WhisperModelNaudioHead) := WhisperLibrary.Symbol('whisper_model_n_audio_head');
+      Pointer(@WhisperModelNaudioLayer) := WhisperLibrary.Symbol('whisper_model_n_audio_layer');
+      Pointer(@WhisperModelNtextCtx) := WhisperLibrary.Symbol('whisper_model_n_text_ctx');
+      Pointer(@WhisperModelNtextState) := WhisperLibrary.Symbol('whisper_model_n_text_state');
+      Pointer(@WhisperModelNtextHead) := WhisperLibrary.Symbol('whisper_model_n_text_head');
+      Pointer(@WhisperModelNtextLayer) := WhisperLibrary.Symbol('whisper_model_n_text_layer');
+      Pointer(@WhisperModelNmels) := WhisperLibrary.Symbol('whisper_model_n_mels');
+      Pointer(@WhisperModelftype) := WhisperLibrary.Symbol('whisper_model_ftype');
+      Pointer(@WhisperModeltype) := WhisperLibrary.Symbol('whisper_model_type');
+      Pointer(@WhisperGetLogits) := WhisperLibrary.Symbol('whisper_get_logits');
+      Pointer(@WhisperGetLogitsFromState) := WhisperLibrary.Symbol('whisper_get_logits_from_state');
+      Pointer(@WhisperTokenToStr) := WhisperLibrary.Symbol('whisper_token_to_str');
+      Pointer(@WhisperModelTypeReadable) := WhisperLibrary.Symbol('whisper_model_type_readable');
+      Pointer(@WhisperTokenEot) := WhisperLibrary.Symbol('whisper_token_eot');
+      Pointer(@WhisperTokenSot) := WhisperLibrary.Symbol('whisper_token_sot');
+      Pointer(@WhisperTokenSolm) := WhisperLibrary.Symbol('whisper_token_solm');
+      Pointer(@WhisperTokenPrev) := WhisperLibrary.Symbol('whisper_token_prev');
+      Pointer(@WhisperTokenNosp) := WhisperLibrary.Symbol('whisper_token_nosp');
+      Pointer(@WhisperTokenNot) := WhisperLibrary.Symbol('whisper_token_not');
+      Pointer(@WhisperTokenBeg) := WhisperLibrary.Symbol('whisper_token_beg');
+      Pointer(@WhisperTokenLang) := WhisperLibrary.Symbol('whisper_token_lang');
+      Pointer(@WhisperTokenTranslate) := WhisperLibrary.Symbol('whisper_token_translate');
+      Pointer(@WhisperTokenTranscribe) := WhisperLibrary.Symbol('whisper_token_transcribe');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperSetMel)          := WhisperLibrary.Symbol('whisper_set_mel');
-      Pointer({$ifndef FPC}@{$endif} WhisperSetMelWithState) := WhisperLibrary.Symbol('whisper_set_mel_with_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperEncode)          := WhisperLibrary.Symbol('whisper_encode');
-      Pointer({$ifndef FPC}@{$endif} WhisperEncodeWithState) := WhisperLibrary.Symbol('whisper_encode_with_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperDecode)          := WhisperLibrary.Symbol('whisper_decode');
-      Pointer({$ifndef FPC}@{$endif} WhisperDecodeWithState) := WhisperLibrary.Symbol('whisper_decode_with_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenize)        := WhisperLibrary.Symbol('whisper_tokenize');
-      Pointer({$ifndef FPC}@{$endif} WhisperTokenCount)      := WhisperLibrary.Symbol('whisper_token_count');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangMaxId)       := WhisperLibrary.Symbol('whisper_lang_max_id');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangId)          := WhisperLibrary.Symbol('whisper_lang_id');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangStr)         := WhisperLibrary.Symbol('whisper_lang_str');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangStrFull)     := WhisperLibrary.Symbol('whisper_lang_str_full');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangAutoDetect)  := WhisperLibrary.Symbol('whisper_lang_auto_detect');
-      Pointer({$ifndef FPC}@{$endif} WhisperLangAutoDetectWithState) := WhisperLibrary.Symbol('whisper_lang_auto_detect_with_state');
+      Pointer(@WhisperSetMel)          := WhisperLibrary.Symbol('whisper_set_mel');
+      Pointer(@WhisperSetMelWithState) := WhisperLibrary.Symbol('whisper_set_mel_with_state');
+      Pointer(@WhisperEncode)          := WhisperLibrary.Symbol('whisper_encode');
+      Pointer(@WhisperEncodeWithState) := WhisperLibrary.Symbol('whisper_encode_with_state');
+      Pointer(@WhisperDecode)          := WhisperLibrary.Symbol('whisper_decode');
+      Pointer(@WhisperDecodeWithState) := WhisperLibrary.Symbol('whisper_decode_with_state');
+      Pointer(@WhisperTokenize)        := WhisperLibrary.Symbol('whisper_tokenize');
+      Pointer(@WhisperTokenCount)      := WhisperLibrary.Symbol('whisper_token_count');
+      Pointer(@WhisperLangMaxId)       := WhisperLibrary.Symbol('whisper_lang_max_id');
+      Pointer(@WhisperLangId)          := WhisperLibrary.Symbol('whisper_lang_id');
+      Pointer(@WhisperLangStr)         := WhisperLibrary.Symbol('whisper_lang_str');
+      Pointer(@WhisperLangStrFull)     := WhisperLibrary.Symbol('whisper_lang_str_full');
+      Pointer(@WhisperLangAutoDetect)  := WhisperLibrary.Symbol('whisper_lang_auto_detect');
+      Pointer(@WhisperLangAutoDetectWithState) := WhisperLibrary.Symbol('whisper_lang_auto_detect_with_state');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
-      Pointer({$ifndef FPC}@{$endif} WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
+      Pointer(@WhisperPrintTimings)    := WhisperLibrary.Symbol('whisper_print_timings');
+      Pointer(@WhisperResetTimings)    := WhisperLibrary.Symbol('whisper_reset_timings');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_flat_get_state_from_context');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetActivityWithState) := WhisperLibrary.Symbol('whisper_flat_get_activity_with_state');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_flat_get_system_info_json');
+      Pointer(@WhisperGetStateFromContext) := WhisperLibrary.Symbol('whisper_flat_get_state_from_context');
+      Pointer(@WhisperGetActivityWithState) := WhisperLibrary.Symbol('whisper_flat_get_activity_with_state');
+      Pointer(@WhisperGetSystemInfoJson)   := WhisperLibrary.Symbol('whisper_flat_get_system_info_json');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperGetBackendCount)   := WhisperLibrary.Symbol('whisper_flat_get_backend_count');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetIndexedBackend)   := WhisperLibrary.Symbol('whisper_flat_get_indexed_backend');
-      Pointer({$ifndef FPC}@{$endif} WhisperGetPreferredBackend)   := WhisperLibrary.Symbol('whisper_flat_get_preferred_backend');
+      Pointer(@WhisperGetBackendCount)   := WhisperLibrary.Symbol('whisper_flat_get_backend_count');
+      Pointer(@WhisperGetIndexedBackend)   := WhisperLibrary.Symbol('whisper_flat_get_indexed_backend');
+      Pointer(@WhisperGetPreferredBackend)   := WhisperLibrary.Symbol('whisper_flat_get_preferred_backend');
 
-      Pointer({$ifndef FPC}@{$endif} WhisperSetContextState) := WhisperLibrary.Symbol('whisper_flat_set_context_state');
+      Pointer(@WhisperSetContextState) := WhisperLibrary.Symbol('whisper_flat_set_context_state');
 
       WhisperLibraryIsLoaded := True;
 

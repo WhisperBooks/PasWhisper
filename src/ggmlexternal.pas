@@ -1,15 +1,10 @@
 unit GgmlExternal;
 
-{$I platform.inc}
-{$IFDEF FPC}
-  {$packrecords C}
-{$ELSE}
-  {$ALIGN 4}
-{$ENDIF}
+
+{$ALIGN 4}
 {$MinEnumSize 4}
 interface
 
-{$ALIGN 4}
 uses
   SysUtils,
   WhisperDynlib, ggmlTypes;
@@ -24,17 +19,11 @@ var
   GgmlBackendTryLoadBest: function (const BackendDeviceClass: PAnsiChar; const LibraryPath: PAnsiChar = Nil): PGgmlBackendReg; CDecl;
   GgmlBackendGetDeviceCount: function(): Int32; CDecl;
 const
-  {$IF DEFINED(OS_WIN64)}
+  {$IF DEFINED(MSWINDOWS)}
   GGMLLibraryName = 'ggml.dll';
-  {$ELSEIF DEFINED(OS_WIN32)}
-  GGMLLibraryName = 'ggml.dll';
-  {$ELSEIF DEFINED(OS_LINUX64)}
+  {$ELSEIF DEFINED(LINUX64)}
   GGMLLibraryName = 'libggml.so';
-  {$ELSEIF DEFINED(OS_LINUX64ARM)}
-  GGMLLibraryName = 'libggml.so';
-  {$ELSEIF DEFINED(OS_OSX64ARM)}
-  GGMLLibraryName = 'libggml.dylib';
-  {$ELSEIF DEFINED(OS_OSX64)}
+  {$ELSEIF DEFINED(MACOS)}
   GGMLLibraryName = 'libggml.dylib';
   {$ENDIF}
 
@@ -48,11 +37,11 @@ procedure FinalizeGgmlLibrary;
 begin
   GgmlLibraryIsLoaded := False;
 
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := Nil;
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := Nil;
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAllFromPath) := Nil;
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest) := Nil;
-  Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := Nil;
+  Pointer(@GgmlBackendLoad) := Nil;
+  Pointer(@GgmlBackendLoadAll) := Nil;
+  Pointer(@GgmlBackendLoadAllFromPath) := Nil;
+  Pointer(@GgmlBackendTryLoadBest) := Nil;
+  Pointer(@GgmlBackendGetDeviceCount)   := Nil;
 
   FreeAndNil(GgmlLibrary);
 end;
@@ -66,11 +55,11 @@ begin
   if GgmlLibrary <> Nil then
     begin
       GgmlLibrary.SymbolError := seRaise;
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendLoadAllFromPath) := GgmlLibrary.Symbol('ggml_backend_load_all_from_path');
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendTryLoadBest)   := GgmlLibrary.Symbol('ggml_backend_try_load_best');
-      Pointer({$ifndef FPC}@{$endif} GgmlBackendGetDeviceCount)   := GgmlLibrary.Symbol('ggml_backend_dev_count');
+      Pointer(@GgmlBackendLoad) := GgmlLibrary.Symbol('ggml_backend_load');
+      Pointer(@GgmlBackendLoadAll) := GgmlLibrary.Symbol('ggml_backend_load_all');
+      Pointer(@GgmlBackendLoadAllFromPath) := GgmlLibrary.Symbol('ggml_backend_load_all_from_path');
+      Pointer(@GgmlBackendTryLoadBest)   := GgmlLibrary.Symbol('ggml_backend_try_load_best');
+      Pointer(@GgmlBackendGetDeviceCount)   := GgmlLibrary.Symbol('ggml_backend_dev_count');
       GgmlLibraryIsLoaded := True;
 
     end

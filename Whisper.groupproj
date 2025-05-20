@@ -3,16 +3,16 @@
         <ProjectGuid>{4B6865E5-EE96-468F-8584-FD852BF11005}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="examples\Delphi\cli\WhisperBenchCli.dproj">
+        <Projects Include="examples\CLI\WhisperBenchCLI\WhisperBenchCli.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="examples\Delphi\vcl\WhisperBenchVCL.dproj">
+        <Projects Include="examples\VCL\WhisperBenchVCL\WhisperBenchVCL.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj">
+        <Projects Include="examples\FMX\WhisperStreamGUI\WhisperStreamGUI.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj">
+        <Projects Include="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -24,40 +24,40 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="WhisperBenchCli">
-        <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj"/>
+        <MSBuild Projects="examples\CLI\WhisperBenchCLI\WhisperBenchCli.dproj"/>
     </Target>
     <Target Name="WhisperBenchCli:Clean">
-        <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj" Targets="Clean"/>
+        <MSBuild Projects="examples\CLI\WhisperBenchCLI\WhisperBenchCli.dproj" Targets="Clean"/>
     </Target>
     <Target Name="WhisperBenchCli:Make">
-        <MSBuild Projects="examples\Delphi\cli\WhisperBenchCli.dproj" Targets="Make"/>
+        <MSBuild Projects="examples\CLI\WhisperBenchCLI\WhisperBenchCli.dproj" Targets="Make"/>
     </Target>
     <Target Name="WhisperBenchVCL">
-        <MSBuild Projects="examples\Delphi\vcl\WhisperBenchVCL.dproj"/>
+        <MSBuild Projects="examples\VCL\WhisperBenchVCL\WhisperBenchVCL.dproj"/>
     </Target>
     <Target Name="WhisperBenchVCL:Clean">
-        <MSBuild Projects="examples\Delphi\vcl\WhisperBenchVCL.dproj" Targets="Clean"/>
+        <MSBuild Projects="examples\VCL\WhisperBenchVCL\WhisperBenchVCL.dproj" Targets="Clean"/>
     </Target>
     <Target Name="WhisperBenchVCL:Make">
-        <MSBuild Projects="examples\Delphi\vcl\WhisperBenchVCL.dproj" Targets="Make"/>
+        <MSBuild Projects="examples\VCL\WhisperBenchVCL\WhisperBenchVCL.dproj" Targets="Make"/>
     </Target>
     <Target Name="WhisperStreamGUI">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj"/>
+        <MSBuild Projects="examples\FMX\WhisperStreamGUI\WhisperStreamGUI.dproj"/>
     </Target>
     <Target Name="WhisperStreamGUI:Clean">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Clean"/>
+        <MSBuild Projects="examples\FMX\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Clean"/>
     </Target>
     <Target Name="WhisperStreamGUI:Make">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Make"/>
+        <MSBuild Projects="examples\FMX\WhisperStreamGUI\WhisperStreamGUI.dproj" Targets="Make"/>
     </Target>
     <Target Name="WhisperBenchGUI">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj"/>
+        <MSBuild Projects="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj"/>
     </Target>
     <Target Name="WhisperBenchGUI:Clean">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Clean"/>
+        <MSBuild Projects="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Clean"/>
     </Target>
     <Target Name="WhisperBenchGUI:Make">
-        <MSBuild Projects="examples\Delphi\fmx\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Make"/>
+        <MSBuild Projects="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI"/>

@@ -1,9 +1,5 @@
 unit whisper;
 
-{$ifdef FPC}
-{$mode delphi}
-{$endif}
-
 interface
 
 uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, WhisperDynlib;

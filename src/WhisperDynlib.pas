@@ -16,41 +16,23 @@
 { Dynamic libraries loading (TDynLib). }
 unit WhisperDynlib;
 
-{$I platform.inc}
-
 {$define LOGNOTRAISE}
 
 interface
 
-uses SysUtils
-  {$ifdef FPC}
-    {$ifdef MSWINDOWS}, jwawinbase {$endif}
-    { With FPC, use cross-platform DynLibs unit. }
-    {$ifndef WASI}, DynLibs{$endif}
-  {$else}
-    { With Delphi, use Windows functions directly.
-      On non-Windows, Delphi SysUtils defines compatible functions
-      LoadLibrary, FreeLibrary, GetProcAddress
-      (note: using PChar, not PAnsiChar) and HMODULE type. }
-    {$ifdef MSWINDOWS} , Windows {$endif}
-  {$endif}
-  , WhisperPlatform, Math, WhisperLog
-  ;
+uses SysUtils, {$ifdef MSWINDOWS}Windows, {$endif}
+     WhisperPlatform, Math, WhisperLog;
 
 type
   EInternalError = class(Exception);
-  TDynLibHandle = {$ifdef FPC} TLibHandle {$else} HModule {$endif};
+  TDynLibHandle = HModule;
 
 const
   { Invalid TDynLibHandle value (meaning : LoadLibrary failed) }
-  InvalidDynLibHandle: TDynLibHandle =
-    {$if defined(FPC) and not defined(WASI)}
-    DynLibs.NilHandle
-    {$else}
-    0 // used with Delphi or FPC+WebAssembly
-    {$endif};
-type
-  { }
+  InvalidDynLibHandle: TDynLibHandle = 0;
+
+  type
+   { }
   EDynLibError = class(Exception);
 
   TDynLibSymbolError = (seRaise, seReturnNil, seWarnAndReturnNil);
@@ -75,7 +57,7 @@ type
         are missing from dynamic library.)
 
       @item(The interface of this is OS-independent and works for
-        both FPC and Delphi.)
+        Delphi.)
 
       @item(macOS-specific extra feature: when loading a library, we also look
         for it inside the bundle. This allows to distribute macOS dynamic
@@ -123,7 +105,7 @@ type
 
       A precise strategy where this library is searched
       is specific to a platform, see the semantics of SysUtils.LoadLibrary
-      (DynLibs for FPC) call on given OS. }
+      call on given OS. }
     property Name: string read FName;
 
     { Link to a dynamic library specified by Name. Returns created
@@ -197,7 +179,7 @@ var
   InternalDisableDynamicLibraries: Boolean = false;
 
 var
-  FPUMASK: {$ifdef FPC}TFPUExceptionMask{$else}TArithmeticExceptionMask{$endif};
+  FPUMASK: TArithmeticExceptionMask;
 
 procedure SafeMaskFPUExceptions(ExceptionsMasked : boolean);
 
@@ -246,11 +228,7 @@ begin
     "Result := dlclose(Module) = 0;"
     Reported to Embarcadero: https://quality.embarcadero.com/browse/RSP-44047
   }
-  {$if (not defined(FPC)) and (not defined(MSWINDOWS))}
-    {$define IGNORE_FREE_LIBRARY_ERRORS}
-  {$endif}
-
-  {$ifdef IGNORE_FREE_LIBRARY_ERRORS}
+  {$if (not defined(MSWINDOWS))}
   FreeLibrary(FHandle);
   {$else}
   if not FreeLibrary(FHandle) then
@@ -263,7 +241,6 @@ end;
 class function TDynLib.Load(const AName: string; const APath: String = ''; RaiseExceptionOnError: boolean = True): TDynLib;
 
   { On Unix, right now this simply uses LoadLibrary that calls dlopen(..., RTLD_LAZY)
-    (see in FPC rtl/unix/dynlibs.inc).
 
     Historic notes:
 
@@ -302,7 +279,7 @@ begin
           { On macOS, search for dynamic libraries in the bundle too.
             This fallback makes sense for libpng, libvorbisfile, libsteam_api...
             It seems that for everything, so just do it always. }
-          {$ifdef OS_OSX}
+          {$ifdef MACOS}
           if (Handle = InvalidDynLibHandle) and (BundlePath <> '') then
             begin
               LPath := BundlePath + '/Contents/MacOS/' + AName;
@@ -314,7 +291,7 @@ begin
       else
         begin
           {$IFDEF MSWINDOWS}
-          SetDllDirectory({$ifndef FPC}PWideChar{$else}PChar{$endif}(Pointer(String(InclPathDelim(WhisperGlobalLibraryPath)))));
+          SetDllDirectory(PWideChar(Pointer(String(InclPathDelim(WhisperGlobalLibraryPath)))));
           {$ENDIF}
           LPath := InclPathDelim(WhisperGlobalLibraryPath) + AName;
           DebugLog.Debug('Trying to load library from %s', [LPath]);
@@ -358,12 +335,11 @@ begin
   Result := GetProcAddress(FHandle, SymbolName);
   if Result = nil then
     case SymbolError of
-      seRaise: raise EDynLibError.Create(ErrStr);
-      seReturnNil: ;
-      seWarnAndReturnNil: { TODO: Needs Log };
-      {$ifndef COMPILER_CASE_ANALYSIS}
-      else raise EInternalError.Create('SymbolError=?');
-      {$endif}
+        seRaise: raise EDynLibError.Create(ErrStr);
+        seReturnNil: ;
+        seWarnAndReturnNil: { TODO: Needs Log };
+      else
+        raise EInternalError.Create('SymbolError=?');
     end;
 end;
 

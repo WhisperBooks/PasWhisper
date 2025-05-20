@@ -61,46 +61,32 @@ unit Log4D;
   - Need to enable OSX conditionals in multiple places for 12.x Delphi
 
 }
-{$I platform.inc}
-interface
 
-{$DEFINE HAS_UNIT_CONTNRS}
+interface
 
 uses
   Classes,
-{$IF DEFINED(OS_LINUX64)}
+{$IF DEFINED(LINUX64)}
   SyncObjs,
-{$ELSEIF DEFINED(OS_OSX)}
+{$ELSEIF DEFINED(MACOS)}
   SyncObjs,
   Posix.Unistd,
   Posix.Stdio,
-{$ELSEIF DEFINED(OS_WIN64)}
+{$ELSEIF DEFINED(MSWINDOWS)}
   Windows,
-{$ELSEIF DEFINED(OS_WIN32)}}
-  Windows,
-{$ELSE}
-  {$IFDEF FPC}
-    {$FATAL Unsupported Platform}
-  {$ELSE}
-    {$MESSAGE FATAL 'Unsupported Platform'}
-  {$ENDIF}
 {$ENDIF}
-{$IFDEF HAS_UNIT_CONTNRS}
   Contnrs,
-{$ENDIF}
   SysUtils;
 
-{$IFNDEF FPC}
-  {$IF DEFINED(OS_LINUX64) OR DEFINED(OS_OSX)}
-  const
-    SANSIEncoding = 'ANSI';
-    SASCIIEncoding = 'ASCII';
-    SUnicodeEncoding = 'Unicode';
-    SBigEndianEncoding = 'Big Endian Unicode';
-    SUTF8Encoding = 'UTF-8';
-    SUTF7Encoding = 'UTF-7';
-    SEncodingLabel = 'Encoding:';
-  {$ENDIF}
+{$IF DEFINED(LINUX64) OR DEFINED(MACOS)}
+const
+SANSIEncoding = 'ANSI';
+SASCIIEncoding = 'ASCII';
+SUnicodeEncoding = 'Unicode';
+SBigEndianEncoding = 'Big Endian Unicode';
+SUTF8Encoding = 'UTF-8';
+SUTF7Encoding = 'UTF-7';
+SEncodingLabel = 'Encoding:';
 {$ENDIF}
 
 const
@@ -1114,14 +1100,12 @@ implementation
 
 {$if DEFINED(UNICODE)}
 uses
-  {$if DEFINED(FPC)}
-  Consts;
-  {$ELSEIF DEFINED(OS_LINUX64) OR DEFINED(OS_OSX)}
+  {$IF DEFINED(OS_LINUX64) OR DEFINED(OS_OSX)}
   FMX.Consts;
   {$ELSE}
   // FMX needs to use the VCL version?
   VCL.Consts;
-  {$ENDIF FPC}
+  {$ENDIF}
 {$ENDIF UNICODE}
 
 const
@@ -2306,7 +2290,6 @@ begin
   inherited Init;
   SetOption(DateFormatOpt,
     {$IF CompilerVersion >= 22}FormatSettings.{$ENDIF}
-    {$IFDEF FPC}FormatSettings.{$ENDIF}
     ShortDateFormat);
 end;
 

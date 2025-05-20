@@ -1,14 +1,8 @@
 unit WhisperUtils;
 
 interface
-{$I platform.inc}
-uses SysUtils, Classes, GgmlTypes
-{$ifdef FPC}
-  , fpjson, jsonparser
-{$else}
-  , JSon
-{$endif}
-;
+
+uses SysUtils, Classes, GgmlTypes, JSon;
 
 type
   { An extremely simple, extremely unreliable, cross-platform + compiler
@@ -16,8 +10,8 @@ type
   }
   TMilliTimer = class
     strict private
-      FTicks: {$IFDEF FPC}QWord{$ELSE}UInt64{$ENDIF}; // GetTickCount64
-      FStart: {$IFDEF FPC}QWord{$ELSE}UInt64{$ENDIF}; // GetTickCount64
+      FTicks: UInt64; // GetTickCount64
+      FStart: UInt64; // GetTickCount64
       function GetElapsed: Single;
       function GetTotalElapsed: Single;
     public
@@ -34,7 +28,7 @@ function  AppPath(): String;
 function ExclPathDelim(const s: string): string;
 function InclPathDelim(const s: string): string;
 
-{$ifdef OS_OSX}
+{$ifdef MACOS}
 type
   CFStringRef = Pointer;
   CFTypeRef = Pointer;
@@ -46,12 +40,8 @@ function BundlePath: string;
 
 implementation
 
-{$ifdef OS_OSX64ARM}
-{$IFDEF FPC}
-uses MacOSAll;
-{$ELSE}
+{$ifdef MACOS}
 uses Macapi.CoreFoundation;
-{$ENDIF}
 
 var
   BundlePathCached: Boolean;
@@ -91,9 +81,8 @@ end;
 
 function InclPathDelim(const s: string): string;
 begin
-  {$if defined(MSWINDOWS) and not defined(FPC)}
-  { On Windows, also accept / as final path delimiter.
-    FPC does it automatically. }
+  {$if defined(MSWINDOWS)}
+  { On Windows, also accept / as final path delimiter. }
   if (S <> '') and (S[Length(S)] = '/') then Exit(S);
   {$endif}
   Result := IncludeTrailingPathDelimiter(S);
@@ -101,9 +90,8 @@ end;
 
 function ExclPathDelim(const s: string): string;
 begin
-  {$if defined(MSWINDOWS) and not defined(FPC)}
-  { On Windows, also accept / as final path delimiter.
-    FPC does it automatically. }
+  {$if defined(MSWINDOWS)}
+  { On Windows, also accept / as final path delimiter. }
   if (S <> '') and (S[Length(S)] = '/') then Exit(Copy(S, 1, Length(S) - 1));
   {$endif}
   Result := ExcludeTrailingPathDelimiter(S);
@@ -126,12 +114,10 @@ begin
 
 end;
 
-{$IFNDEF FPC}
 function GetTickCount64: UInt64; inline;
 begin
   Result := TThread.GetTickCount64;
 end;
-{$ENDIF}
 
 constructor TMilliTimer.Create;
 begin
@@ -157,14 +143,9 @@ begin
 end;
 
 function Format_JSON(Value: String; Indentation: Integer = 4): String; inline;
-{$ifndef FPC}
 var
-  JV: {$ifdef FPC}TJSONData{$else}TJSONValue{$endif};
-{$endif}
+  JV: TJSONValue;
 begin
-  {$ifdef FPC}
-  Result := Value; // JV.FormatJSON([], Indentation);
-  {$else}
   JV := nil;
   try
     try
@@ -177,14 +158,13 @@ begin
   finally
     FreeAndNil(JV);
   end;
-  {$endif}
 end;
 
 function FormatDot(const Fmt: String; const Args: array of const): String;
 var
   FormatSettings: TFormatSettings;
 begin
-  FormatSettings := {$ifdef fpc}Default({$endif}TFormatSettings{$ifdef fpc}){$endif}{$ifndef fpc}.Create{$endif};
+  FormatSettings := TFormatSettings.Create;
   FormatSettings.DecimalSeparator := '.';
   FormatSettings.ThousandSeparator := #0;
   Result := Format(Fmt, Args, FormatSettings);

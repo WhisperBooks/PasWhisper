@@ -10,8 +10,6 @@ The whole eco-system, including these bindings, are all multi-platform.
 
 For Delphi FMX can target Windows, Mac, Linux (suitable version of Delphi required), Android and iOS. VCL is supported but there is no real benefit to choosing it unless you're lost when it comes to FMX.
 
-The [TODO] FLC/Lazarus version will allow for an even wider range of platforms (even the Raspberry Pi)
-
 Detailed Readme.MD is high on my TODO list (but behind other documentation)
 
 
@@ -26,7 +24,4 @@ Bottom Left - Mac M4 basic
 
 Bottom Right - NVIDIA 4070 Laptop GPU
 
-![Some More Tests](img/pi5.png)
 
-
-Or even a Pi5 (Lazarus - just got it working)
