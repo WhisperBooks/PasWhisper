@@ -303,8 +303,14 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Settings := TSettings.Create;
-  {$IFDEF MSWINDOWS}
+  {$IF DEFINED(MSWINDOWS)}
+  {$IF DEFINED(CPUX86)}
+  SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x86\\');
+  {$ELSEIF DEFINED(CPUX64)}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
+  {$ELSE} // Windows ARM?
+  {$MESSAGE FATAL 'Unsupported Platform'}
+  {$ENDIF}
   {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);
   DebugLogInit(TPath.Combine(Settings.AppHome, 'Whisper.log'));

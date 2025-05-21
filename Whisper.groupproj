@@ -15,6 +15,9 @@
         <Projects Include="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="WhisperBenchGUI:Make">
         <MSBuild Projects="examples\FMX\WhisperBenchGUI\WhisperBenchGUI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="WhisperTranscribeGUI">
+        <MSBuild Projects="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj"/>
+    </Target>
+    <Target Name="WhisperTranscribeGUI:Clean">
+        <MSBuild Projects="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WhisperTranscribeGUI:Make">
+        <MSBuild Projects="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI"/>
+        <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI;WhisperTranscribeGUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean;WhisperBenchGUI:Clean"/>
+        <CallTarget Targets="WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean;WhisperBenchGUI:Clean;WhisperTranscribeGUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make;WhisperBenchGUI:Make"/>
+        <CallTarget Targets="WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make;WhisperBenchGUI:Make;WhisperTranscribeGUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
