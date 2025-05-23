@@ -4,10 +4,8 @@ uses
   System.StartUpCopy,
   FMX.Forms,
   WhisperBenchMain in 'src\WhisperBenchMain.pas',
-  BaseDevice in '..\..\..\src\BaseDevice.pas',
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
   ggmltypes in '..\..\..\src\ggmltypes.pas',
-  Log4D in '..\..\..\src\Log4D.pas',
   whisper in '..\..\..\src\whisper.pas',
   WhisperBackend in '..\..\..\src\WhisperBackend.pas',
   WhisperDynlib in '..\..\..\src\WhisperDynlib.pas',
@@ -16,7 +14,8 @@ uses
   WhisperPlatform in '..\..\..\src\WhisperPlatform.pas',
   whispertypes in '..\..\..\src\whispertypes.pas',
   WhisperUtils in '..\..\..\src\WhisperUtils.pas',
-  Settings in 'src\Settings.pas';
+  Settings in 'src\Settings.pas',
+  Log4D in '..\..\..\src\Log4D.pas';
 
 {$R *.res}
 

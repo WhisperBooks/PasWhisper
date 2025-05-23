@@ -320,7 +320,7 @@ begin
     Raise Exception.Create('Couldn''t import whisper library');
 
 end;
-
+{
 Initialization
 
 Finalization
@@ -329,5 +329,5 @@ Finalization
       FinalizeWhisperLibrary;
       // TODO : Unload Libray?
     end;
-
+}
 end.

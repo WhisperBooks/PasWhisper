@@ -576,10 +576,11 @@ begin
     end;
 end;
 
+{
 initialization
   SetWhisperLibraryPath;
 
 finalization
-
+}
 
 end.

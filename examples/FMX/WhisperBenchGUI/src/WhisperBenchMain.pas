@@ -62,7 +62,6 @@ implementation
 
 uses
   WhisperLog,
-  BaseDevice,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
   WhisperExternal, WhisperUtils;
 

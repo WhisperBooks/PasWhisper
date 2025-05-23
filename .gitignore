@@ -39,6 +39,9 @@ iOSDevice64/
 Linux64/
 backup/
 scratchpad/
+out/
+LibrarySupport/
+ModelSupport_*/
 
 # Delphi compiler-generated binaries (safe to delete)
 *.exe

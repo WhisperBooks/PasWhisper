@@ -1,3 +1,6 @@
 [submodule "thirdparty/os-logos"]
 	path = thirdparty/os-logos
 	url = https://github.com/ngeenx/operating-system-logos.git
+[submodule "thirdparty/json-serializer"]
+	path = thirdparty/json-serializer
+	url = https://github.com/CleverComponents/Json-Serializer.git
