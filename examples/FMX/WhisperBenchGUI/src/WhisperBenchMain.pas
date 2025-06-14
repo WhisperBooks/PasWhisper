@@ -350,7 +350,7 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   DebugLog.Info('Stop');
   FreeAndNil(Settings);
-//  FreeAndNil(Whisp);
+  FreeAndNil(Whisp);
 end;
 
 procedure TForm1.FormResize(Sender: TObject);

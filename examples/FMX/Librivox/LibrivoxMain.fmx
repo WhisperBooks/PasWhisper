@@ -1,0 +1,75 @@
+object GrabForm: TGrabForm
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 439.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Align = Client
+      Size.Width = 640.000000000000000000
+      Size.Height = 439.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 636.000000000000000000
+      Viewport.Height = 435.000000000000000000
+    end
+  end
+  object Layout2: TLayout
+    Align = Bottom
+    Position.Y = 439.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Button1: TButton
+      Anchors = [akTop, akRight]
+      Position.X = 368.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 1
+      Text = 'Books'
+      TextSettings.Trimming = None
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Anchors = [akTop, akRight]
+      Position.X = 536.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 0
+      Text = 'Model'
+      TextSettings.Trimming = None
+      OnClick = Button2Click
+    end
+  end
+  object RESTClient1: TRESTClient
+    Params = <>
+    SynchronizedEvents = False
+    OnReceiveData = RESTClient1ReceiveData
+    Left = 368
+    Top = 216
+  end
+  object RESTRequest1: TRESTRequest
+    Client = RESTClient1
+    Params = <>
+    Response = RESTResponse1
+    SynchronizedEvents = False
+    Left = 456
+    Top = 216
+  end
+  object RESTResponse1: TRESTResponse
+    Left = 440
+    Top = 312
+  end
+end

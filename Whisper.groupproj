@@ -18,6 +18,9 @@
         <Projects Include="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="examples\FMX\Librivox\LibrivoxGrab.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="WhisperTranscribeGUI:Make">
         <MSBuild Projects="examples\FMX\WhisperTranscribeGUI\WhisperTranscribeGUI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="LibrivoxGrab">
+        <MSBuild Projects="examples\FMX\Librivox\LibrivoxGrab.dproj"/>
+    </Target>
+    <Target Name="LibrivoxGrab:Clean">
+        <MSBuild Projects="examples\FMX\Librivox\LibrivoxGrab.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LibrivoxGrab:Make">
+        <MSBuild Projects="examples\FMX\Librivox\LibrivoxGrab.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI;WhisperTranscribeGUI"/>
+        <CallTarget Targets="WhisperBenchCli;WhisperBenchVCL;WhisperStreamGUI;WhisperBenchGUI;WhisperTranscribeGUI;LibrivoxGrab"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean;WhisperBenchGUI:Clean;WhisperTranscribeGUI:Clean"/>
+        <CallTarget Targets="WhisperBenchCli:Clean;WhisperBenchVCL:Clean;WhisperStreamGUI:Clean;WhisperBenchGUI:Clean;WhisperTranscribeGUI:Clean;LibrivoxGrab:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make;WhisperBenchGUI:Make;WhisperTranscribeGUI:Make"/>
+        <CallTarget Targets="WhisperBenchCli:Make;WhisperBenchVCL:Make;WhisperStreamGUI:Make;WhisperBenchGUI:Make;WhisperTranscribeGUI:Make;LibrivoxGrab:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

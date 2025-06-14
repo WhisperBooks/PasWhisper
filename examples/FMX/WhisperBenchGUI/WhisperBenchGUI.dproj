@@ -319,22 +319,6 @@
         <DCCReference Include="..\..\..\src\WhisperUtils.pas"/>
         <DCCReference Include="src\Settings.pas"/>
         <DCCReference Include="..\..\..\src\Log4D.pas"/>
-        <None Include="ModelSupport_WhisperBenchGUI\default.txaPackage"/>
-        <None Include="ModelSupport_WhisperBenchGUI\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\GgmlExternal\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperBenchGUI\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\Settings\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\whisper\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperBackend\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperDynlib\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\Log4D\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperLog\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperPlatform\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperUtils\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperBenchMain\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\WhisperExternal\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\ggmltypes\default.txvpck"/>
-        <None Include="ModelSupport_WhisperBenchGUI\whispertypes\default.txvpck"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -355,8 +339,8 @@
                 <Source>
                     <Source Name="MainSource">WhisperBenchGUI.dpr</Source>
                 </Source>
-            <WelcomePageFile Path="src\WhisperBenchMain.pas"/>
-            <WelcomePageFolder/>
+                <WelcomePageFile Path="src\WhisperBenchMain.pas"/>
+                <WelcomePageFolder/>
             </Delphi.Personality>
             <Deployment Version="5">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
@@ -601,12 +585,6 @@
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\MacOS\</RemoteDir>
                         <RemoteName>libwhisper.dylib</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="ModelSupport_WhisperBenchGUI\default.txaPackage" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win64">
-                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1659,7 +1637,6 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
             </Platforms>
-            <ModelSupport>True</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

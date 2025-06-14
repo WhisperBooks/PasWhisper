@@ -8,12 +8,18 @@ uses
   System.SysUtils, System.IOUtils, System.Types, System.UITypes, System.Classes,
   System.Variants{, FMX.Forms, FMX.Dialogs, StyleModel};
 
+const
+  GenOptCount = 4;
+
 type
+
+  TGenOpts = Array[0..GenOptCount - 1] of Boolean;
+
   TSettingsRec = record
     WipeOnStart: Boolean;
-    PythonInstalled: Boolean;
-    LastOpenStyleDir: String;
-    LastSaveStyleDir: String;
+    LastUsedModel: String;
+    ModelDirectory: String;
+    GenOpt: TGenOpts;
     AppHome: String;
     SettingsHome: String;
     WhisperVersion: String;
@@ -23,6 +29,12 @@ type
   strict private
     FSettings: TSettingsRec;
     function GetAppHome: String;
+    function GetLastUsedModel: String;
+    procedure SetLastUsedModel(AValue: String);
+    function GetModelDirectory: String;
+    procedure SetModelDirectory(AValue: String);
+    function GetGenOpt(Index: Cardinal): Boolean;
+    procedure SetGenOpt(Index: Cardinal; AValue: Boolean);
   public
     constructor Create;
     destructor Destroy; Override;
@@ -31,6 +43,9 @@ type
     procedure MakeDefaultValues;
     procedure Save;
     property AppHome: String read GetAppHome;
+    property LastUsedModel: String read GetLastUsedModel write SetLastUsedModel;
+    property ModelDirectory: String read GetModelDirectory write SetModelDirectory;
+    property GenOpt[Index: Cardinal]: Boolean read GetGenOpt write SetGenOpt;
   end;
 
 var
@@ -45,7 +60,7 @@ var
   AllowGPU: Boolean;
 
 const
-  appname: String = 'WhisperStreamGUI';
+  appname: String = 'WhisperBenchGUI';
   pypath: String = 'python';
   pyver: String = '3.9';
   pyexe: String = 'python.exe';
@@ -71,15 +86,13 @@ begin
       Load;
       // If AppHome has been removed (e.g. USB) then it won't exist any more
       // so reset it back to default in that situation
-    end;
-
-  Initialise;
+    end
+  else
+    Initialise;
 end;
 
 destructor TSettings.Destroy;
 begin
-  Save;
-
   inherited;
 end;
 
@@ -88,19 +101,28 @@ begin
   Result := FSettings.AppHome;
 end;
 
+function TSettings.GetGenOpt(Index: Cardinal): Boolean;
+begin
+  Result := FSettings.GenOpt[Index];
+end;
+
+function TSettings.GetLastUsedModel: String;
+begin
+  Result := FSettings.LastUsedModel;
+end;
+
+function TSettings.GetModelDirectory: String;
+begin
+  Result := FSettings.ModelDirectory;
+end;
+
 procedure TSettings.Initialise;
   begin
-  if not DirectoryExists(FSettings.AppHome) then
+  if not DirectoryExists(FSettings.AppHome) and not FSettings.AppHome.IsEmpty() then
     begin
       ForceDirectories(FSettings.AppHome);
       InstallRequired := True;
     end;
-
-  if not FSettings.PythonInstalled then
-    InstallRequired := True;
-
-  if not FileExists(TPath.Combine(FSettings.AppHome, pycode)) then
-    InstallRequired := True;
 
   FSettings.WhisperVersion := appver;
   Save;
@@ -112,6 +134,9 @@ var
   JsonText: String;
   LSettings: TSettingsRec;
 begin
+  if FSettings.SettingsHome.IsEmpty() then
+    Exit;
+
   try
     JsonText := TFile.ReadAllText(IncludeTrailingPathDelimiter(FSettings.SettingsHome) + 'Settings.json');
   except
@@ -126,12 +151,12 @@ begin
   else
     begin
       lSerializer := TJsonSerializer.Create;
+      LSerializer.MaxDepth := 2;
       try
         try
-          LSettings := lSerializer.Deserialize<TSettingsRec>(JsonText);
+          FSettings := lSerializer.Deserialize<TSettingsRec>(JsonText);
           if FSettings.WhisperVersion <> appver then
             VersionUpdate := True;
-
         except
          on E : EJsonSerializationException do
            LSettings := Default(TSettingsRec);
@@ -152,11 +177,16 @@ begin
   InstallRequired := False;
   VersionUpdate := False;
   EnableGPU := False;
-  {$IF DEFINED(MACOS) AND DEFINED(CPUARM)}
-  EnableGPU := True;
-  {$ENDIF}
-  {$IF DEFINED(MSWINDOWS)}
-  EnableGPU := True;
+  {$IF DEFINED(MACOS)}
+  FSettings.GenOpt[0] := True;
+  FSettings.GenOpt[1] := True;
+  FSettings.GenOpt[2] := False;
+  FSettings.GenOpt[3] := True;
+  {$ELSE}
+  FSettings.GenOpt[0] := False;
+  FSettings.GenOpt[1] := False;
+  FSettings.GenOpt[2] := True;
+  FSettings.GenOpt[3] := False;
   {$ENDIF}
 
   AllowGPU := EnableGPU;
@@ -179,10 +209,14 @@ var
   lSerializer: TJsonSerializer;
   JsonText: String;
 begin
+  if FSettings.SettingsHome.IsEmpty() then
+    Exit;
+
   lSerializer := TJsonSerializer.Create;
+  lSerializer.MaxDepth := 2;
   try
     try
-      JsonText := lSerializer.Serialize<TSettings>(Self);
+      JsonText := lSerializer.Serialize<TSettingsRec>(FSettings);
       try
         TFile.WriteAllText(IncludeTrailingPathDelimiter(FSettings.SettingsHome) + 'Settings.json', JsonText);
       except
@@ -200,6 +234,23 @@ begin
   finally
     FreeAndNil(lSerializer);
   end;
+end;
+
+procedure TSettings.SetGenOpt(Index: Cardinal; AValue: Boolean);
+begin
+  FSettings.GenOpt[Index] := AValue;
+end;
+
+procedure TSettings.SetLastUsedModel(AValue: String);
+begin
+  if AValue <> '' then
+    FSettings.LastUsedModel := AValue;
+end;
+
+procedure TSettings.SetModelDirectory(AValue: String);
+begin
+  if AValue <> '' then
+    FSettings.ModelDirectory := AValue;
 end;
 
 end.

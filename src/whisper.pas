@@ -173,8 +173,8 @@ begin
     FreeState;
   if(FCtx <> Nil) then
     begin
-      WhisperFree(FCtx);
-      FCtx := Nil;
+//      WhisperFree(FCtx);
+//      FCtx := Nil;
     end;
 
   inherited;

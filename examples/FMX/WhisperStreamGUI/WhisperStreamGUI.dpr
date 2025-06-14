@@ -14,11 +14,14 @@ uses
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
   WhisperLog in '..\..\..\src\WhisperLog.pas',
   Settings in 'src\Settings.pas',
-  Log4D in '..\..\..\src\Log4D.pas';
+  Log4D in '..\..\..\src\Log4D.pas',
+  SoundControl in 'src\audio\SoundControl.pas',
+  sdl2 in 'src\audio\sdl2.pas';
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

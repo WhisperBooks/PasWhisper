@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo, FMX.Menus, Settings;
+  FMX.Memo, FMX.Menus,
+  Whisper, Settings, SoundControl;
 
 type
   TForm1 = class(TForm)
@@ -18,19 +19,34 @@ type
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem2: TMenuItem;
+    OpenDialog1: TOpenDialog;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure MenuItem3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure MenuItem3Click(Sender: TObject);
+    procedure CheckBoxChange(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    Whisp: TWhisper;
+    FrameCount: Int64;
+    StartClock: TDateTime;
     Settings: TSettings;
     BackendsLoaded: Boolean;
     PromptCount: Integer;
     BatchCount: Integer;
     BatchSize: Integer;
     TokenCount: Integer;
+    procedure FormIdle(Sender: TObject; var Done: Boolean);
     procedure RunBench;
+    procedure SelectModel;
+    function NoModel: Boolean;
   public
     { Public declarations }
   end;
@@ -41,16 +57,17 @@ var
 const
   Threads: Integer = 4;
   MaxToken = 256;
-  Appname = 'WhisperStreamGUI';
+  Appname = 'WhisperBenchGUI';
 
 implementation
 
 {$R *.fmx}
 
 uses
+  System.DateUtils,
   WhisperLog,
   WhisperTypes, GgmlTypes, IOUtils, GgmlExternal,
-  WhisperExternal, Whisper, WhisperUtils;
+  WhisperExternal, WhisperUtils;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -61,35 +78,58 @@ begin
   Button1.Enabled := True;
 end;
 
+function TForm1.NoModel: Boolean;
+begin
+  Result := False;
+  if Settings.LastUsedModel.IsEmpty() then
+    Result := True;
+  if Settings.ModelDirectory.IsEmpty() then
+    Result := True;
+end;
+
 procedure TForm1.RunBench;
 var
   Info: String;
   I: Integer;
-  Whisp: TWhisper;
   NMels: Int32;
   Tokens: TWhisperTokenArray;
   Timings: PWhisperActivity;
-  ModelFile: String;
   sw: TMilliTimer;
   Perf: Array[0..7] of Single; // A few spare just in case
   dev: TBackendDevice;
+  Model: String;
   GgmlBackendCount: Integer;
   WhisperBackendCount: Integer;
 begin
+  if (NoModel) then
+    SelectModel;
+
+  if (NoModel) then
+    Exit;
+
   SetLength(Tokens, TokenCount);
 
   for I := 0 to TokenCount - 1 do
       Tokens[I] := 0;
 
-  Whisp := TWhisper.Create;
   try
     sw := TMilliTimer.Create;
     try
       if not BackendsLoaded then
         begin
-  //        Whisp.LoadBackends;
+//          Whisp.LoadBackends;
+
           Whisp.LoadBestBackend('cpu');
-          Whisp.LoadBestBackend('blas');
+          {$IFDEF MACOS}
+          if Checkbox1.IsChecked then
+            Whisp.LoadBestBackend('blas');
+          if Checkbox2.IsChecked then
+            Whisp.LoadBestBackend('metal');
+          if Checkbox3.IsChecked then
+            Whisp.LoadBestBackend('rpc');
+          {$ELSE}
+          if Checkbox1.IsChecked then
+            Whisp.LoadBestBackend('blas');
           Whisp.LoadBestBackend('rpc');
           if Checkbox2.IsChecked then
             begin
@@ -105,29 +145,28 @@ begin
               if Checkbox3.IsChecked then
                 Whisp.LoadBestBackend('cuda');
             end;
-
+          {$ENDIF}
           BackendsLoaded := True;
         end;
       Perf[0] := sw.Elapsed; // Loaded Backends
 
-    {$IF DEFINED(WIN64)}
-      ModelFile := 'D:\models\ggml-base.en.bin';
-    {$ELSEIF DEFINED(LINUX64)}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF DEFINED(OS_OSX64ARM)}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSEIF DEFINED(OSX64)}
-      ModelFile := TPath.GetHomePath() + '/models/ggml-base.en.bin';
-    {$ELSE}
-      Unsupported Platform
-    {$ENDIF}
+
+
       GgmlBackendCount := GgmlBackendGetDeviceCount();
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
-      Memo1.Lines.Add(Format('Model : %s',[ModelFile]));
       Memo1.Lines.Add('');
 
-      if Whisp.LoadModel(ModelFile, not Checkbox1.IsChecked) then
+      Model := TPath.Combine(Settings.ModelDirectory, Settings.LastUsedModel);
+      Memo1.Lines.Add('Using Model : ' + Model);
+      Memo1.Lines.Add('');
+
+      if not Whisp.IsModelLoaded then
+        Whisp.LoadModel(Model, {$IFDEF MACOS}Checkbox4.IsChecked{$ELSE}True{$ENDIF});
+
+      if Whisp.IsModelLoaded then
         begin
+          Perf[1] := sw.Elapsed; // Loaded Model
+
           WhisperBackendCount := Whisp.GetBackendCount;
 
           if WhisperBackendCount < 1 then
@@ -166,10 +205,13 @@ begin
                 end;
             end;
           NMels := Whisp.ModelNmels;
+
+          Whisp.ResetTimings;
+
           if Whisp.SetMel(Nil, 0, NMels) <> WHISPER_SUCCESS then
             Exit;
 
-          Perf[1] := sw.Elapsed; // Loaded Model
+          Perf[2] := sw.Elapsed; // Loaded Model
 
           // Heat
           if Whisp.Encode(0, Threads) <> WHISPER_SUCCESS then
@@ -181,7 +223,7 @@ begin
 
           Whisp.ResetTimings;
 
-          Perf[2] := sw.Elapsed; // Done Heat
+          Perf[3] := sw.Elapsed; // Done Heat
 
           // Run
           if Whisp.Encode(0, Threads) <> 0 then
@@ -205,8 +247,8 @@ begin
                 Exit;
             end;
 
-          Perf[3] := sw.Elapsed; // Done Run
-          Perf[4] := sw.TotalElapsed; // Done Run
+          Perf[4] := sw.Elapsed; // Done Run
+          Perf[5] := sw.TotalElapsed; // Done Run
 
           Timings := Whisp.GetActivity;
 
@@ -223,9 +265,9 @@ begin
           Memo1.Lines.Add('');
           Memo1.Lines.Add(FormatDot('Whisper Load Backends       : %8.3f',[Perf[0]]));
           Memo1.Lines.Add(FormatDot('Whisper Load Model          : %8.3f',[Perf[1]]));
-          Memo1.Lines.Add(FormatDot('Whisper Load Heat           : %8.3f',[Perf[2]]));
-          Memo1.Lines.Add(FormatDot('Whisper Load Run            : %8.3f',[Perf[3]]));
-          Memo1.Lines.Add(FormatDot('Whisper Total Runtime       : %8.3f',[Perf[4]]));
+          Memo1.Lines.Add(FormatDot('Whisper Load Heat           : %8.3f',[Perf[3]]));
+          Memo1.Lines.Add(FormatDot('Whisper Load Run            : %8.3f',[Perf[4]]));
+          Memo1.Lines.Add(FormatDot('Whisper Total Runtime       : %8.3f',[Perf[5]]));
           Memo1.Lines.Add('');
 
           Info := Format_JSON(Whisp.GetSystemInfoJson);
@@ -236,57 +278,155 @@ begin
       sw.Free;
     end;
   finally
-    Whisp.Free;
     SetLength(Tokens, 0);
   end;
 
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TForm1.CheckBoxChange(Sender: TObject);
+var
+  CBX: TCheckBox;
 begin
+  if Sender is TCheckBox then
+    begin
+      CBX := Sender as TCheckBox;
+      Settings.GenOpt[CBX.Tag] := CBX.IsChecked;
+    end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Settings.GenOpt[0] := CheckBox1.IsChecked;
+  Settings.GenOpt[1] := CheckBox2.IsChecked;
+  Settings.GenOpt[2] := CheckBox3.IsChecked;
+  Settings.GenOpt[3] := CheckBox4.IsChecked;
+  Settings.Save;
+
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  I: Integer;
+begin
+  Memo1.Lines.Clear;
   Settings := TSettings.Create;
-  {$IFDEF MACOS}
-  SetWhisperLibraryPath('');//Volumes/SN770/whisper_libs/vino');
-  {$ELSE}
+  {$IF DEFINED(MSWINDOWS)}
+  {$IF DEFINED(CPUX86)}
+  SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x86\\');
+  {$ELSEIF DEFINED(CPUX64)}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
+  {$ELSE} // Windows ARM?
+  {$MESSAGE FATAL 'Unsupported Platform'}
+  {$ENDIF}
   {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);
   DebugLogInit(TPath.Combine(Settings.AppHome, 'Whisper.log'));
+  DebugLog.Info('Start');
   TokenCount := 256;
   BatchCount := 64;
   BatchSize := 5;
   PromptCount := 16;
-  Caption := AppName + ' : ' + IntToStr(System.CPUCount);
+  Caption := AppName;
   Width := 640;
   Height := 960;
-  Button1.Text := 'Stream';
-  CheckBox1.Text := 'InitWithState';
+  Button1.Text := 'Benchmark';
+  {$IFDEF MACOS}
+  CheckBox1.Text := 'Blas';
+  CheckBox2.Text := 'Metal';
+  CheckBox3.Text := 'RPC';
+  CheckBox4.Text := 'State';
+  {$ELSE}
+  CheckBox1.Text := 'Blas';
   CheckBox2.Text := 'Cuda First';
   CheckBox3.Text := 'Cuda';
-  CheckBox4.Text := 'AMD';
-  CheckBox2.IsChecked := True;
-  CheckBox3.IsChecked := True;
-  CheckBox4.IsChecked := True;
-  Memo1.Lines.Add('');
+  CheckBox4.Text := 'Vulkan';
+  {$ENDIF}
+  CheckBox1.IsChecked := Settings.GenOpt[0];
+  CheckBox2.IsChecked := Settings.GenOpt[1];
+  CheckBox3.IsChecked := Settings.GenOpt[2];
+  CheckBox4.IsChecked := Settings.GenOpt[3];
+
   Memo1.Lines.Add('Whisper path is ' + WhisperGlobalLibraryPath);
   Memo1.Lines.Add('Settings path is ' + Settings.AppHome);
-  {$IFDEF MACOS}
-  Memo1.Lines.Add('Bundle path is ' + BundlePath);
-  {$ENDIF}
+  Memo1.Lines.Add(Format('Model is %s - %s',[Settings.ModelDirectory, Settings.LastUsedModel]));
+  Whisp := TWhisper.Create;
+
+  FrameCount := 0;
+  StartClock := GetTime;
+  Application.OnIdle := FormIdle;
+
+  TAudioSDL.Create;
+  if AudioSDL <> Nil then
+    begin
+      for I := 0 to AudioSDL.DevIn.Count - 1 do
+        Memo1.Lines.Add(Format('Input Device %d = %s',[I, AudioSDL.DevIn[I]]));
+      for I := 0 to AudioSDL.DevOut.Count - 1 do
+        Memo1.Lines.Add(Format('Output Device %d = %s',[I, AudioSDL.DevOut[I]]));
+    end;
+
 end;
 
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  DebugLog.Info('Stop');
+  FreeAndNil(Settings);
+  FreeAndNil(Whisp);
+end;
+
+procedure TForm1.FormIdle(Sender: TObject; var Done: Boolean);
+var
+  NowTime: Int64;
+  Disp: Int64;
+begin
+  NowTime := MilliSecondsBetween(StartClock, GetTime);
+  Inc(FrameCount);
+  Disp := NowTime mod 10;
+  if Disp = 9 then
+    Caption := AppName + ' (' + IntToStr(Width) + ' x ' + IntToStr(Height) + ') Frame : ' + Format('%d %8.3f',[FrameCount, FrameCount/NowTime]);
+  Done := True;
+end;
 
 procedure TForm1.FormResize(Sender: TObject);
 begin
   Caption := AppName + ' (' + IntToStr(Width) + ' x ' + IntToStr(Height) + ')';
 end;
 
+procedure TForm1.MenuItem2Click(Sender: TObject);
+var
+  ModelDirectory: String;
+begin
+  ModelDirectory := TPath.GetDocumentsPath();
+  SelectDirectory('Select Model Dirctory', ModelDirectory, ModelDirectory);
+  Memo1.Lines.Add('Model path is ' + ModelDirectory);
+end;
+
 procedure TForm1.MenuItem3Click(Sender: TObject);
 begin
-  Memo1.Lines.Clear;
-  Memo1.Lines.Add(Format('TGgmlBackend       : %d',[SizeOf(TGgmlBackend)]));
-  Memo1.Lines.Add(Format('TGgmlBackendDevice : %d',[SizeOf(TGgmlBackendDevice)]));
-  Memo1.Lines.Add(Format('IGgmlBackendDevice : %d',[SizeOf(IGgmlBackendDevice)]));
+  SelectModel;
 end;
+
+procedure TForm1.SelectModel;
+var
+  FP, FN: String;
+begin
+  if Settings.ModelDirectory <> '' then
+    OpenDialog1.InitialDir := Settings.ModelDirectory;
+
+  OpenDialog1.Filter := 'Model Files|*.bin';
+  if OpenDialog1.Execute then
+    begin
+      // check 4cc = lmgg then do this
+      FP := ExtractFilePath(OpenDialog1.Filename);
+      FN := ExtractFileName(OpenDialog1.Filename);
+
+      Memo1.Lines.Add(Format('Model is %s - %s',[FP, FN]));
+      Settings.LastUsedModel := FN;
+      Settings.ModelDirectory := FP;
+      Settings.Save;
+      Memo1.Lines.Add(Format('Settings Saved',[FP, FN]));
+    end;
+end;
+
 
 end.

@@ -67,7 +67,7 @@ begin
     Raise Exception.Create('Couldn''t import ggml library');
 
 end;
-{
+
 Initialization
 
 Finalization
@@ -77,6 +77,6 @@ Finalization
       FinalizeGgmlLibrary;
       // TODO : Unload Libray?
     end;
-}
+
 
 end.
