@@ -298,7 +298,7 @@ begin
   RModel := THuggingFace.Create(Self);
 //  RModel.Model := 'non-existant-test';
   RModel.Model := 'medium.en';
-  RModel.ModelType := GGML;
+  RModel.ModelType := OpenVino; // GGML;
   RModel.OnAsynchCompltete := OnDownloadComplete;
   RModel.OnAsynchData := DoAsynchData;
   RModel.OnError := ErrorPop;
@@ -353,20 +353,35 @@ end;
 { THuggingFace }
 
 function THuggingFace.Grab: Boolean;
+var
+  Path: String;
 begin
   if FModel = '' then
     Exit(False);
 
   case FModelType of
-    GGML: FileName := 'ggml-' + FModel + '.bin';
-    OpenVino: FileName := 'ggml-' + FModel + '-encoder-openvino.zip';
-    CoreML: FileName := 'ggml-' + FModel + '-encoder.mlmodelc.zip';
+    GGML:
+      begin
+        Path := 'ggerganov/whisper.cpp/resolve/main/';
+        FileName := 'ggml-' + FModel + '.bin';
+      end;
+    OpenVino:
+      begin
+        // ggml-medium-encoder-openvino.zip?download=true
+        Path := 'Whisper-Pascal/whisper-openvino/resolve/main/';
+        FileName := 'ggml-' + FModel + '-encoder-openvino.zip';
+      end;
+    CoreML:
+      begin
+        Path := 'ggerganov/whisper.cpp/resolve/main/';
+        FileName := 'ggml-' + FModel + '-encoder.mlmodelc.zip';
+      end
   else
     Exit(False);
   end;
 
   URL := 'https://huggingface.co';
-  Resource := 'ggerganov/whisper.cpp/resolve/main/' + FileName;
+  Resource := Path + FileName;
   { https://huggingface.co/base-encoder.mlmodelc.zip?download=true }
   // https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin?download=true
   FRestParams.AddItem('download','true');
