@@ -20,11 +20,26 @@ object GrabForm: TGrabForm
       DataDetectorTypes = []
       Align = Client
       Size.Width = 640.000000000000000000
-      Size.Height = 439.000000000000000000
+      Size.Height = 417.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       Viewport.Width = 636.000000000000000000
-      Viewport.Height = 435.000000000000000000
+      Viewport.Height = 413.000000000000000000
+    end
+    object Layout3: TLayout
+      Align = Bottom
+      Position.Y = 417.000000000000000000
+      Size.Width = 640.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object ProgressBar1: TProgressBar
+        Align = Client
+        Orientation = Horizontal
+        Size.Width = 640.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
     end
   end
   object Layout2: TLayout
@@ -52,24 +67,5 @@ object GrabForm: TGrabForm
       TextSettings.Trimming = None
       OnClick = Button2Click
     end
-  end
-  object RESTClient1: TRESTClient
-    Params = <>
-    SynchronizedEvents = False
-    OnReceiveData = RESTClient1ReceiveData
-    Left = 368
-    Top = 216
-  end
-  object RESTRequest1: TRESTRequest
-    Client = RESTClient1
-    Params = <>
-    Response = RESTResponse1
-    SynchronizedEvents = False
-    Left = 456
-    Top = 216
-  end
-  object RESTResponse1: TRESTResponse
-    Left = 440
-    Top = 312
   end
 end

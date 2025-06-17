@@ -494,7 +494,9 @@ begin
       FModel := AModel;
       FCParams := WhisperContextDefaultParams;
       if NoGPU then
-        FCParams.use_gpu := False;
+        FCParams.use_gpu := False
+      else
+        FCParams.use_gpu := True;
       if useFlash then
         FCParams.flash_attn := True;
       if WithState then

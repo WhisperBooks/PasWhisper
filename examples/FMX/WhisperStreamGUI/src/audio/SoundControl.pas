@@ -85,6 +85,10 @@ var
   NumDev: Integer;
   Device: TAudioSDLDevice;
   I: Integer;
+  {
+  Chosen: PAnsiString;
+  AudioSpec: PSDL_AudioSpec;
+  }
 begin
   Result := False;
   Flag := SDL_INIT_AUDIO;

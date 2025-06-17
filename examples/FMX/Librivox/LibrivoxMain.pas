@@ -4,14 +4,14 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.Diagnostics,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
   FMX.Controls.Presentation, FMX.StdCtrls,
   REST.Client, REST.Types,
-  FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.Layouts, Data.Bind.Components,
-  Data.Bind.ObjectScope;
+  FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.Layouts;
 
 type
-  TNotifyMessageEvent = procedure(Sender: TObject; const Msg: String);
+  TNotifyMessageEvent = procedure(Sender: TObject; const Code: Integer; const Msg: String) of Object;
 
   TDownloadProgress = record
     ReadCount: Int64;
@@ -24,10 +24,16 @@ type
     FRESTClient: TRESTClient;
     FRESTRequest: TRESTRequest;
     FRESTResponse: TRESTResponse;
+    FPrecisionTimer: TStopWatch;
+    FFile: String;
+    FAquireTime: Int64;
     FIsAsynch: Boolean;
     FOnAsynchCompltete: TNotifyEvent;
     FOnAsynchData: TNotifyEvent;
+    FOnError: TNotifyMessageEvent;
     FProgress: TDownloadProgress;
+    FInvalid: Boolean;
+    FAbort: Boolean;
     procedure SetURL(const AValue: String);
     procedure SetResource(const AValue: String);
     function GetContent: String;
@@ -39,6 +45,7 @@ type
     procedure ClientReceiveData(const Sender: TObject; AContentLength,
       AReadCount: Int64; var AAbort: Boolean);
     procedure ClientHTTPProtocolError(Sender: TCustomRESTClient);
+    procedure RequestHTTPProtocolError(Sender: TCustomRESTRequest);
   protected
     FAsynchThread: TRESTExecutionThread;
     FRESTParams: TRESTRequestParameterList;
@@ -46,6 +53,7 @@ type
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
     function Grab: Boolean; virtual;
+    function GetTime: Int64;
     property URL: String write SetURL;
     property Resource: String write SetResource;
     property Content: String read GetContent;
@@ -56,6 +64,11 @@ type
     property OnAsynchCompltete: TNotifyEvent read FOnAsynchCompltete write FOnAsynchCompltete;
     property OnAsynchData: TNotifyEvent read FOnAsynchData write FOnAsynchData;
     property Progress: TDownloadProgress read FProgress write FProgress;
+    property OnError: TNotifyMessageEvent read FOnError write FOnError;
+    property Abort: Boolean read FAbort write FAbort;
+    property Invalid: Boolean read FInvalid;
+    property AquireTime: Int64 read FAquireTime;
+    property FileName: String read FFile write FFile;
   end;
 
   TArchiveOrg = class(TRemoteData)
@@ -72,13 +85,11 @@ type
   strict private
     FNumItems: Integer;
     FModel: String;
-    FFile: String;
     FModelType: TModelType;
   public
     function Grab: Boolean; override;
     property NumItems: Integer read FNumItems write FNumItems;
     property Model: String read FModel write FModel;
-    property FileName: String read FFile;
     property ModelType: TModelType read FModelType write FModelType;
   end;
 
@@ -88,17 +99,14 @@ type
     Button1: TButton;
     Memo1: TMemo;
     Button2: TButton;
-    RESTClient1: TRESTClient;
-    RESTRequest1: TRESTRequest;
-    RESTResponse1: TRESTResponse;
-    procedure OnGrabComplete(Sender: TObject);
-    procedure OnModelComplete(Sender: TObject);
+    Layout3: TLayout;
+    ProgressBar1: TProgressBar;
+    procedure OnDownloadComplete(Sender: TObject);
     procedure DoAsynchData(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure RESTClient1ReceiveData(const Sender: TObject; AContentLength,
-      AReadCount: Int64; var AAbort: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure ErrorPop(Sender: TObject; const Code: Integer; const Msg: String);
   private
     { Private declarations }
     RJSON: TArchiveOrg;
@@ -124,7 +132,7 @@ begin
   RJSON.NumItems := 10;
 
   RJSON.IsAsynch := True;
-  RJSON.OnAsynchCompltete := OnGrabComplete;
+  RJSON.OnAsynchCompltete := OnDownloadComplete;
   RJSON.Grab;
 end;
 
@@ -135,8 +143,6 @@ begin
 end;
 
 procedure TRemoteData.AynchCompleteWithErrors(O: TObject);
-var
-  E: Exception;
 begin
   raise Exception.Create('GrabJSON : Exception : Class = ' + O.ClassName);
 end;
@@ -159,16 +165,24 @@ end;
 
 constructor TRemoteData.Create(AOwner: TComponent);
 begin
+  FIsAsynch := True;
+
+  FPrecisionTimer := TStopWatch.StartNew;
+
   FRESTParams := TRESTRequestParameterList.Create(Nil);
   FRESTClient := TRESTClient.Create(AOwner);
-  FRESTRequest := TRESTRequest.Create(Nil);
-  FRESTResponse := TRESTResponse.Create(Nil);
+  FRESTRequest := TRESTRequest.Create(FRESTClient);
+  FRESTResponse := TRESTResponse.Create(FRESTClient);
 
   FRestClient.OnReceiveData := ClientReceiveData;
   FRestClient.OnHTTPProtocolError := ClientHTTPProtocolError;
+  FRestClient.RaiseExceptionOn500 := True;
+  FRestClient.SynchronizedEvents := True;
 
   FRESTRequest.Client := FRestClient;
   FRESTRequest.Response := FRESTResponse;
+  FRESTRequest.OnHTTPProtocolError := RequestHTTPProtocolError;
+  FRESTRequest.SynchronizedEvents := True;
 
   FProgress := Default(TDownloadProgress);
 end;
@@ -186,6 +200,7 @@ function TArchiveOrg.Grab: Boolean;
 begin
   URL := 'https://archive.org';
   Resource := 'advancedsearch.php';
+  Filename := 'librivox.json';
 
   FRestParams.AddItem('q','collection:"librivoxaudio"');
   FRestParams.AddItem('fl','avg_rating;creator;date;description;downloads;format;genre;identifier;item_size;language;licenseurl;mediatype;name;noindex;num_reviews;oai_updatedate;publicdate;subject;title', pkGETorPOST, [poPHPArray]);
@@ -215,6 +230,13 @@ begin
   Result := FRestResponse.RawBytes;
 end;
 
+function TRemoteData.GetTime: Int64;
+begin
+  FPrecisionTimer.Stop;
+  FAquireTime := FPrecisionTimer.ElapsedMilliseconds;
+  Result := FAquireTime;
+end;
+
 function TRemoteData.Grab: Boolean;
 begin
   try
@@ -240,13 +262,22 @@ begin
       end;
     except
       on E : Exception do
-        raise Exception.Create('GrabJSON : Exception : Class = ' + E.ClassName + ', Message = ' + E.Message);
+        raise Exception.Create('Grab : ' + E.ClassName + ', Message = ' + E.Message);
       end;
   finally
 //    AUrl := RestRequest.GetFullRequestURL(True);
   end;
 
   Result := True;
+end;
+
+procedure TRemoteData.RequestHTTPProtocolError(Sender: TCustomRESTRequest);
+begin
+  if Assigned(OnError) then
+    begin
+      FInvalid := True;
+      FOnError(Self, Sender.Response.StatusCode, Sender.Response.StatusText);
+    end;
 end;
 
 procedure TRemoteData.SetResource(const AValue: String);
@@ -262,21 +293,31 @@ end;
 procedure TGrabForm.Button2Click(Sender: TObject);
 begin
   Memo1.Lines.Clear;
+  ProgressBar1.Value := 0;
   Memo1.WordWrap := True;
   RModel := THuggingFace.Create(Self);
-//  RModel.Model := 'base.en';
-  RModel.Model := 'base';
+//  RModel.Model := 'non-existant-test';
+  RModel.Model := 'medium.en';
   RModel.ModelType := GGML;
-  RModel.IsAsynch := True;
-  RModel.OnAsynchCompltete := OnModelComplete;
+  RModel.OnAsynchCompltete := OnDownloadComplete;
   RModel.OnAsynchData := DoAsynchData;
+  RModel.OnError := ErrorPop;
   RModel.Grab;
 end;
 
 procedure TGrabForm.DoAsynchData(Sender: TObject);
 begin
   if Sender = RModel then
-    Memo1.Lines.Add(Format('Read #%d chunks so far : %d of %d',[RModel.Progress.ReadCount, RModel.Progress.ReadBytes, RModel.Progress.TotalBytes]));
+    begin
+//    Memo1.Lines.Add(Format('Read #%d chunks so far : %d of %d',[RModel.Progress.ReadCount, RModel.Progress.ReadBytes, RModel.Progress.TotalBytes]));
+      ProgressBar1.Value := (RModel.Progress.ReadBytes / RModel.Progress.TotalBytes) * ProgressBar1.Max;
+    end;
+end;
+
+procedure TGrabForm.ErrorPop(Sender: TObject; const Code: Integer;
+  const Msg: String);
+begin
+  ShowMessage(Format('ErrorPop : %d - %s', [Code, Msg]));
 end;
 
 procedure TGrabForm.FormCreate(Sender: TObject);
@@ -284,31 +325,28 @@ begin
 //  OnAsynchData := DoAsynchData;
 end;
 
-procedure TGrabForm.OnGrabComplete(Sender: TObject);
-begin
-  // application/json
-  Memo1.Lines.Add(Format('Date : Type = %s, Length = %d',[RJSON.ContentType, RJSON.ContentLength]));
-  Memo1.Lines.Add(RJSON.Content);
-end;
-
-procedure TGrabForm.OnModelComplete(Sender: TObject);
+procedure TGrabForm.OnDownloadComplete(Sender: TObject);
 var
   S: TStream;
+  Elapsed: Int64;
+  Secs, Bps: Single;
 begin
-  // application/octet-stream
-//  if RModel.ContentType = 'application/octetstream' then
-  Memo1.Lines.Add(Format('Date : Type = %s, Length = %d, Raw = %d',[RModel.ContentType, RModel.ContentLength, Length(RModel.RawBytes)]));
+  if TRemoteData(Sender).Invalid then
+    Exit;
+  Elapsed := TRemoteData(Sender).GetTime;
+  Secs :=  (Elapsed / 1000);
+  Bps := (TRemoteData(Sender).ContentLength / (1024 * 1024)) / Secs;
 
-  S := TFileStream.Create(RModel.FileName, fmCreate);
-  S.Position := 0;
-  S.Write(Rmodel.RawBytes, Length(RModel.RawBytes));
-  S.Free;
-
-end;
-
-procedure TGrabForm.RESTClient1ReceiveData(const Sender: TObject;
-  AContentLength, AReadCount: Int64; var AAbort: Boolean);
-begin
+  S := Nil;
+  Memo1.Lines.Add(Format('Date : Type = %s, Length = %d, Raw = %d, Time = %f, MBPS = %f',[TRemoteData(Sender).ContentType, TRemoteData(Sender).ContentLength, Length(TRemoteData(Sender).RawBytes), Secs, Bps]));
+  try
+    S := TFileStream.Create(TRemoteData(Sender).FileName, fmCreate);
+    S.Position := 0;
+    S.Write(TRemoteData(Sender).RawBytes, Length(TRemoteData(Sender).RawBytes));
+  finally
+    if S <> Nil then
+      S.Free;
+  end;
 
 end;
 
@@ -320,15 +358,15 @@ begin
     Exit(False);
 
   case FModelType of
-    GGML: FFile := 'ggml-' + FModel + '.bin';
-    OpenVino: FFile := 'ggml-' + FModel + '-encoder-openvino.bin';
-    CoreML: FFile := 'ggml-' + FModel + '-encoder.mlmodelc.zip';
+    GGML: FileName := 'ggml-' + FModel + '.bin';
+    OpenVino: FileName := 'ggml-' + FModel + '-encoder-openvino.zip';
+    CoreML: FileName := 'ggml-' + FModel + '-encoder.mlmodelc.zip';
   else
     Exit(False);
   end;
 
   URL := 'https://huggingface.co';
-  Resource := 'ggerganov/whisper.cpp/resolve/main/' + FFile;
+  Resource := 'ggerganov/whisper.cpp/resolve/main/' + FileName;
   { https://huggingface.co/base-encoder.mlmodelc.zip?download=true }
   // https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin?download=true
   FRestParams.AddItem('download','true');
