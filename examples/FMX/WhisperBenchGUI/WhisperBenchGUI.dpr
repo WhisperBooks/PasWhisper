@@ -7,7 +7,7 @@ uses
   ggmlexternal in '..\..\..\src\ggmlexternal.pas',
   ggmltypes in '..\..\..\src\ggmltypes.pas',
   whisper in '..\..\..\src\whisper.pas',
-  WhisperBackend in '..\..\..\src\WhisperBackend.pas',
+  ComputeEngine in '..\..\..\src\ComputeEngine.pas',
   WhisperDynlib in '..\..\..\src\WhisperDynlib.pas',
   whisperexternal in '..\..\..\src\whisperexternal.pas',
   WhisperLog in '..\..\..\src\WhisperLog.pas',

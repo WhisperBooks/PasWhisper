@@ -128,7 +128,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\src\whisper.pas"/>
-        <DCCReference Include="..\..\..\src\WhisperBackend.pas"/>
+        <DCCReference Include="..\..\..\src\ComputeEngine.pas"/>
         <DCCReference Include="..\..\..\src\WhisperDynlib.pas"/>
         <DCCReference Include="..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\src\WhisperLog.pas"/>

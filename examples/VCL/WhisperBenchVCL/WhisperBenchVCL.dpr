@@ -4,7 +4,7 @@ uses
   Vcl.Forms,
   WhisperBenchMain in 'src\WhisperBenchMain.pas' {Form1},
   whisper in '..\..\..\src\whisper.pas',
-  WhisperBackend in '..\..\..\src\WhisperBackend.pas',
+  ComputeEngine in '..\..\..\src\ComputeEngine.pas',
   WhisperDynlib in '..\..\..\src\WhisperDynlib.pas',
   whisperexternal in '..\..\..\src\whisperexternal.pas',
   WhisperLog in '..\..\..\src\WhisperLog.pas',

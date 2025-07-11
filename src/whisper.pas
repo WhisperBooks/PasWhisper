@@ -2,11 +2,12 @@ unit whisper;
 
 interface
 
-uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, WhisperDynlib;
+uses SysUtils, WhisperExternal, WhisperTypes, ggmlTypes, WhisperDynlib, ComputeEngine;
 
 type
   TWhisper = class
   strict private
+    FBackend: TComputeBackend;
     FCtx: TWhisperContext;
     FState: TWhisperState;
     FModel: String;
@@ -104,6 +105,7 @@ var
   PModel: PAnsiChar;
 
 procedure SetWhisperLibraryPath(const APath: String = '');
+function IsDelphiRunning: Boolean;
 
 implementation
 
@@ -119,7 +121,8 @@ constructor TWhisper.Create;
 begin
   if not GgmlLibraryIsLoaded then
     try
-      InitializeGgmlLibrary;
+      FBackend := TComputeBackend.Create;
+      // InitializeGgmlLibrary;
     finally
       if Not WhisperLibraryIsLoaded then
         try
@@ -176,7 +179,7 @@ begin
 //      WhisperFree(FCtx);
 //      FCtx := Nil;
     end;
-
+  FreeAndNil(FBackend);
   inherited;
 end;
 
@@ -559,11 +562,21 @@ begin
     Result := WhisperSetMelWithState(FCtx, FState, Data, NLen, NMel);
 end;
 
+function IsDelphiRunning: Boolean;
+begin
+  {$IF DEFINED(MSWINDOWS)}
+  Result := (FindWindow('TAppBuilder', nil) > 0) and
+    (FindWindow('TPropertyInspector', 'Object Inspector') > 0);
+  {$ELSE}
+  Result := False;
+  {$ENDIF}
+end;
+
 procedure SetWhisperLibraryPath(const APath: String = '');
 begin
+  {$IF DEFINED(MSWINDOWS)}
   WhisperGlobalLibraryPath := APath;
   DebugLog.Debug('Library Path Set To : "%s"', [APath]);
-  {$IF DEFINED(MSWINDOWS)}
   {$ENDIF}
 end;
 

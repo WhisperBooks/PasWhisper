@@ -116,6 +116,7 @@ begin
 //          Whisp.LoadBackends;
 
           Whisp.LoadBestBackend('cpu');
+//          Whisp.LoadBestBackend('openvino');
           {$IFDEF MACOS}
           if Checkbox1.IsChecked then
             Whisp.LoadBestBackend('blas');
@@ -299,16 +300,16 @@ begin
   Settings.Save;
 end;
 
+{$DEFINE RUNNING_LOCAL}
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Settings := TSettings.Create;
   {$IF DEFINED(MSWINDOWS)}
-  {$IF DEFINED(CPUX86)}
+  {$IF DEFINED(CPUX86) and DEFINED(RUNNING_LOCAL)}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x86\\');
-  {$ELSEIF DEFINED(CPUX64)}
+  {$ELSEIF DEFINED(CPUX64) and DEFINED(RUNNING_LOCAL)}
   SetWhisperLibraryPath('C:\\src\\Whisper\\lib\\windows\\x64\\');
-  {$ELSE} // Windows ARM?
-  {$MESSAGE FATAL 'Unsupported Platform'}
   {$ENDIF}
   {$ENDIF}
   SetMultiByteConversionCodePage(CP_UTF8);

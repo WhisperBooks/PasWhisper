@@ -310,7 +310,7 @@
         <DCCReference Include="..\..\..\src\ggmlexternal.pas"/>
         <DCCReference Include="..\..\..\src\ggmltypes.pas"/>
         <DCCReference Include="..\..\..\src\whisper.pas"/>
-        <DCCReference Include="..\..\..\src\WhisperBackend.pas"/>
+        <DCCReference Include="..\..\..\src\ComputeEngine.pas"/>
         <DCCReference Include="..\..\..\src\WhisperDynlib.pas"/>
         <DCCReference Include="..\..\..\src\whisperexternal.pas"/>
         <DCCReference Include="..\..\..\src\WhisperLog.pas"/>
@@ -588,6 +588,474 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\OpenCL.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>OpenCL.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\OpenCL.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>OpenCL.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\SDL2.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>SDL2.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\SDL2.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>SDL2.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cublas64_12.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cublas64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cublas64_12.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cublas64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cublasLt64_12.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cublasLt64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cublasLt64_12.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cublasLt64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cudart64_12.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cudart64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\cudart64_12.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>cudart64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-base.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-base.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-base.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-base.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-blas.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-blas.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-blas.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-blas.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-alderlake.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-alderlake.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-alderlake.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-alderlake.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-haswell.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-haswell.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-haswell.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-haswell.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-icelake.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-icelake.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-icelake.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-icelake.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-sandybridge.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-sandybridge.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-sandybridge.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-sandybridge.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-skylakex.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-skylakex.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-skylakex.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-skylakex.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-sse42.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-sse42.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-sse42.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-sse42.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-x64.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-x64.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cpu-x64.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cpu-x64.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cuda.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cuda.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-cuda.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-cuda.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-opencl.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-opencl.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-opencl.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-opencl.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-rpc.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-rpc.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-rpc.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-rpc.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-vulkan.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-vulkan.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml-vulkan.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml-vulkan.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\ggml.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>ggml.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvblas64_12.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvblas64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvblas64_12.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvblas64_12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvrtc-builtins64_124.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvrtc-builtins64_124.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvrtc-builtins64_124.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvrtc-builtins64_124.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvrtc64_120_0.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvrtc64_120_0.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\nvrtc64_120_0.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>nvrtc64_120_0.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openblas.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openblas.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openblas.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openblas.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_auto_batch_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_auto_batch_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_auto_batch_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_auto_batch_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_auto_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_auto_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_auto_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_auto_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_c.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_c.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_c.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_c.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_hetero_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_hetero_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_hetero_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_hetero_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_cpu_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_cpu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_cpu_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_cpu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_gpu_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_gpu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_gpu_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_gpu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_npu_plugin.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_npu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_intel_npu_plugin.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_intel_npu_plugin.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_ir_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_ir_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_ir_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_ir_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_onnx_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_onnx_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_onnx_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_onnx_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_paddle_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_paddle_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_paddle_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_paddle_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_pytorch_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_pytorch_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_pytorch_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_pytorch_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_tensorflow_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_tensorflow_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_tensorflow_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_tensorflow_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_tensorflow_lite_frontend.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_tensorflow_lite_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\openvino_tensorflow_lite_frontend.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>openvino_tensorflow_lite_frontend.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\tbb12.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>tbb12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\tbb12.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>tbb12.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\whisper.dll" Configuration="Debug" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>whisper.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\lib\windows\x64\whisper.dll" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteName>whisper.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OSXARM64\Debug\WhisperBenchGUI.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
                     <Platform Name="OSXARM64">
                         <Overwrite>true</Overwrite>
@@ -631,12 +1099,6 @@
                 <DeployFile LocalName="Win64\Debug\WhisperBenchGUI.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>WhisperBenchGUI.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win64\Debug\WhisperBenchGUI.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>WhisperBenchGUI.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
