@@ -66,6 +66,7 @@ type
     function  GetPreferredBackend: TBackendDevice;
     Function IsModelLoaded: Boolean;
     procedure UnloadModel;
+    property Backend             : TComputeBackend Read FBackend;
     property Nlen                : Int32 Read GetNlen;
     property NlenFromState       : Int32 Read GetNlenFromState;
     property Nvocab              : Int32 Read GetNvocab;

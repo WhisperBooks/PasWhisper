@@ -115,32 +115,32 @@ begin
         begin
 //          Whisp.LoadBackends;
 
-          Whisp.LoadBestBackend('cpu');
+          Whisp.Backend.LoadBest('cpu');
 //          Whisp.LoadBestBackend('openvino');
           {$IFDEF MACOS}
           if Checkbox1.IsChecked then
-            Whisp.LoadBestBackend('blas');
+            Whisp.Backend.LoadBest('blas');
           if Checkbox2.IsChecked then
-            Whisp.LoadBestBackend('metal');
+            Whisp.Backend.LoadBest('metal');
           if Checkbox3.IsChecked then
-            Whisp.LoadBestBackend('rpc');
+            Whisp.Backend.LoadBest('rpc');
           {$ELSE}
           if Checkbox1.IsChecked then
-            Whisp.LoadBestBackend('blas');
-          Whisp.LoadBestBackend('rpc');
+            Whisp.Backend.LoadBest('blas');
+          Whisp.Backend.LoadBest('rpc');
           if Checkbox2.IsChecked then
             begin
               if Checkbox3.IsChecked then
-                Whisp.LoadBestBackend('cuda');
+                Whisp.Backend.LoadBest('cuda');
               if Checkbox4.IsChecked then
-                Whisp.LoadBestBackend('vulkan');
+                Whisp.Backend.LoadBest('vulkan');
             end
           else
             begin
               if Checkbox4.IsChecked then
-                Whisp.LoadBestBackend('vulkan');
+                Whisp.Backend.LoadBest('vulkan');
               if Checkbox3.IsChecked then
-                Whisp.LoadBestBackend('cuda');
+                Whisp.Backend.LoadBest('cuda');
             end;
           {$ENDIF}
           BackendsLoaded := True;
@@ -149,7 +149,7 @@ begin
 
 
 
-      GgmlBackendCount := GgmlBackendGetDeviceCount();
+      GgmlBackendCount := Whisp.Backend.GetDeviceCount;
       Memo1.Lines.Add(Format('Available Backend Devices : %d',[GgmlBackendCount]));
       Memo1.Lines.Add('');
 
